@@ -1,4 +1,6 @@
 <script>
+
+
 	import Header from '../../components/Header.svelte';
 	import Modal from '../../components/Modal.svelte';
 	import {fade, slide} from 'svelte/transition';
@@ -12,9 +14,11 @@
 		let showModal = false;
 
 		let toggleModal = () => {
-		showModal = !showModal;
+		    showModal = !showModal;
 		};
 
+		export let data
+		const {movies} = data
 </script>
 
 
@@ -68,7 +72,7 @@
 	
 
 	<!-- <button on:click={toggleModal}>Open Modal</button> -->
-	<Modal {showModal} on:click={toggleModal} />
+	<Modal {showModal} data={movies} on:click={toggleModal} />
 </nav>
 
 

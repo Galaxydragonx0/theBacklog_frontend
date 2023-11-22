@@ -2,6 +2,10 @@
     export let showModal = false;
 
     let movies = [1, 2, 3, 4, 5, 6, 7, 9, 10 , 11, 12];
+    /**
+     * @type {any}
+     */
+     export let data
   </script>
   
 {#if showModal}
@@ -11,11 +15,11 @@
     <div class="modal" on:click|self>
       <div class="title"><h1>Movies</h1></div>
       <div class="movie grid">
-        {#each movies as movie}
+        {#each data as movie}
           <!-- svelte-ignore a11y-missing-attribute -->
           <div class="image-title">
-              <img class="poster" src="">
-              <span class="title-name"><h3>Movie Title</h3></span>
+              <img class="poster" src="https://image.tmdb.org/t/p/original/{movie.poster_path}">
+              <span class="title-name"><h3>{movie.title}</h3></span>
           </div>
         {/each}
       </div>
@@ -61,15 +65,17 @@
   }
 
   .poster{
-    height: 250px;
+    min-height: 14.25rem;
     border: 10px solid;
-    width: 170px;
+    min-width: 9.938rem;
   }
 
   .title-name{
     display: block;
     padding: 10px;
     margin-top: -16px;
+    min-width: 11.25rem;
+    min-height: 6.75rem;
 
   }
 
