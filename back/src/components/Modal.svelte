@@ -48,7 +48,7 @@
 
   .grid{
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 180px);
     grid-auto-rows: auto;
     justify-content: space-evenly;
     justify-items: center;
@@ -67,7 +67,7 @@
   .poster{
     min-height: 14.25rem;
     border: 10px solid;
-    min-width: 9.938rem;
+    max-width: 9.938rem;
   }
 
   .title-name{
@@ -75,10 +75,13 @@
     padding: 10px;
     margin-top: -16px;
     min-width: 11.25rem;
-    min-height: 6.75rem;
+    min-height: 5rem;
 
   }
 
+  .modal{
+    overflow-x: hidden;
+  }
   /* .image-title{
     grid-row: 4;
   } */

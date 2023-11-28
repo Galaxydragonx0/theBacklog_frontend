@@ -45,8 +45,8 @@
 				
 		}}>Nostalgia</span>
 	{#if topActive}
-		<span in:fade={{delay:300, duration:500}} class="menu-deco">/</span>
-		<span in:fade={{delay:300, duration:500}} class="menu-cta"><span>explore</span></span>
+		<span in:fade={{delay:300, duration:500}} out:fade={{delay:300, duration:500}}  class="menu-deco">/</span>
+		<span in:fade={{delay:300, duration:500}} out:fade={{delay:300, duration:500}}  class="menu-cta"><span>explore</span></span>
 	{/if}
 	</a>
 	<a class="menu-item selected" id="title-2" href="#content-2">
