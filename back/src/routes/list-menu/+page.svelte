@@ -18,7 +18,7 @@
 		};
 
 		export let data
-		const {movies} = data
+		//const {movies, userMovies} = data
 </script>
 
 
@@ -29,6 +29,7 @@
 		<span class="menu__headline-text"><span>Choose a project</span></span>
 	</div> -->
 	<a class="menu-item selected" id="title-1" href="#content-1" on:click={toggleModal}>
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<span class="menu-item-title1"on:mouseenter={() => {
 			if(!navigating)
 			{
@@ -43,7 +44,7 @@
 				topActive = false;
 			}
 				
-		}}>Nostalgia</span>
+		}}>Movies</span>
 	{#if topActive}
 		<span in:fade={{delay:300, duration:500}} out:fade={{delay:300, duration:500}}  class="menu-deco">/</span>
 		<span in:fade={{delay:300, duration:500}} out:fade={{delay:300, duration:500}}  class="menu-cta"><span>explore</span></span>
@@ -72,7 +73,7 @@
 	
 
 	<!-- <button on:click={toggleModal}>Open Modal</button> -->
-	<Modal {showModal} data={movies} on:click={toggleModal} />
+	<Modal {showModal} data={data} on:click={toggleModal} />
 </nav>
 
 

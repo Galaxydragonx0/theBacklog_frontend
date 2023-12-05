@@ -6,17 +6,31 @@ import type Movie from "../../models/Movie";
 export const prerender = false;
 let query = ""
 let movieArray : Movie[];
+let userList : Movie[];
 
 // on load we can probably show popular movies for easy access 
 
 /** @type {import('./$types').PageServerLoad} */
-export async function load() {
+/** @type {import('./$types').PageLoad} */
+export async function load({parent}) {
+    
     if (movieArray != null){
         return {movieArray};
     }
+
+
+    /*
+        userList = await parent();
+    */
 	
 }
 
+
+// get this data from 
+function addToList(movieData : Movie){
+    // add data to current list gotten from backend
+    
+}
 
 
 /** @type {import('./$types').Actions} */

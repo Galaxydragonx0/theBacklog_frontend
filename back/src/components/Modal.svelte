@@ -1,11 +1,14 @@
 <script>
+    import EmptyList from "./EmptyList.svelte";
+
     export let showModal = false;
 
-    let movies = [1, 2, 3, 4, 5, 6, 7, 9, 10 , 11, 12];
+    //let movies = [1, 2, 3, 4, 5, 6, 7, 9, 10 , 11, 12];
     /**
      * @type {any}
      */
      export let data
+     let {userMovies} = data
   </script>
   
 {#if showModal}
@@ -13,15 +16,22 @@
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div class="modal" on:click|self>
-      <div class="title"><h1>Movies</h1></div>
+      <div class="title">
+        <h1>Movies</h1>
+      </div>
+      {#if userMovies.length !== 0}
       <div class="movie grid">
-        {#each data as movie}
+        {#each userMovies as movie}
           <!-- svelte-ignore a11y-missing-attribute -->
           <div class="image-title">
               <img class="poster" src="https://image.tmdb.org/t/p/original/{movie.poster_path}">
               <span class="title-name"><h3>{movie.title}</h3></span>
           </div>
         {/each}
+      </div>
+      {/if}
+      <div>
+      <EmptyList message="nothing in the box office ???" />
       </div>
     </div>
   </div>

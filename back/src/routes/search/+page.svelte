@@ -4,15 +4,13 @@
 
     export let data;
 
-    function showText(){
-        
-    }
+    function showText() {}
 </script>
 
 <Header />
 
 <!-- search bar -->
-<div style="padding-top: 1.5rem;">
+<div class="search-container" style="padding-top: 1.5rem;">
     <form class="search-bar" method="post">
         <input class="bar" type="text" name="searchQuery" />
         <button formaction="?/search" class="search-button" type="submit"
@@ -23,17 +21,20 @@
 <div on:touchstart class="grid">
     {#if data.movieArray}
         {#each data.movieArray as movie}
-            <div class="poster-container" >
-                <img
-                    alt="movie-poster"
-                    class="poster-image"
-                    src="https://image.tmdb.org/t/p/original/{movie.poster_path}"
-                />
-                <!-- <span class="title-name"><h3>{movie.title}</h3></span> -->
-                <div class="image-overlay overlay-primary">
-                    <div class="image-title">{movie.title}</div>
+            {#if movie.poster_path}
+                <!-- on:click={(movie) => {addToList(movie)}} -->
+            <div  class="poster-container">
+                    <img
+                        alt="movie-poster"
+                        class="poster-image"
+                        src="https://image.tmdb.org/t/p/original/{movie.poster_path}"
+                    />
+                    <!-- <span class="title-name"><h3>{movie.title}</h3></span> -->
+                    <div class="image-overlay overlay-primary">
+                        <div class="image-title">{movie.title}</div>
+                    </div>
                 </div>
-            </div>
+            {/if}
         {/each}
     {/if}
 </div>
@@ -45,54 +46,53 @@
         font-family: "Rubik-Regular", sans-serif;
     }
 
-
     .image-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    color: #ffffff;
-    font-family: 'Quicksand', sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.25s;
-    text-align: center;
-}
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        color: #ffffff;
+        font-family: "Quicksand", sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.25s;
+        text-align: center;
+    }
 
-.overlay-primary {
-    backdrop-filter: blur(1px);
-}
+    .overlay-primary {
+        backdrop-filter: blur(1px);
+    }
 
-.image-overlay > * {
-    transform: translateY(13px);
-    transition: transform 0.25s;
-}
+    .image-overlay > * {
+        transform: translateY(13px);
+        transition: transform 0.25s;
+    }
 
-.image-overlay:active {
-    opacity: 1;
-}
+    .image-overlay:active {
+        opacity: 1;
+    }
 
-.image-overlay:active > * {
-    transform: translateY(0);
-}
+    .image-overlay:active > * {
+        transform: translateY(0);
+    }
 
-.image-overlay:hover {
-    opacity: 1;
-}
+    .image-overlay:hover {
+        opacity: 1;
+    }
 
-.image-overlay:hover > * {
-    transform: translateY(0);
-}
+    .image-overlay:hover > * {
+        transform: translateY(0);
+    }
 
-.image-title {
-    /* font-size: 2em; */
-    font-weight: bold;
-}
+    .image-title {
+        /* font-size: 2em; */
+        font-weight: bold;
+    }
 
     .grid {
         display: grid;
@@ -118,17 +118,24 @@
     .search-button {
         all: unset;
         min-height: 1.84rem;
-        position: fixed;
+        position: absolute;
         font-size: 1.7rem;
         padding-left: 0.5rem;
+        right: 0.6rem;
     }
 
     /* mobile styles */
 
-    .search-bar {
+    .search-container {
         display: grid;
-        grid-template-columns: repeat(2, 180px);
-        grid-template-rows: 1;
+        grid-auto-columns: auto;
+        justify-content: space-evenly;
+
+    }
+    .search-bar {
+        padding-left: 0.85rem;
+        position: relative;
+        width: 18rem;
     }
 
     .poster-container {
@@ -143,13 +150,13 @@
         width: 159px;
     }
 
-    .title-name {
+    /* .title-name {
         display: block;
         padding: 10px;
         margin-top: -16px;
         min-width: 11.25rem;
         min-height: 5rem;
-    }
+    } */
 
     /* short ahhhh phone */
     /* @media screen and (min-height: 600px) {
@@ -180,8 +187,15 @@
     /* desktop styles */
     @media screen and (min-width: 1200px) {
         .grid {
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(9, 1fr);
             grid-auto-rows: auto;
+        }
+
+        .poster-image {
+            display: block;
+            height: 14rem;
+            border: 4px solid;
+            width: 10rem;
         }
     }
 </style>
