@@ -1,6 +1,5 @@
 <script>
 
-
 	import Header from '../../components/Header.svelte';
 	import Modal from '../../components/Modal.svelte';
 	import {fade, slide} from 'svelte/transition';
@@ -17,6 +16,7 @@
 		    showModal = !showModal;
 		};
 
+		
 		export let data
 		//const {movies, userMovies} = data
 </script>
@@ -24,27 +24,8 @@
 
 <Header />
 <nav class="grid" id="menu">
-	<!-- <div class="menu__headline">
-		<span class="menu__headline-deco"></span>
-		<span class="menu__headline-text"><span>Choose a project</span></span>
-	</div> -->
-	<a class="menu-item selected" id="title-1" href="#content-1" on:click={toggleModal}>
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
-		<span class="menu-item-title1"on:mouseenter={() => {
-			if(!navigating)
-			{
-				topActive = true;
-			}
-				
-		}}
-
-		on:mouseleave={() => {
-			if(!navigating)
-			{
-				topActive = false;
-			}
-				
-		}}>Movies</span>
+	<a class="menu-item selected" id="title-1" href="/movie-list">
+		<span class="menu-item-title1">Movies</span>
 	{#if topActive}
 		<span in:fade={{delay:300, duration:500}} out:fade={{delay:300, duration:500}}  class="menu-deco">/</span>
 		<span in:fade={{delay:300, duration:500}} out:fade={{delay:300, duration:500}}  class="menu-cta"><span>explore</span></span>
