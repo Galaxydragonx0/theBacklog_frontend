@@ -14,7 +14,7 @@ export const load = async () => {
 
   const fetchUserMovies = async () => {
     const url = `${env.server_url}/movies`
-    const hard_code_key = ""//"393ffddf567de88b56534a144558ff59af5c417109b9035ab8641d98f9bd27a5"
+    const hard_code_key = "393ffddf567de88b56534a144558ff59af5c417109b9035ab8641d98f9bd27a5"
 
     // ToDo: remove hard coded - api-key used for authentication
     const userMovies = await fetch(url, {
@@ -37,18 +37,13 @@ export const load = async () => {
         }
         
     })
-    .catch( () => {throw new Error("The server went to touch some grass, bro is better than us fr")})
+    .catch( (error) => {console.log(error); throw new Error("The server went to touch some grass, bro is better than us fr")})
 
-   
-
-  
-
+    
     const data =  userMovies;
     return data;
     
 };
-
-
 
 
     return {

@@ -20,6 +20,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@sveltejs/adapter-auto": "^2.1.1"
+		"@sveltejs/adapter-auto": "^2.1.1",
+		"embla-carousel-svelte": "^8.0.0-rc19"
 	}
 }

@@ -2,6 +2,7 @@
 
 	import Header from '../../components/Header.svelte';
 	import Modal from '../../components/Modal.svelte';
+	import ModalTwo from '../../components/ModalTwo.svelte'
 	import {fade, slide} from 'svelte/transition';
 	import { quintOut, sineIn } from 'svelte/easing';
 
@@ -10,7 +11,9 @@
 		let topActive = false;
 		let navigating = false;
 
-		let showModal = false;
+
+		$: showModal = false;
+		
 
 		let toggleModal = () => {
 		    showModal = !showModal;
@@ -53,8 +56,29 @@
 	</a> -->
 	
 
-	<!-- <button on:click={toggleModal}>Open Modal</button> -->
-	<Modal {showModal} data={data} on:click={toggleModal} />
+	<button on:click={toggleModal}>Open Modal</button>
+	<!-- <ModalTwo  bind:showModal>
+		<h2 slot="header">
+			<img alt="movie poster" class="poster" src="https://placehold.co/350x260">
+		</h2>
+	
+		<ol class="definition-list">
+			<li>of or relating to modality in logic</li>
+			<li>
+				containing provisions as to the mode of procedure or the manner of taking effect —used of a
+				contract or legacy
+			</li>
+			<li>of or relating to a musical mode</li>
+			<li>of or relating to structure as opposed to substance</li>
+			<li>
+				of, relating to, or constituting a grammatical form or category characteristically indicating
+				predication
+			</li>
+			<li>of or relating to a statistical mode</li>
+		</ol>
+	
+		<p>merriam-webster.com</p>
+	</ModalTwo> -->
 </nav>
 
 

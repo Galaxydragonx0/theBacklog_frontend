@@ -19,17 +19,17 @@
       <div class="title">
         <h1>Movies</h1>
       </div>
-      {#if userMovies.length !== 0}
+      <!-- {#if userMovies.length !== 0}
       <div class="movie grid">
         {#each userMovies as movie}
-          <!-- svelte-ignore a11y-missing-attribute -->
+          
           <div class="image-title">
               <img class="poster" src="https://image.tmdb.org/t/p/original/{movie.poster_path}">
               <span class="title-name"><h3>{movie.title}</h3></span>
           </div>
         {/each}
       </div>
-      {/if}
+      {/if} -->
       <div>
       <EmptyList message="nothing in the box office ???" />
       </div>

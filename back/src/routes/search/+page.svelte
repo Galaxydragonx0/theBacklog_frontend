@@ -1,43 +1,27 @@
-<script>
-    import Icon from "@iconify/svelte";
+<script >
+// @ts-nocheck
+
+
     import Header from "../../components/Header.svelte";
+    import Search from "../../components/Search.svelte";
 
-    export let data;
-
-    function showText() {}
 </script>
 
 <Header />
 
 <!-- search bar -->
 <div class="search-container" style="padding-top: 1.5rem;">
-    <form class="search-bar" method="post">
+    <!-- <form class="search-bar" method="post">
         <input class="bar" type="text" name="searchQuery" />
         <button formaction="?/search" class="search-button" type="submit"
             ><Icon icon="pixelarticons:search" /></button
         >
-    </form>
+    </form> -->
+    <Search />
 </div>
-<div on:touchstart class="grid">
-    {#if data.movieArray}
-        {#each data.movieArray as movie}
-            {#if movie.poster_path}
-                <!-- on:click={(movie) => {addToList(movie)}} -->
-            <div  class="poster-container">
-                    <img
-                        alt="movie-poster"
-                        class="poster-image"
-                        src="https://image.tmdb.org/t/p/original/{movie.poster_path}"
-                    />
-                    <!-- <span class="title-name"><h3>{movie.title}</h3></span> -->
-                    <div class="image-overlay overlay-primary">
-                        <div class="image-title">{movie.title}</div>
-                    </div>
-                </div>
-            {/if}
-        {/each}
-    {/if}
-</div>
+
+
+
 
 <style>
     @import "../../../styles.css";
@@ -46,7 +30,7 @@
         font-family: "Rubik-Regular", sans-serif;
     }
 
-    .image-overlay {
+    /* .image-overlay {
         position: absolute;
         top: 0;
         left: 0;
@@ -90,19 +74,23 @@
     }
 
     .image-title {
-        /* font-size: 2em; */
+        /* font-size: 2em; 
         font-weight: bold;
+    } */
+
+    .pagination{
+        text-align: center;
     }
 
     .grid {
         display: grid;
-        grid-template-columns: repeat(2, 180px);
+        grid-template-columns: repeat(2, 150px);
         grid-auto-rows: auto;
         justify-content: space-evenly;
         justify-items: center;
-        align-content: space-evenly;
-        align-items: center;
-        text-align: center;
+        /* align-content: space-evenly;
+        align-items: center; */
+        /* text-align: center; */
         padding-top: 2rem;
     }
 
@@ -138,17 +126,18 @@
         width: 18rem;
     }
 
-    .poster-container {
+    /* .poster-container {
         position: relative;
         margin-bottom: 43px;
-    }
+    } */
 
+    /* 
     .poster-image {
         display: block;
         height: 228px;
         border: 4px solid;
         width: 159px;
-    }
+    } */
 
     /* .title-name {
         display: block;
@@ -191,11 +180,11 @@
             grid-auto-rows: auto;
         }
 
-        .poster-image {
+        /* .poster-image {
             display: block;
             height: 14rem;
             border: 4px solid;
             width: 10rem;
-        }
+        } */
     }
 </style>
