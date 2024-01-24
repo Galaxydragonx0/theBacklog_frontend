@@ -10,13 +10,6 @@
     import { onDestroy } from "svelte";
     export let data
 
-    // const unsub = movieList.subscribe((data) => {
-    //     // testing 
-    //     console.log(data)
-    // })
-
-    // onDestroy(unsub)
-
     let totalPages = data.totalPages
     let currentPage = parseInt(data.page_num)
     let query = data.search_query
@@ -87,23 +80,17 @@
     }
 
     .page-num{
-        /* position: relative; */
-        /* margin: 0; */
         padding: 0 20px 0 20px;
         font-size: 1.6rem;
         padding-top: 5px;
     }
 
     .previous-page{
-        /* position: absolute; */
         padding-top: 9px;
-        /* padding-right: 10px; */
     }
 
     .next-page{
-        /* position: absolute; */
         padding-top: 9px;
-        /* padding-left: 10px; */
     }    
 
     .block{
@@ -134,44 +121,15 @@
 
     }
 
-    /* .poster-container {
-        position: relative;
-        margin-bottom: 43px;
-    } */
-
-    /* 
-    .poster-image {
-        display: block;
-        height: 228px;
-        border: 4px solid;
-        width: 159px;
-    } */
-
-    /* .title-name {
-        display: block;
-        padding: 10px;
-        margin-top: -16px;
-        min-width: 11.25rem;
-        min-height: 5rem;
-    } */
-
     /* short ahhhh phone */
-    /* @media screen and (min-height: 600px) {
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            grid-template-rows: repeat(30, 20px);
-        }
-    } */
+    @media screen and (min-height: 600px) {
+
+    }
 
     /* long ahhhh phone */
-    /* @media screen and (min-height: 750px) {
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            grid-template-rows: repeat(30, 40px);
-        }
-    } */
+    @media screen and (min-height: 750px) {
+
+    }
 
     /* small tablet styles */
     @media screen and (min-width: 620px) {
@@ -187,12 +145,5 @@
             grid-template-columns: repeat(9, 1fr);
             grid-auto-rows: auto;
         }
-
-        /* .poster-image {
-            display: block;
-            height: 14rem;
-            border: 4px solid;
-            width: 10rem;
-        } */
     }
 </style>

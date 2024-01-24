@@ -102,7 +102,6 @@
   .backdrop{
     width: 100%;
     height: 100%;
-    /* position: fixed; */
     background: rgba(0,0,0,0.8);
   }
   .modal{
@@ -110,7 +109,6 @@
     height: 100%;
     text-align: center;
     background: white;
-    /* max-height: calc(100vh - 100px); */
     overflow-y: auto;
   }
 
@@ -132,37 +130,16 @@
     width: 100%;
   }
 
-  /* .poster{
-    min-height: 14.25rem;
-    border: 10px solid;
-    max-width: 9.938rem;
-  }
-
-  .title-name{
-    display: block;
-    padding: 10px;
-    margin-top: -16px;
-    min-width: 11.25rem;
-    min-height: 5rem;
-
-  } */
-
   .modal{
     overflow-x: hidden;
   }
-  /* .image-title{
-    grid-row: 4;
-  } */
+
 
 
   /* short ahhhh phone */
 @media screen and (min-height:600px )
 {
-  /* .poster{
-    height: 228px;
-    border: 4px solid;
-    width: 159px;
-  } */
+
 }
 
 /* long ahhhh phone */

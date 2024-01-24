@@ -19,10 +19,10 @@
       <div class="title">
         <h1>Movies</h1>
       </div>
+      <!-- COMMENTED OUT TO WORK ON TESTING SHOULD BE DELETED AS MODALTWO IS FULLY FUNCTIONAL -->
       <!-- {#if userMovies.length !== 0}
       <div class="movie grid">
         {#each userMovies as movie}
-          
           <div class="image-title">
               <img class="poster" src="https://image.tmdb.org/t/p/original/{movie.poster_path}">
               <span class="title-name"><h3>{movie.title}</h3></span>

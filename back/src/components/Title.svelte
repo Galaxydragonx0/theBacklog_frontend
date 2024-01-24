@@ -8,19 +8,15 @@
     function getData(){
         console.log("this is triggered")
         dispatch('getData', title)
-    }
-
-    
+    }    
 </script>
 
     
 <div class="poster-container">
         <button class="add-button" on:click={getData}><Icon icon="simple-line-icons:plus" /></button>  
         <img alt="movie-poster" class="poster-image" src="https://image.tmdb.org/t/p/original/{title.poster_path}" />
-        <!-- <div class="image-overlay overlay-primary"> -->
-        <!-- <span class="title-name"><h3>{title.title}</h3></span> -->
-        <!-- </div> -->
 </div>
+
 
 
 <style>

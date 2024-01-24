@@ -12,18 +12,11 @@
         </h4>
     </div>
     <div class="buttons">
-        <button class="completed"
-            ><span
-                ><Icon
-                    style="font-size:1.3rem; color:rgb(13 109 13);"
-                    icon="mdi:tick-circle"
-                /></span
-            ></button
-        >
-        <!-- <button><Icon class="remove" style="font-size:1.3rem; color:red;" icon="bi:dash-circle-fill" /></button> -->
+        <button class="completed">
+            <span>
+                <Icon style="font-size:1.3rem; color:rgb(13 109 13);" icon="mdi:tick-circle" /></span>
+        </button>
     </div>
-    <!-- <Icon class="arrow" style="font-size:2rem;" icon="mdi:tick-circle" /> -->
-    <!-- <span>Mark as Complete</span>  -->
 </div>
 
 <style>
@@ -64,13 +57,11 @@
     .container {
         display: inline-grid;
         grid-template-columns: 1fr 3fr;
-        /* grid-template-rows: 1; */
         grid-template-areas:
             "poster info info"
             "poster info info"
             "poster button button";
         grid-gap: 5px;
-        /* align-items: center; */
     }
 
     .container > .image {
@@ -85,7 +76,6 @@
     }
 
     .container > .buttons {
-        /* display: inline-block; */
         grid-area: button;
     }
 
@@ -95,12 +85,10 @@
 
     .info {
         grid-column: 4;
-        /* margin-top: -2.5rem; */
     }
 
     .buttons {
         padding-top: 1rem;
-        /* padding-left: 5rem; */
         grid-column: 5;
     }
 

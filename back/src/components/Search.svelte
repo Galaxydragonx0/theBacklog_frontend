@@ -18,9 +18,6 @@
     </button>
 </form>
 
-<!-- <div class="search-container" style="padding-top: 1.5rem;">
-
-</div> -->
 
 <style>
     .search-bar {
