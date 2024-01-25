@@ -1,6 +1,6 @@
 <script>
 // @ts-nocheck
-import Icon from "@iconify/svelte";
+    import Icon from "@iconify/svelte";
     export let message;
 </script>
 <div class= container>
