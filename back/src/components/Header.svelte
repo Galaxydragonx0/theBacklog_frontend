@@ -14,7 +14,8 @@
     header
     {
         background: #181818;
-        padding: 20px;
+        padding: 1rem;
+        padding-top: 2rem;
     }
 
     h1
@@ -22,8 +23,17 @@
         color: red;
         font-family: 'header-font';
         margin: 0;
-        text-align: center;
-        font-size: 1.5rem;
+        text-align: start;
+        font-size: 2.2rem;
+    }
+
+    /* short ahhhh phone */
+    @media screen and (min-height:600px )
+    {
+        h1
+        {
+            font-size: 1.6rem;
+        }
     }
 
 

@@ -17,17 +17,17 @@
 	{/if}
 	</a>
 	<a class="menu-item selected" id="title-2" href="#content-2">
-		<span class="menu__item-title">361 KM</span>
+		<span class="menu__item-title">Shows</span>
 		<!-- <span class="menu-deco">|</span>
 		<span class="menu-cta"><span>explore</span> -->
 	</a>
 	<a class="menu-item selected" id="title-3" href="#content-3">
-		<span class="menu__item-title">Moonbox</span>
+		<span class="menu__item-title">Games</span>
 		<!-- <span class="menu-deco">|</span>
 		<span class="menu-cta"><span>explore</span> -->
 	</a>
 	<a class="menu-item selected" id="title-4" href="#content-4">
-		<span class="menu__item-title">Beta Z</span>
+		<span class="menu__item-title">Books</span>
 		<!-- <span class="menu-deco">|</span>
 		<span class="menu-cta"><span>explore</span></span> -->
 	</a>
@@ -60,7 +60,7 @@
 
 	a{
 		text-decoration: none;
-		font-family: 'Rubik', sans-serif;
+		font-family: 'Rubik-Regular', sans-serif;
 		font-style: italic;
 		font-weight: 700;
 		font-size:  clamp(4rem, 7vw, 10rem);
@@ -114,20 +114,20 @@
 	}
 
 	.menu-item#title-1{
-		grid-column: 3/8;
-		grid-row:4;
+		grid-column: 8/13;
+		grid-row:14;
 	}
 	.menu-item#title-2{
-		/* grid-column: 3/8; */
-		grid-row:10;
+		grid-column: 8/13;
+		grid-row:17;
 	}
 	.menu-item#title-3{
-		/* grid-column: 3/8; */
-		grid-row:16;
+		grid-column: 8/13;
+		grid-row:20;
 	}
 	.menu-item#title-4{
-		/* grid-column: 3/8; */
-		grid-row:22;
+		grid-column: 8/13;
+		grid-row:23;
 	}
 
 	.menu-item{
@@ -150,20 +150,20 @@
 	}
 
 	.menu-item#title-1{
-		grid-column: 7/13;
-		grid-row:10;
+		grid-column: 6/13;
+		grid-row:8;
 	}
 	.menu-item#title-2{
-		grid-column: 7/13;
-		grid-row:12;
+		grid-column: 6/13;
+		grid-row:10;
 	}
 	.menu-item#title-3{
-		grid-column: 6/12;
-		grid-row:14;
+		grid-column: 6/13;
+		grid-row:12;
 	}
 	.menu-item#title-4{
-		grid-column: 8/13;
-		grid-row:16;
+		grid-column: 6/13;
+		grid-row:14;
 	}
 
 	.menu-item{
@@ -171,7 +171,7 @@
 	}
 }
 
-	/* small tablet styles */
+/* small tablet styles */
 @media screen and (min-width: 620px){
   	a{
 		font-size: 3em;
@@ -191,6 +191,51 @@
 
 	a{
 		font-size: 6.5em;
+	}
+
+	.menu-item#title-1{
+		grid-column: 9/13;
+		grid-row:8;
+	}
+	.menu-item#title-2{
+		grid-column: 9/13;
+		grid-row:11;
+	}
+	.menu-item#title-3{
+		grid-column: 9/13;
+		grid-row:14;
+	}
+	.menu-item#title-4{
+		grid-column: 9/13;
+		grid-row:17;
+	}
+
+	.menu-item{
+		margin-top: 20px;
+	}
+
+	a:after {
+		content: '»';
+		text-shadow: 10px 2px #7b1f1f;
+		grid-row:inherit;
+		grid-column: 10/12;
+		position: absolute;
+		opacity: 0;  
+		top: 14px;
+		right: -20px;
+		transition: 0.5s;
+		padding-right:2.5rem
+	}
+
+	a:hover{
+		padding-right: 24px;
+		padding-left:8px;
+		text-shadow: 10px 2px #7b1f1f;
+	}
+
+	a:hover:after {
+		opacity: 1;
+		right: 10px;
 	}
 
 }
