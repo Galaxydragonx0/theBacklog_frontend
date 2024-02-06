@@ -11,7 +11,7 @@
     export let data
 
     let totalPages = data.totalPages
-    let currentPage = parseInt(data.page_num)
+    $: currentPage = parseInt(data.page_num)
     let query = data.search_query
 
     $: movieListItems = $movieList
@@ -26,7 +26,7 @@
     $: showModal = false;
 		
     let toggleModal = (movie) => {
-        console.log(movie)
+        // console.log(movie)
         currentMovie = movie;
         showModal = !showModal;
     };
@@ -44,9 +44,10 @@
         {#each data.movieArray as movie}
             {#if movie.poster_path}
 
-                <div on:click={toggleModal(movie)}>
+            <!-- <button class="add-button" on:click={addToList(movie)}><Icon icon="simple-line-icons:plus" /></button>   -->
+                <div class="title-container" on:click={toggleModal(movie)}>
                     <Title title={movie} on:getData={addToList}/>
-                    </div>
+                </div>
 
                 
             {/if}
@@ -64,10 +65,10 @@
 <div class="pagination">
     <!-- {#each Array(totalPages) as _, idx} -->
     {#if currentPage > 1}
-        <a class="previous-page block" href="/search/{query}/{currentPage-1}"><Icon style="font-size:2rem;" icon="emojione-monotone:left-arrow" /></a>
+        <a class="previous-page block" href="/search/{query}/{currentPage-parseInt('1')}"><Icon style="font-size:2rem;" icon="emojione-monotone:left-arrow" /></a>
     {/if}
     <p class="page-num block">{currentPage}</p> 
-    <a class="next-page block" href="/search/{query}/{currentPage+1}"><Icon style="font-size:2rem;" icon="emojione-monotone:right-arrow" /></a>
+    <a class="next-page block" href="/search/{query}/{currentPage+parseInt('1')}"><Icon style="font-size:2rem;" icon="emojione-monotone:right-arrow" /></a>
 
     <!-- {/each} -->
 </div>
@@ -79,10 +80,22 @@
         font-family: "Rubik-Regular", sans-serif;
     }
 
+    .title-container{
+        position: relative;
+    }
+
+    .add-button{
+        border-radius: 8px;
+        z-index: 1000;
+        position: absolute;
+        left: 4;   
+    }
+
     .page-num{
         padding: 0 20px 0 20px;
         font-size: 1.6rem;
         padding-top: 5px;
+        color: wheat;
     }
 
     .previous-page{
@@ -99,6 +112,7 @@
 
     .pagination{
         text-align: center;
+        background-color: #181818;
     }
 
     .grid {
@@ -107,8 +121,8 @@
         grid-auto-rows: auto;
         justify-content: space-evenly;
         justify-items: center;
-
         padding-top: 2rem;
+        background-color: #181818;
     }
 
 
@@ -118,7 +132,7 @@
         display: grid;
         grid-auto-columns: auto;
         justify-content: space-evenly;
-
+        background-color: #181818;
     }
 
     /* short ahhhh phone */

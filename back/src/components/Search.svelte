@@ -33,6 +33,7 @@
         font-size: 1.7rem;
         padding-left: 0.5rem;
         right: 0.6rem;
+        color: wheat;
     }
 
     
@@ -43,5 +44,6 @@
         min-height: 1.5rem;
         border: 2px solid black;
         border-radius: 10px;
+        background-color: wheat;
     }
 </style>
