@@ -5,14 +5,14 @@
     import Header from "../../../../components/Header.svelte";
     import Title from "../../../../components/Title.svelte";
     import Search from "../../../../components/Search.svelte";
-    import movieList from "../../../Store";
+    import movieList from "../../../MovieStore";
     import ModalTwo from "../../../../components/ModalTwo.svelte";
     import { onDestroy } from "svelte";
     export let data
 
     let totalPages = data.totalPages
     $: currentPage = parseInt(data.page_num)
-    let query = data.search_query
+    $: query = data.search_query
 
     $: movieListItems = $movieList
 

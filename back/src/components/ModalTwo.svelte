@@ -50,6 +50,8 @@
 		background: rgb(0 0 0 / 69%);
 		border-radius: 10px;
 		color: wheat;
+		height: 95vh;
+		width: 95vw;
 	}
 
 	.movie-container{

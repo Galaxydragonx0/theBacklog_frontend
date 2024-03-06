@@ -9,7 +9,7 @@
   // @ts-ignore
   import { onMount } from "svelte";
   import emblaCarouselSvelte from "embla-carousel-svelte";
-  import movieList from "../Store";
+  import movieList from "../MovieStore";
 
   $: movieListItems = $movieList;
 
@@ -176,6 +176,7 @@
     height: 50vh;
     backdrop-filter: blur(35px) saturate(1);
     background: linear-gradient( 351deg, transparent, black);
+    width: 100%;
   }
 
   .embla__slide {

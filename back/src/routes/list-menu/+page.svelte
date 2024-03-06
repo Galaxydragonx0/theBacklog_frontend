@@ -1,13 +1,21 @@
-<script>
+<script lang="ts">
 
 	import Header from '../../components/Header.svelte';
 	import {fade, slide} from 'svelte/transition';
+	import UserDataStore from '../UserDataStore.js';
+
 
 	let topActive = false;
 
+	export let data;
+	export let form;
+	let user_email = data.user_email;
+	let api_key = data.api_key;
+	$UserDataStore = {user_email, api_key}
+
 </script>
 
-<Header/>
+<Header modalPassthrough={data.modalPassthrough} auth_errors={data.auth_errors} formData={form} viewPassThrough={data.viewPassthrough}/>
 <nav class="grid" id="menu">
 	<a class="menu-item selected" id="title-1" href="/movie-list">
 		<span class="menu-item-title1">Movies</span>
