@@ -1,0 +1,244 @@
+<script lang="ts">
+// @ts-nocheck
+
+    import userStore from "../routes/UserDataStore";
+    export const prerender = false
+	// @ts-ignore
+	export let showModal; // boolean
+    export let auth_errors;
+    export let viewPassThrough = {};
+    
+    $: userData = $userStore;
+
+	// @ts-ignore
+	/**
+     * @type {HTMLDialogElement}
+     */
+	let dialog;
+    
+    // @ts-ignore
+    $: loginView= viewPassThrough.login
+    $: signupView = viewPassThrough.register;
+
+    import { createEventDispatcher } from "svelte";
+    // import type { ActionData } from "../routes/list-menu/$types";
+    let dispatch = createEventDispatcher()
+
+    function closeModal(){
+        dispatch('closeModal', showModal)
+    }
+
+    function logout(){
+        userData.user_email = null;
+        userData.api_key = null;
+    }
+
+    export let form;
+    // @ts-ignore
+    $: if (dialog && showModal) dialog.showModal();
+</script>
+
+
+<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
+<dialog
+	class="dialog-pop"
+	bind:this={dialog}
+	on:close={() => {if(!form?.errors?.email && !auth_errors){showModal = false}}}
+	on:click|self={() => {loginView=true; signupView=false; closeModal(); dialog.close();}}
+>
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
+
+    <div class="form-container" on:click|stopPropagation>
+
+        <div class="header" style="display: flex; justify-content: space-between;">
+            {#if !userData?.user_email}
+                <p class="login-view" on:click={() => {loginView = true; signupView = false;}}>Login</p>
+                <p class="signup-view" on:click={() => {signupView = true; loginView=false;}}>/SignUp</p>
+            {:else if userData?.user_email}
+                <p class="login-view">Logout</p>
+            {/if}
+            
+        </div>
+        {#if loginView && !userData.user_email}
+        <!-- show validations for form fields -->
+            <form method="POST" action="?/login">
+                <label class="email-label" for="email">Email</label>
+                <input type="email" name="email" id="email">
+                {#if form?.errors?.email}
+                    <p class="error">{form?.errors?.email[0]}</p>
+                {:else if auth_errors}
+                    <p class="error">{auth_errors}. Try clicking SignUp</p>
+                {/if}
+                <!-- <label for="pwd">Password</label>
+                <input type="password" name="password" id="pwd"> -->
+
+                <button class="btn">Login</button>
+            </form>
+        {/if}
+        {#if signupView && !userData.user_email}
+            <form method="post" action="?/register">
+                <label class="email-label" for="email">Email</label>
+                <input type="email" name="email" id="email">
+                {#if form?.errors?.email}
+                <p class="error">{form?.errors?.email[0]}</p>
+                {:else if auth_errors}
+                    <p class="error">{auth_errors}. Objective failed try again</p>
+                {/if}
+
+                <button class="btn">Register</button>
+            </form>
+        {/if}
+        {#if userData.user_email}
+            <h3 class="logout-email">{userData?.user_email}</h3>
+            <button on:click={logout} class="btn">Logout</button>
+        {/if}
+    </div>
+</dialog>
+
+<style>
+
+@font-face{
+    font-family: "header-font";
+    src: url('../../assets/fonts/PublicPixel.ttf');
+
+    font-family: "Rubik";
+    src: url('../../src/assets/fonts/Rubik-Regular.ttf');
+}
+
+.login-view, .signup-view{
+    font-family: "header-font";
+}
+
+.logout-email{
+    font-family: 'Rubik';
+    font-style: italic;
+    font-weight: bolder;
+    color: #cf4343;
+    text-align: center;
+}
+
+.email-label{
+    font-family: 'header-font';
+}
+
+.btn{
+    display: block;
+    color: red;
+    background-color: midnightblue;
+    height: 2.5rem;
+    margin-top: 3rem;
+    font-family: 'header-font';
+    width: 17rem;
+    box-shadow: none;
+}
+
+.login-view:hover, .signup-view:hover{
+    text-decoration: underline;
+} 
+
+.error{
+    width: 14rem;
+    font-size: 0.7rem;
+    color: #975151;
+    text-align: left;
+}
+
+.header{
+    padding-bottom: 4rem;
+}
+
+input, label, .form-container{
+    display: block;
+}
+
+p{
+    font-size: 1.5rem;
+}
+
+input{
+    width: 16rem;
+    height: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+label{
+    font-size: 1.2rem;
+    text-align: left;
+    padding-bottom: 0.5rem;
+}
+.dialog-pop{
+		backdrop-filter: blur(10px) saturate(4);
+		background-color: #181818;
+		background: rgb(0 0 0 / 69%);
+		border-radius: 10px;
+		color: wheat;
+	}
+
+    dialog::backdrop {
+		background: rgba(0, 0, 0, 0.3);
+	}
+
+	/* dialog > div {
+		padding: 1em;
+	} */
+
+	dialog[open] {
+		animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+	}
+
+	@keyframes zoom {
+		from {
+			transform: scale(0.95);
+		}
+		to {
+			transform: scale(1);
+		}
+	}
+
+	dialog[open]::backdrop {
+		animation: fade 0.2s ease-out;
+	}
+
+	@keyframes fade {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+
+
+     /* short ahhhh phone */
+     @media screen and (min-height:600px )
+    {
+
+    }
+
+    /* long ahhhh phone */
+    @media screen and (min-height:750px )
+    {
+
+    }
+
+
+    /* small tablet styles */
+    @media screen and (min-width: 620px){
+
+    }
+
+    /* large tablet & laptop styles */
+    @media screen and (min-width: 960px){
+
+
+
+    }
+
+    /* desktop styles */
+    @media screen and (min-width: 1200px){
+        p{
+            font-size: 2rem;
+        }
+
+    }
+</style>

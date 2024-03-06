@@ -1,6 +1,74 @@
+<script>
+// @ts-nocheck
+
+    import Icon from "@iconify/svelte";
+    import Login from "../components/Login.svelte"
+    import UserDataStore from "../routes/UserDataStore";
+
+    export let formData;
+    export let modalPassthrough
+    export let viewPassThrough = {};
+    export let auth_errors;
+    
+
+    $: userStore = $UserDataStore
+
+    $: showModal = modalPassthrough;
+    
+    let toggleModal = () => {
+        showModal = !showModal;
+        console.log("value of show modal: ", showModal )
+    };
+
+    let closeModal = (event) =>{
+        showModal = !event.detail;
+    }
+    // @ts-ignore
+    var width;
+    // @ts-ignore
+    var height;
+
+</script>
+
+
+<svelte:window bind:innerWidth={width} bind:innerHeight={height} />
 <header>
+
     <h1 class="the">the</h1>
     <h1 class="backlog">Backlog</h1>
+    
+    {#if height >= 945}
+        <!-- logged in larger mobile screens and greater -->
+        {#if userStore.user_email && !formData?.errors.email && !auth_errors}
+            <button class="email" on:click={toggleModal}>
+                <p class="email-text">{userStore.user_email}</p>
+            </button>
+        {/if}
+
+        <!-- logged out larger mobile screens and greater -->
+        {#if !userStore.user_email || !userStore.api_key && (formData?.errors.email || auth_errors)}
+        <button on:click={toggleModal} class="login">
+            <span >
+                <Icon class="avatar" icon="carbon:user-avatar-filled-alt" />
+            </span>
+        </button>
+        {/if}
+    {/if}
+
+    {#if height <= 944 }
+        {#if userStore.user_email && !formData?.errors.email && !auth_errors }
+        <button class="avatar-pic" on:click={toggleModal}>
+            <Icon class="avatar" icon="carbon:user-avatar-filled-alt" />
+        </button>
+        {/if}
+        {#if !userStore.user_email || !userStore.api_key && (formData?.errors.email || auth_errors)}
+        <button class="avatar-pic" on:click={toggleModal}>
+            <Icon class="avatar" icon="carbon:user-avatar-filled-alt" />
+        </button>
+        {/if}
+    {/if}
+
+    <Login showModal={showModal} form={formData} auth_errors={auth_errors} viewPassThrough={viewPassThrough} on:closeModal={closeModal}/>
 </header>
 
 
@@ -10,6 +78,24 @@
 		font-family: 'header-font';
 		src: url('../../assets/fonts/PublicPixel.ttf')
 	}
+
+    .avatar-pic{
+        color: wheat;
+        position: absolute;
+        top: 2.2rem;
+        right: 1rem;
+        height: 4rem;
+        width: 4rem;
+        border: none;
+        border-radius: 25px;
+        font-family: "header-font";
+        font-size: 2.5rem;
+        font-weight: 550;
+        text-align: center;
+        overflow: hidden;
+        background-color: #181818;
+    }
+
 
     header
     {
@@ -30,10 +116,141 @@
     /* short ahhhh phone */
     @media screen and (min-height:600px )
     {
+        .login{
+        color: wheat;
+        position: absolute;
+        top: 2rem;
+        right: 1rem;
+        height: 4rem;
+        width: 4rem;
+        border: none;
+        border-radius: 25px;
+        font-family: "header-font";
+        font-size: 2rem;
+        font-weight: 550;
+        text-align: center;
+        overflow: hidden;
+        background-color: #181818;
+        }
         h1
         {
-            font-size: 1.6rem;
+            font-size: 1.4rem;
         }
+    }
+
+    /* long ahhhh phone */
+    @media screen and (min-height:750px )
+    {
+        h1
+        {
+            font-size: 2em;
+        }
+
+        .login{
+        color: wheat;
+        position: absolute;
+        top: 2rem;
+        right: 1rem;
+        height: 4rem;
+        width: 4rem;
+        border: none;
+        border-radius: 25px;
+        font-family: "header-font";
+        font-size: 2rem;
+        font-weight: 550;
+        text-align: center;
+        overflow: hidden;
+        background-color: #181818;
+        }
+
+    }
+
+
+    /* small tablet styles */
+    @media screen and (min-width: 620px){
+
+    }
+
+    /* large tablet & laptop styles */
+    @media screen and (min-width: 960px){
+
+
+
+    }
+
+    /* desktop styles */
+    @media screen and (min-width: 1200px){
+
+        h1
+        {
+            font-size: 3.5rem;
+        }
+
+        .email{
+            color: #08086b;
+            position: absolute;
+            top: 5rem;
+            right: 13rem;
+            height: 1.5rem;
+            width: 17rem;
+            border: none;
+            border-radius: 12px;
+            font-family: "header-font";
+            font-size: 1rem;
+            font-weight: 550;
+            text-align: center;
+            overflow: hidden;
+            background-color: #993953;
+        }
+
+        .email-text{
+            margin-top: 0px;
+        }
+
+        .login{
+        color: wheat;
+        position: absolute;
+        top: 5rem;
+        right: 7rem;
+        height: 4rem;
+        width: 4rem;
+        border: none;
+        border-radius: 25px;
+        font-family: "header-font";
+        font-size: 3rem;
+        font-weight: 550;
+        text-align: center;
+        overflow: hidden;
+        background-color: #181818;
+        }
+
+        .login:hover span {
+            display: none;
+        }
+
+        .login:hover {
+            width: 20rem;
+            transition: width 800ms;
+        }
+
+        .login::after {
+            content: "";
+            width: 160px;
+            display: none;
+        }
+
+        .login:hover::before {
+            content: "Login/Sign-Up";
+            display: inline-block;
+            font-size: 1rem;
+        }
+
+        .login:hover,
+        .login:focus {
+            animation: raise 2s;
+            box-shadow: 0 0 0 2em transparent;
+        }
+
     }
 
 

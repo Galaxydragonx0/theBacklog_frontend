@@ -21,6 +21,8 @@
 	"type": "module",
 	"dependencies": {
 		"@sveltejs/adapter-auto": "^2.1.1",
-		"embla-carousel-svelte": "^8.0.0-rc19"
+		"embla-carousel-svelte": "^8.0.0-rc19",
+		"zod": "^3.22.4",
+		"zod-form-data": "^2.0.2"
 	}
 }

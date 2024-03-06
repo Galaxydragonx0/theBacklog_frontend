@@ -1,13 +1,21 @@
-<script>
+<script lang="ts">
 
 	import Header from '../../components/Header.svelte';
 	import {fade, slide} from 'svelte/transition';
+	import UserDataStore from '../UserDataStore.js';
+
 
 	let topActive = false;
 
+	export let data;
+	export let form;
+	let user_email = data.user_email;
+	let api_key = data.api_key;
+	$UserDataStore = {user_email, api_key}
+
 </script>
 
-<Header/>
+<Header modalPassthrough={data.modalPassthrough} auth_errors={data.auth_errors} formData={form} viewPassThrough={data.viewPassthrough}/>
 <nav class="grid" id="menu">
 	<a class="menu-item selected" id="title-1" href="/movie-list">
 		<span class="menu-item-title1">Movies</span>
@@ -80,6 +88,7 @@
 
 	.menu-item{
 		color: wheat;
+		font-family: "header-font";
 	}
 
 	.menu-item#title-1{
@@ -106,7 +115,7 @@
 	.grid{
 		display: grid;
 		grid-template-columns: repeat(12, 1fr);
-		grid-template-rows: repeat(30, 20px);
+		grid-template-rows: repeat(32, 20px);
 	}
 
 	a{
@@ -114,19 +123,19 @@
 	}
 
 	.menu-item#title-1{
-		grid-column: 8/13;
+		grid-column: 6/13;
 		grid-row:14;
 	}
 	.menu-item#title-2{
-		grid-column: 8/13;
+		grid-column: 6/13;
 		grid-row:17;
 	}
 	.menu-item#title-3{
-		grid-column: 8/13;
+		grid-column: 6/13;
 		grid-row:20;
 	}
 	.menu-item#title-4{
-		grid-column: 8/13;
+		grid-column: 6/13;
 		grid-row:23;
 	}
 
@@ -146,7 +155,7 @@
 	}
 
 	a{
-		font-size: 3.25em;
+		font-size: 2.3em;
 	}
 
 	.menu-item#title-1{
@@ -154,16 +163,19 @@
 		grid-row:8;
 	}
 	.menu-item#title-2{
-		grid-column: 6/13;
+		grid-column: 4/12;
 		grid-row:10;
+		text-align: end;
 	}
 	.menu-item#title-3{
-		grid-column: 6/13;
-		grid-row:12;
+		grid-column: 4/12;
+		grid-row: 12;
+		text-align: end;
 	}
 	.menu-item#title-4{
-		grid-column: 6/13;
+		grid-column: 4/12;
 		grid-row:14;
+		text-align: end;
 	}
 
 	.menu-item{
@@ -190,7 +202,7 @@
 
 
 	a{
-		font-size: 6.5em;
+		font-size: 4.5em;
 	}
 
 	.menu-item#title-1{
@@ -198,15 +210,15 @@
 		grid-row:8;
 	}
 	.menu-item#title-2{
-		grid-column: 9/13;
+		grid-column: 9/11;
 		grid-row:11;
 	}
 	.menu-item#title-3{
-		grid-column: 9/13;
+		grid-column: 9/11;
 		grid-row:14;
 	}
 	.menu-item#title-4{
-		grid-column: 9/13;
+		grid-column: 9/11;
 		grid-row:17;
 	}
 
@@ -215,21 +227,21 @@
 	}
 
 	a:after {
-		content: '»';
+		/* content: '»'; */
 		text-shadow: 10px 2px #7b1f1f;
 		grid-row:inherit;
 		grid-column: 10/12;
 		position: absolute;
 		opacity: 0;  
 		top: 14px;
-		right: -20px;
+		right: -10px;
 		transition: 0.5s;
 		padding-right:2.5rem
 	}
 
 	a:hover{
-		padding-right: 24px;
-		padding-left:8px;
+		padding-right: 32px;
+		padding-left:10px;
 		text-shadow: 10px 2px #7b1f1f;
 	}
 

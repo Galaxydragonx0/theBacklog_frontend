@@ -14,7 +14,7 @@
     
 <div class="poster-container">
         <button class="add-button" on:click={getData}><Icon icon="simple-line-icons:plus" /></button>  
-        <img alt="movie-poster" class="poster-image" src="https://image.tmdb.org/t/p/original/{title.poster_path}" />
+        <img alt="movie-poster" class="poster-image" src="https://image.tmdb.org/t/p/w185/{title.poster_path}" />
 </div>
 
 
@@ -29,7 +29,6 @@
     .poster-container {
         position: relative;
         margin-bottom: 0.4rem;
-
     }
 
     .poster-image {
