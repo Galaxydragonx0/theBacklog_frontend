@@ -1,42 +1,61 @@
 <script>
 // @ts-nocheck
-
+  import { browser } from '$app/environment';
   import EmptyList from "../../components/EmptyList.svelte";
   // @ts-ignore
   import Title from "../../components/Title.svelte";
   // @ts-ignore
   import UserListTitle from "../../components/UserListTitle.svelte";
   // @ts-ignore
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import emblaCarouselSvelte from "embla-carousel-svelte";
   import movieList from "../MovieStore";
+  import UserDataStore from "../UserDataStore";
+  import { addToast } from '../../components/Toaster.svelte'
+
+  $: userData = $UserDataStore;
+  
+  
+  
+  
+  // data gives us the user_data from the DB
+  export let data;
+
+  movieList.update( () => {
+    if(browser){
+      window.localStorage.setItem('savedMovies', JSON.stringify(data.movies));
+    }
+    
+    return data.movies
+  })
 
   $: movieListItems = $movieList;
+
 
   let emblaApi;
   let options = { loop: true };
   // @ts-ignore
   let plugins = [];
+
+  //initalising carousel
   // @ts-ignore
   function onInit(event) {
     emblaApi = event.detail;
-    console.log(emblaApi.slideNodes()); // Access API
   }
 
-  // let movies = [1, 2, 3, 4, 5, 6, 7, 9, 10 , 11, 12];
+  
   /**
    * @type {any}
    */
-  export let data;
-  // @ts-ignore
-  const movies = data.data.movies;
-  const error = data.data.error;
-  // @ts-ignore
-  const rcode = data.data.code;
+  
+  // const error = data.data.error;
+  // // @ts-ignore
+  // const rcode = data.data.code;
 </script>
 
 <div class="ovr-container">
-  {#if movieListItems && movieListItems.length > 0}
+  <!-- && userData.user_email -->
+  {#if movieListItems && movieListItems.length > 0 }
     <div class="embla" use:emblaCarouselSvelte={ options, plugins } on:emblaInit={onInit}>
       <div class="embla__container">
         {#each movieListItems as movie}
@@ -95,16 +114,17 @@
       <a href="/search">Try adding some titles here => </a>
     </div>
 
-    {#if error}
+    <!-- {#if error}
       <h1>
         You might want to signup, its easier to track your titles this way. Its
         only an email I promise.
       </h1>
-    {/if}
+    {/if} -->
   </div>
 </div>
 
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=DotGothic16&display=swap');
   @font-face {
     src: url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,600;0,900;1,400;1,600;1,800;1,900&display=swap");
     font-family: "Rubik-Regular", sans-serif;
@@ -139,7 +159,8 @@
     grid-row: 3;
     text-align: center;
     font-style: oblique;
-    font-family: 'Rubik-Regular', sans-serif;
+    font-family: "DotGothic16", sans-serif;
+		font-weight: 400;
     z-index: 2;
     padding:0.4rem;
   }
@@ -148,7 +169,9 @@
     grid-column: 1/-1;
     grid-row: 5;
     padding: 1rem;
-    font-family:  Arial, Helvetica, sans-serif;
+    font-family: "DotGothic16", sans-serif;
+		font-weight: 400;
+		font-style: normal;
     z-index: 2;
   }
 
