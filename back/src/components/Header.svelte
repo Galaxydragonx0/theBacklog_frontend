@@ -2,7 +2,7 @@
 // @ts-nocheck
 
     import Icon from "@iconify/svelte";
-    import Login from "../components/Login.svelte"
+    import Login from "../components/Login.svelte";
     import UserDataStore from "../routes/UserDataStore";
 
     export let formData;
@@ -32,11 +32,11 @@
 
 
 <svelte:window bind:innerWidth={width} bind:innerHeight={height} />
-<header>
-
-    <h1 class="the">the</h1>
-    <h1 class="backlog">Backlog</h1>
-    
+<header style="line-height: normal;">
+    <a class="logo-link" href="/list-menu">
+        <p class="the">the</p>
+        <p class="backlog">Backlog</p>
+    </a>
     {#if height >= 945}
         <!-- logged in larger mobile screens and greater -->
         {#if userStore.user_email && !formData?.errors.email && !auth_errors}
@@ -76,8 +76,24 @@
 
     @font-face{
 		font-family: 'header-font';
-		src: url('../../assets/fonts/PublicPixel.ttf')
+		src: url('../assets/fonts/PublicPixel.ttf')
 	}
+
+    .logo-link{
+        text-decoration: none;
+    }
+
+    .logo-link :visited{
+        text-decoration: none;
+    }
+
+    .the, .backlog{
+        font-weight: 1000;
+        font-family: 'header-font';
+        font-size: 3rem;
+        color: red;
+        margin: 0;
+    }
 
     .avatar-pic{
         color: wheat;
@@ -116,6 +132,14 @@
     /* short ahhhh phone */
     @media screen and (min-height:600px )
     {
+ 
+        .the, .backlog{
+        font-weight: 1000;
+        font-family: 'header-font';
+        font-size: 2rem;
+        color: red;
+        margin: 0;
+    }
         .login{
         color: wheat;
         position: absolute;
@@ -210,7 +234,7 @@
         .login{
         color: wheat;
         position: absolute;
-        top: 5rem;
+        top: 1.7rem;
         right: 7rem;
         height: 4rem;
         width: 4rem;

@@ -20,7 +20,7 @@
 
 
 <style>
-    
+
     @font-face {
         src: url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,600;0,900;1,400;1,600;1,800;1,900&display=swap");
         font-family: "Rubik-Regular", sans-serif;
@@ -28,30 +28,24 @@
 
     .poster-container {
         position: relative;
-        margin-bottom: 0.4rem;
+        margin-bottom: 1rem;
     }
 
     .poster-image {
         display: block;
-        height: 228px;
-        border: 4px solid;
+        height: 185px;
         border-radius: 10px;
         width: 159px;
     }
 
-
-    .poster-image {
-        display: block;
-        height: 228px;
-        border: 4px solid;
-        width: 159px;
-    }
 
     .add-button{
         border-radius: 8px;
         z-index: 1000;
         position: absolute;
         left: 4;   
+        background-color: lightgrey;
+        font-size: larger;
     }
 
     .title-name {
@@ -95,12 +89,12 @@
 /* desktop styles */
 @media screen and (min-width: 1200px){
 
-        .poster-image {
-            display: block;
-            height: 14rem;
-            border: 4px solid;
-            width: 10rem;
-        }
+    .poster-image {
+        display: block;
+        height: 18rem;
+        width: 12rem;
+    }
+        
 
 }
 </style>

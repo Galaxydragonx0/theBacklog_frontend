@@ -1,13 +1,26 @@
-<script lang="ts">
+<script>
+    // @ts-ignore
+    import { any, boolean } from "zod";
+
 // @ts-nocheck
 
     import userStore from "../routes/UserDataStore";
     export const prerender = false
 	// @ts-ignore
 	export let showModal; // boolean
-    export let auth_errors;
-    export let viewPassThrough = {};
+    // @ts-ignore
+    /**
+     * @type {any}
+     */
+     export let auth_errors;
+    /**
+     * @type {{ login: any; register: any; }}
+     */
+     // @ts-ignore
+     export let viewPassThrough;
     
+
+    // update the store to collect the user info
     $: userData = $userStore;
 
 	// @ts-ignore
@@ -15,27 +28,38 @@
      * @type {HTMLDialogElement}
      */
 	let dialog;
-    
-    // @ts-ignore
-    $: loginView= viewPassThrough.login
+    $: loginView = viewPassThrough.login || true ;
+
     $: signupView = viewPassThrough.register;
 
     import { createEventDispatcher } from "svelte";
+    import { goto } from "$app/navigation";
     // import type { ActionData } from "../routes/list-menu/$types";
     let dispatch = createEventDispatcher()
 
     function closeModal(){
+        // @ts-ignore
         dispatch('closeModal', showModal)
     }
 
     function logout(){
-        userData.user_email = null;
-        userData.api_key = null;
+        userData.user_email = '';
+        userData.api_key = '';
     }
 
-    export let form;
+    function login(){
+        goto('/list-menu?/login')
+    }
+
     // @ts-ignore
-    $: if (dialog && showModal) dialog.showModal();
+    /**
+     * @type {{ errors: { email: any[]; }; }}
+     */
+     export let form;
+     console.log(form?.errors)
+    // @ts-ignore
+   // @ts-ignore
+     $: if (dialog && showModal) dialog.showModal();
 </script>
 
 
@@ -61,7 +85,7 @@
         </div>
         {#if loginView && !userData.user_email}
         <!-- show validations for form fields -->
-            <form method="POST" action="?/login">
+            <form method="POST" action="/list-menu?/login">
                 <label class="email-label" for="email">Email</label>
                 <input type="email" name="email" id="email">
                 {#if form?.errors?.email}
@@ -72,11 +96,11 @@
                 <!-- <label for="pwd">Password</label>
                 <input type="password" name="password" id="pwd"> -->
 
-                <button class="btn">Login</button>
+                <button class="btn" on:click={login}>Login</button>
             </form>
         {/if}
         {#if signupView && !userData.user_email}
-            <form method="post" action="?/register">
+            <form method="post" action="/list-menu?/register">
                 <label class="email-label" for="email">Email</label>
                 <input type="email" name="email" id="email">
                 {#if form?.errors?.email}
@@ -88,7 +112,7 @@
                 <button class="btn">Register</button>
             </form>
         {/if}
-        {#if userData.user_email}
+        {#if userData.user_email && !form?.errors?.email[0]}
             <h3 class="logout-email">{userData?.user_email}</h3>
             <button on:click={logout} class="btn">Logout</button>
         {/if}
@@ -236,6 +260,20 @@ label{
 
     /* desktop styles */
     @media screen and (min-width: 1200px){
+        
+
+        .error{
+            width: 14rem;
+            font-size: 1rem;
+            font-family: monospace;
+            color: #975151;
+            text-align: left;
+        }
+
+        .form-container{
+            padding: 2rem;
+        }
+
         p{
             font-size: 2rem;
         }

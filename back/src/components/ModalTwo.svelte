@@ -27,7 +27,8 @@
 	on:click|self={() => dialog.close()}
 >
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<div class="movie-container" on:click|stopPropagation>
+	<div class="movie-container" on:click|stopPropagation bind:this={dialog}	on:close={() => (showModal = false)}
+		on:click|self={() => dialog.close()}>
 
         <img alt="movie poster" class="poster" src="https://image.tmdb.org/t/p/w185{movie.poster_path}">
 
@@ -43,7 +44,7 @@
 </dialog>
 
 <style>
-
+    @import url('https://fonts.googleapis.com/css2?family=DotGothic16&display=swap');
 	.dialog-pop{
 		backdrop-filter: blur(10px) saturate(4);
 		background-color: #181818;
@@ -52,6 +53,8 @@
 		color: wheat;
 		height: 95vh;
 		width: 95vw;
+
+		
 	}
 
 	.movie-container{
@@ -64,8 +67,12 @@
 		"image image info info"
 		"image image info info"
 		"desc desc desc desc";
-		max-width: 25rem;
+		/* max-width: 25rem; */
+		height: -webkit-fill-available;
 		backdrop-filter: blur(35px) saturate(1);
+		font-family: "DotGothic16", sans-serif;
+		font-weight: 400;
+		font-style: normal;
 	}
 
 	.movie-container > .poster{

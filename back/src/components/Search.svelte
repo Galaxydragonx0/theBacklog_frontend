@@ -1,11 +1,11 @@
-<script >
+<script>
     // @ts-nocheck
-        import { goto } from '$app/navigation';
-        import Icon from "@iconify/svelte";
+    import { goto } from "$app/navigation";
+    import Icon from "@iconify/svelte";
 
-        let searchValue = '';
-        let pageNum = "1";
-        const handleSearch = () => {
+    let searchValue = "";
+    let pageNum = "1";
+    const handleSearch = () => {
         goto(`/search/${searchValue}/${pageNum}`);
     };
 </script>
@@ -18,32 +18,33 @@
     </button>
 </form>
 
-
 <style>
     .search-bar {
+        grid-column: 1/-1;
+        grid-row: 4;
         padding-left: 0.85rem;
         position: relative;
-        width: 18rem;
+        /* width: 18rem; */
     }
 
     .search-button {
         all: unset;
         min-height: 1.84rem;
         position: absolute;
-        font-size: 1.7rem;
+        font-size: 2.3rem;
         padding-left: 0.5rem;
-        right: 0.6rem;
-        color: wheat;
+        right: -3rem;
+        color: springgreen;
     }
 
-    
     .bar {
-        grid-row: 2;
-        grid-column: 1/13;
-        min-width: 15rem;
-        min-height: 1.5rem;
-        border: 2px solid black;
+        min-width: 30rem;
+        min-height: 2.5rem;
         border-radius: 10px;
-        background-color: wheat;
+        background-color: black;
+        color: springgreen;
+        font-family: "DotGothic16";
+        letter-spacing: 0.1rem;
+        padding: 0 5px 0 5px;
     }
 </style>

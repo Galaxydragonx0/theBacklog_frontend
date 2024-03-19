@@ -9,9 +9,12 @@
 
 	export let data;
 	export let form;
-	let user_email = data.user_email;
-	let api_key = data.api_key;
-	$UserDataStore = {user_email, api_key}
+
+	if(!form?.errors){
+		let user_email = data.user_email;
+		let api_key = data.api_key;
+		$UserDataStore = {user_email, api_key}; 
+	}
 
 </script>
 
