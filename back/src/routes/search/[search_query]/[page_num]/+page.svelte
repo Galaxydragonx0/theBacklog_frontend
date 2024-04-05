@@ -11,15 +11,13 @@
     import { onDestroy } from "svelte";
     import { addToast } from "../../../../components/Toaster.svelte";
     import { createToaster } from "@melt-ui/svelte";
+    import {page} from '$app/stores';
 
     export let data;
 
     let totalPages = data.totalPages;
     $: currentPage = parseInt(data.page_num);
     $: query = data.search_query;
-
-    // TODO
-    // BUG -> the list is reset and updated if the user refershes the page on the search and then just joins here even with login
 
     // we use the update function to let the store be updated
     function addToList(event) {
@@ -29,6 +27,8 @@
                 let currentMovies = localStorage.getItem("savedMovies");
                 return [event.detail, ... JSON.parse(currentMovies)]
             }
+            const genreKey= 'title_genre';
+            event.detail[genreKey] = 'movie'
             return [event.detail, ...data];
         });
         console.log($movieList);
@@ -62,7 +62,7 @@
                     "Content-type": "applicaiton/json",
                     Authorization:
                         "ApiKey " +
-                        "5bce80b794bc568ac2189e28a8a340b08e3c5e02b3d18f82e4d46d12750a3735",
+                        `${data.userData}`,
                 },
             });
 
@@ -83,7 +83,6 @@
             }
             // this is needs to be error handled and displayed to the user
             // gets the correct errors already
-            // console.log(list_data);
         });
 
         onDestroy(movieListUnsub);
