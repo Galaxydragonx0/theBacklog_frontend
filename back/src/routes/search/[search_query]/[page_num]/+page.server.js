@@ -4,15 +4,15 @@ import { env } from '$env/dynamic/private';
 import UserDataStore from '../../../UserDataStore';
 
 export const prerender = false;
-let queryValue = ""
+
 let totalPages
 let movieArray
-let userList
+
 
 // on load we can probably show popular movies for easy access 
 
 
-export async function load({ params }) {
+export async function load({locals  , params }) {
 
     const { search_query, page_num } = params;
 
@@ -23,10 +23,11 @@ export async function load({ params }) {
     movieArray = data.results
     totalPages = data.total_pages
 
+    let userData = locals.user.apiKey
 
 
     if (movieArray != null) {
-        return { movieArray, totalPages, search_query, page_num };
+        return { movieArray, totalPages, search_query, page_num, userData };
     }
 
 }

@@ -28,7 +28,7 @@
      * @type {HTMLDialogElement}
      */
 	let dialog;
-    $: loginView = viewPassThrough.login || true ;
+    $: loginView = viewPassThrough.login ;
 
     $: signupView = viewPassThrough.register;
 
@@ -56,7 +56,7 @@
      * @type {{ errors: { email: any[]; }; }}
      */
      export let form;
-     console.log(form?.errors)
+    //  console.log(form?.errors)
     // @ts-ignore
    // @ts-ignore
      $: if (dialog && showModal) dialog.showModal();
@@ -75,23 +75,23 @@
     <div class="form-container" on:click|stopPropagation>
 
         <div class="header" style="display: flex; justify-content: space-between;">
-            {#if !userData?.user_email}
+            {#if !userData?.user_email || !userData.api_key}
                 <p class="login-view" on:click={() => {loginView = true; signupView = false;}}>Login</p>
                 <p class="signup-view" on:click={() => {signupView = true; loginView=false;}}>/SignUp</p>
             {:else if userData?.user_email}
-                <p class="login-view">Logout</p>
+                <p class="logout-view">Logout</p>
             {/if}
             
         </div>
-        {#if loginView && !userData.user_email}
+        {#if loginView && !userData.api_key}
         <!-- show validations for form fields -->
             <form method="POST" action="/list-menu?/login">
                 <label class="email-label" for="email">Email</label>
                 <input type="email" name="email" id="email">
                 {#if form?.errors?.email}
                     <p class="error">{form?.errors?.email[0]}</p>
-                {:else if auth_errors}
-                    <p class="error">{auth_errors}. Try clicking SignUp</p>
+                {:else if auth_errors?.error}
+                    <p class="error">{auth_errors?.error}. Try clicking SignUp</p>
                 {/if}
                 <!-- <label for="pwd">Password</label>
                 <input type="password" name="password" id="pwd"> -->
@@ -99,20 +99,20 @@
                 <button class="btn" on:click={login}>Login</button>
             </form>
         {/if}
-        {#if signupView && !userData.user_email}
+        {#if signupView && !userData.api_key}
             <form method="post" action="/list-menu?/register">
                 <label class="email-label" for="email">Email</label>
                 <input type="email" name="email" id="email">
                 {#if form?.errors?.email}
                 <p class="error">{form?.errors?.email[0]}</p>
-                {:else if auth_errors}
-                    <p class="error">{auth_errors}. Objective failed try again</p>
+                {:else if auth_errors?.error}
+                    <p class="error">{auth_errors?.error}. Objective failed try again</p>
                 {/if}
 
                 <button class="btn">Register</button>
             </form>
         {/if}
-        {#if userData.user_email && !form?.errors?.email[0]}
+        {#if userData.api_key && !form?.errors?.email[0]}
             <h3 class="logout-email">{userData?.user_email}</h3>
             <button on:click={logout} class="btn">Logout</button>
         {/if}
@@ -129,9 +129,20 @@
     src: url('../../src/assets/fonts/Rubik-Regular.ttf');
 }
 
-.login-view, .signup-view{
+.login-view, .logout-view, .signup-view{
     font-family: "header-font";
 }
+
+.login-view:hover, .signup-view:hover{
+    cursor: pointer;
+    color: darkcyan;
+}
+
+.login-view:focus, .signup-view:focus{
+    cursor: pointer;
+    color: darkcyan;
+}
+
 
 .logout-email{
     font-family: 'Rubik';
@@ -181,7 +192,10 @@ p{
 
 input{
     width: 16rem;
+    padding: 0 5px 0 5px;
     height: 1.5rem;
+    color: black;
+    font-weight: 600;
     margin-bottom: 1.5rem;
 }
 

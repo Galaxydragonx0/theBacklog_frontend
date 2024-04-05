@@ -1,6 +1,5 @@
 import { env } from "$env/dynamic/private";
 import { error, type HttpError } from '@sveltejs/kit';
-import movieList from "../MovieStore";
 
 
 type loadError = {
@@ -8,13 +7,14 @@ type loadError = {
     message : string
 }
 
-export const load = async () => {
+export const load = async ({locals}) => {
 
-    
+
 // const fetchUserMovies = async () => {
+    
 
     const url = `${env.server_url}/getMovies`
-    const hard_code_key = "5bce80b794bc568ac2189e28a8a340b08e3c5e02b3d18f82e4d46d12750a3735"
+    const code_key = locals.user.apiKey
 
 
     // ToDo: remove hard coded - api-key used for authentication
@@ -22,7 +22,7 @@ export const load = async () => {
     method: 'GET',
     headers:{
         "Content-Type": "application/json",
-        "Authorization": `ApiKey ${hard_code_key}`
+        "Authorization": `ApiKey ${code_key}`
     }
     })
     .then((requestResponse) => {
@@ -46,3 +46,8 @@ export const load = async () => {
 
 return {movies};
 }
+
+
+// export const actions = {
+//     remove : async({cookies}) =>{}
+// }

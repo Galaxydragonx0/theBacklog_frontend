@@ -1,92 +1,164 @@
 <script>
-// @ts-nocheck
-  import { browser } from '$app/environment';
+  // @ts-nocheck
+  import { browser } from "$app/environment";
   import EmptyList from "../../components/EmptyList.svelte";
-  // @ts-ignore
-  import Title from "../../components/Title.svelte";
-  // @ts-ignore
-  import UserListTitle from "../../components/UserListTitle.svelte";
-  // @ts-ignore
-  import { onDestroy, onMount } from "svelte";
   import emblaCarouselSvelte from "embla-carousel-svelte";
   import movieList from "../MovieStore";
   import UserDataStore from "../UserDataStore";
-  import { addToast } from '../../components/Toaster.svelte'
+  import { addToast } from "../../components/Toaster.svelte";
+  import Icon from "@iconify/svelte";
+  import CompletedStore from "../CompletedTitleStore";
+  import { page } from '$app/stores'
+
+
 
   $: userData = $UserDataStore;
-  
-  
-  
-  
+  $: movieListItems = $movieList;
+
   // data gives us the user_data from the DB
   export let data;
 
-  movieList.update( () => {
-    if(browser){
-      window.localStorage.setItem('savedMovies', JSON.stringify(data.movies));
+  // adds list to localstorage for backup
+  movieList.update(() => {
+    if (browser) {
+      window.localStorage.setItem("savedMovies", JSON.stringify(data.movies));
     }
-    
-    return data.movies
-  })
+    return data.movies;
+  });
 
-  $: movieListItems = $movieList;
-
-
+ 
+  // EMBLA SLIDES
   let emblaApi;
+  emblaCarouselSvelte.globalOptions = { loop: true }
   let options = { loop: true };
-  // @ts-ignore
   let plugins = [];
 
   //initalising carousel
-  // @ts-ignore
   function onInit(event) {
     emblaApi = event.detail;
+    emblaApi.on('scrollNext',scrollNext);
   }
 
-  
-  /**
-   * @type {any}
-   */
-  
-  // const error = data.data.error;
-  // // @ts-ignore
-  // const rcode = data.data.code;
+  // scroll previous
+  function scrollPrev(){
+    if(emblaApi){
+      if(emblaApi){
+        emblaApi.scrollPrev()
+      }
+    }
+  }
+  // scroll next 
+  function scrollNext(){
+    if(emblaApi){
+      emblaApi.scrollNext()
+    }
+  }
+
+ async function removeTitle(id, showToast){
+
+    let updatedMovieList = movieListItems.filter((obj) => obj.id !== id)
+    
+    movieList.update(() => {
+        if (browser) {
+          window.localStorage.setItem("savedMovies", JSON.stringify(updatedMovieList));
+        }
+        console.log(updatedMovieList)
+        return updatedMovieList;
+    });
+
+    const server_endpoint = "http://localhost:8200/movies";
+    let res = await fetch(server_endpoint, {
+        method: "POST",
+        body: JSON.stringify(updatedMovieList),
+        headers: {
+            "Content-type": "applicaiton/json",
+            Authorization:
+                "ApiKey " +
+                $page.data.user.apiKey,
+        },
+    });
+
+    const list_data = await res.json();
+    if(showToast){
+      if (res.status >= 400 && res.status < 500) {
+          let update_errors = response?.error;
+
+          addToast({
+              data: {
+                  title: "Error",
+                  description: 'The title was not removed',
+                  color: "red",
+              },
+              closeDelay: 5000,
+              type: "foreground",
+          });
+      }
+
+      
+      addToast({
+                data: {
+                    title: "Success",
+                    description: 'The title was removed!',
+                    color: "green",
+                },
+                closeDelay: 5000,
+                type: "foreground",
+              });
+    }    
+  }
+
+  async function  completedTitle(title){  
+      // add the title to the completed list
+      CompletedStore.update((data) => {
+        return [title,... data]
+      })
+      //remove it from the ongoing list
+      removeTitle(title.id, false);
+
+      const updateUrl = "http://localhost:8200/completed"
+      let res = await fetch(updateUrl, {
+        method: 'POST',
+        body: JSON.stringify($CompletedStore),
+        headers : {
+          'content-type': 'application/json',
+          Authorization : 'ApiKey ' + $page.data.user.apiKey
+        }
+      })
+
+      const completedRes = await res.json();
+
+      if (res.status >= 400 && res.status < 500) {
+          let update_errors = response?.error;
+
+          addToast({
+              data: {
+                  title: "Error",
+                  description: "Title was not marked as complete",
+                  color: "red",
+              },
+              closeDelay: 5000,
+              type: "foreground",
+          });
+      }
+      addToast({
+                data: {
+                    title: "Success",
+                    description: 'Your title has been added to a completed list',
+                    color: "green",
+                },
+                closeDelay: 5000,
+                type: "foreground",
+              });
+   
+  }
+
 </script>
 
 <div class="ovr-container">
-  <!-- && userData.user_email -->
-  {#if movieListItems && movieListItems.length > 0 }
-    <div class="embla" use:emblaCarouselSvelte={ options, plugins } on:emblaInit={onInit}>
-      <div class="embla__container">
-        {#each movieListItems as movie}
-          <div class="embla__slide" style="">
-            <div class="bg-img">
-              <img
-              class="bg-poster-img"
-              alt="movie-poster"
-              src="https://image.tmdb.org/t/p/original/{movie.poster_path}"
-            />
-            </div>
-            <!-- <img
-              alt="movie-poster"
-              class="image"
-              src="https://image.tmdb.org/t/p/w185/{movie.backdrop_path}"
-            /> -->
-            <div class="info">
-              <h2 class="title-name">{movie.title}</h2>
-              <p class="title-overview">{movie.overview}</p>
-            </div>
-          </div>
-        {/each}
-      </div>
-    </div>
+  <!-- -->
+  {#if movieListItems && movieListItems.length > 0 && $page.data.user.apiKey}
+
   {/if}
-  <!-- {#if !movieListItems || movieListItems.length <= 0}
-    <div>
-      <EmptyList message="nothing in the box office ???" />
-      <a href="/search">Try adding some titles here => </a>
-    </div>
-  {/if} -->
 </div>
 
 <div class="backdrop">
@@ -94,50 +166,30 @@
     <div class="title">
       <h1>Movies</h1>
     </div>
-    <!-- {#if !error}
-        {#if movieListItems && movieListItems.length > 0}
-        <div class="movie grid">
-            {#each movieListItems as movie}
-            svelte-ignore a11y-missing-attribute
-            <div class="image-title">
-                <img class="poster" src="https://image.tmdb.org/t/p/original/{movie.poster_path}">
-                <span class="title-name"><h3>movie</h3></span> 
-            </div> 
-            {/each}
-        </div>
-        {/if}-->
-
     <div>
       {#if !movieListItems || movieListItems.length <= 0}
         <EmptyList message="nothing in the box office ???" />
       {/if}
       <a href="/search">Try adding some titles here => </a>
     </div>
-
-    <!-- {#if error}
-      <h1>
-        You might want to signup, its easier to track your titles this way. Its
-        only an email I promise.
-      </h1>
-    {/if} -->
   </div>
 </div>
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=DotGothic16&display=swap');
+  @import url("https://fonts.googleapis.com/css2?family=DotGothic16&display=swap");
   @font-face {
     src: url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,600;0,900;1,400;1,600;1,800;1,900&display=swap");
     font-family: "Rubik-Regular", sans-serif;
   }
 
-  .bg-img{
+  .bg-img {
     grid-column: 1/-1;
     grid-row: 1;
     opacity: 0.3;
     z-index: 0;
   }
 
-  .bg-poster-img{
+  .bg-poster-img {
     width: 100vw;
   }
 
@@ -155,24 +207,31 @@
   }
 
   .title-name {
-    grid-column: 1/-1;
-    grid-row: 3;
+    grid-column: 1 / -1;
+    grid-row: 2;
     text-align: center;
     font-style: oblique;
     font-family: "DotGothic16", sans-serif;
-		font-weight: 400;
+    font-weight: 400;
     z-index: 2;
-    padding:0.4rem;
+    padding: 0.4rem;
   }
 
   .title-overview {
-    grid-column: 1/-1;
-    grid-row: 5;
+    grid-column: 1 / -1;
+    grid-row: 3 / 7;
     padding: 1rem;
     font-family: "DotGothic16", sans-serif;
-		font-weight: 400;
-		font-style: normal;
+    font-weight: 400;
+    font-style: normal;
     z-index: 2;
+  }
+
+  .remove {
+    grid-row: 4 / 7;
+    grid-column: 1 / 2;
+    position: absolute;
+    left: 1.5rem;
   }
 
   .embla {
@@ -185,7 +244,7 @@
     grid-auto-columns: 100%; /* Each slide covers 100% of the viewport */
   }
 
-  .info{
+  .info {
     position: absolute;
     bottom: 0rem;
     border-radius: 10px;
@@ -198,7 +257,7 @@
     grid-row: 1/-1;
     height: 50vh;
     backdrop-filter: blur(35px) saturate(1);
-    background: linear-gradient( 351deg, transparent, black);
+    background: linear-gradient(351deg, transparent, black);
     width: 100%;
   }
 
@@ -216,7 +275,6 @@
     /* background-color: rgba(255,255,255,.5);
     border-radius: 1rem;
     box-shadow: 0 1rem 2rem rgba(0,0,0,.3); */
-    
   }
 
   .image {
@@ -234,7 +292,7 @@
 
   .backdrop {
     width: 100%;
-    height: 100%;
+    height: 15rem;
     background: rgba(0, 0, 0, 0.8);
   }
   .modal {
@@ -283,9 +341,67 @@
 
   /* desktop styles */
   @media screen and (min-width: 1200px) {
-    .grid {
-      grid-template-columns: repeat(5, 1fr);
-      grid-auto-rows: auto;
+    .info {
+      position: absolute;
+      bottom: 0rem;
+      border-radius: 10px;
+      background-size: 100%;
+      grid-column: 4;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: repeat(10, 1fr);
+      display: grid;
+      grid-column: 2 / -1;
+      grid-row: 1 / -1;
+      text-align: justify;
+      height: 100vh;
+      -webkit-backdrop-filter: blur(35px) saturate(1);
+      /* backdrop-filter: blur(35px) saturate(1); */
+      background: linear-gradient(351deg, transparent, black);
+      width: 100%;
+    }
+
+    .title-name {
+      grid-column: 1/-1;
+      grid-row: 3;
+      text-align: center;
+      font-style: oblique;
+      font-family: "DotGothic16", sans-serif;
+      font-weight: 400;
+      z-index: 2;
+      padding: 0.4rem;
+      font-size: 3rem;
+    }
+
+    .title-overview {
+      grid-column: 1 / -1;
+      grid-row: 4 / 7;
+      padding: 3rem 10rem;
+      font-family: "DotGothic16", sans-serif;
+      font-weight: 400;
+      font-style: normal;
+      z-index: 2;
+      font-size: 1.7rem;
+    }
+
+    .bg-img {
+      grid-column: 1;
+      grid-row: 1;
+      opacity: 0.3;
+      z-index: 0;
+    }
+
+    .remove {
+      grid-row: 10;
+      grid-column: 1 / 2;
+      position: absolute;
+      left: 10.1rem;
+    }
+
+    .completed {
+      grid-row: 10;
+      grid-column: 2 / 3;
+      position: absolute;
+      left: 10.1rem;
     }
   }
 </style>
