@@ -23,7 +23,16 @@ export async function load({locals  , params }) {
     movieArray = data.results
     totalPages = data.total_pages
 
-    let userData = locals.user.apiKey
+    let userData;
+
+    if (locals.user){
+        userData = locals?.user.apiKey;
+    }
+    else{
+        userData = env.guest_api_key;
+    } 
+   
+     
 
 
     if (movieArray != null) {

@@ -20,25 +20,23 @@
 
 <style>
     .search-bar {
-        grid-column: 1/-1;
+        grid-column: 1 / -1;
         grid-row: 4;
-        padding-left: 0.85rem;
         position: relative;
-        /* width: 18rem; */
     }
 
     .search-button {
         all: unset;
-        min-height: 1.84rem;
+        min-height: 2.84rem;
         position: absolute;
         font-size: 2.3rem;
-        padding-left: 0.5rem;
-        right: -3rem;
+        right: 1rem;
+        top: 23.5rem;
         color: springgreen;
     }
 
     .bar {
-        min-width: 30rem;
+        min-width: 21rem;
         min-height: 2.5rem;
         border-radius: 10px;
         background-color: black;
@@ -46,5 +44,107 @@
         font-family: "DotGothic16";
         letter-spacing: 0.1rem;
         padding: 0 5px 0 5px;
+        margin-left: -1rem;
+    }
+
+    /* short ahhhh phone */
+    @media screen and (min-height: 600px) {
+
+        .search-bar {
+            grid-column: 1 / 3;
+            grid-row: 4;
+            position: relative;
+        }
+
+        
+        .search-button {
+            all: unset;
+            min-height: 2.84rem;
+            position: absolute;
+            font-size: 2rem;
+            top: -3px;
+            /* right: -2.55rem; */
+            color: springgreen;
+        }
+
+        .bar {
+            min-width: 18rem;
+            min-height: 2.5rem;
+            border-radius: 10px;
+            background-color: black;
+            color: springgreen;
+            font-family: "DotGothic16";
+            letter-spacing: 0.1rem;
+            padding: 0 5px 0 5px;
+            margin: 0;
+        }
+    }
+
+    /* long ahhhh phone */
+    @media screen and (min-height: 750px) {
+        .search-bar {
+            grid-column: 1 / 3;
+            grid-row: 4;
+            position: relative;
+        }
+        .search-button {
+            all: unset;
+            min-height: 2.84rem;
+            position: absolute;
+            font-size: 2.3rem;
+            top: -3px;
+            /* right: -2.55rem; */
+            color: springgreen;
+        }
+
+        .bar {
+            min-width: 20rem;
+            min-height: 2.5rem;
+            border-radius: 10px;
+            background-color: black;
+            color: springgreen;
+            font-family: "DotGothic16";
+            letter-spacing: 0.1rem;
+            padding: 0 5px 0 5px;
+            margin-left: 0;
+        }
+    }
+
+    /* small tablet styles */
+    @media screen and (min-width: 620px) {
+    }
+
+    /* large tablet & laptop styles */
+    @media screen and (min-width: 960px) {
+    }
+
+    /* desktop styles */
+    @media screen and (min-width: 1200px) {
+        .search-bar {
+            grid-column: 1/-1;
+            grid-row: 4;
+            position: relative;
+        }
+
+        .search-button {
+            all: unset;
+            min-height: 1.84rem;
+            position: absolute;
+            font-size: 2.3rem;
+            padding-left: 0.5rem;
+            color: springgreen;
+        }
+
+        .bar {
+            min-width: 30rem;
+            min-height: 2.5rem;
+            border-radius: 10px;
+            background-color: black;
+            color: springgreen;
+            font-family: "DotGothic16";
+            letter-spacing: 0.1rem;
+            padding: 0 5px 0 5px;
+            margin: 0;
+        }
     }
 </style>

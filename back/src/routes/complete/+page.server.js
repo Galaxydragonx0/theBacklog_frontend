@@ -1,28 +1,16 @@
-import { env } from "$env/dynamic/private";
-import { error, redirect, type HttpError } from '@sveltejs/kit';
+import { env } from '$env/dynamic/private';
+import { error } from '@sveltejs/kit';
 
-
-type loadError = {
-    status : number,
-    message : string
-}
-
+// @ts-ignore
 export const load = async ({locals}) => {
-
-
-// const fetchUserMovies = async () => {
+    const url = `${env.server_url}/getCompleted`
 
     if(!locals.user?.apiKey) return ({api_key: env.guest_api_key});
-    
-
-    const url = `${env.server_url}/getMovies`
     const code_key = locals.user.apiKey
 
 
-
-
     // ToDo: remove hard coded - api-key used for authentication
-    let movies = await fetch(url, {
+    let compTitles = await fetch(url, {
     method: 'GET',
     headers:{
         "Content-Type": "application/json",
@@ -30,6 +18,9 @@ export const load = async ({locals}) => {
     }
     })
     .then((requestResponse) => {
+        if(requestResponse.status == 400 ){
+            console.log(requestResponse.body)
+        }
         if (requestResponse.status == 401 || requestResponse.status == 403)
         {
             throw error(requestResponse.status, "You are not allowed to do this ngl");
@@ -44,14 +35,6 @@ export const load = async ({locals}) => {
         
     })
 
-    // console.log(movies);
 
-// };
-
-return {movies};
+    return {compTitles}
 }
-
-
-// export const actions = {
-//     remove : async({cookies}) =>{}
-// }

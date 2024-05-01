@@ -4,7 +4,7 @@
 
 // @ts-nocheck
 
-    import userStore from "../routes/UserDataStore";
+    import UserDataStore from "../routes/UserDataStore";
     export const prerender = false
 	// @ts-ignore
 	export let showModal; // boolean
@@ -21,8 +21,9 @@
     
 
     // update the store to collect the user info
-    $: userData = $userStore;
+    $: userData = $UserDataStore;
 
+    console.log('this is when it loads in', $UserDataStore)
 	// @ts-ignore
 	/**
      * @type {HTMLDialogElement}
@@ -43,8 +44,12 @@
     }
 
     function logout(){
-        userData.user_email = '';
-        userData.api_key = '';
+        // UserDataStore.update((data) => {
+        //     data.api_key = '';
+        //     data.user_email = '';
+        //     return {user_email: data.user_email, api_key: data.api_key}
+        // })
+            localStorage.removeItem('savedMovies')
     }
 
     function login(){
@@ -113,8 +118,10 @@
             </form>
         {/if}
         {#if userData.api_key && !form?.errors?.email[0]}
-            <h3 class="logout-email">{userData?.user_email}</h3>
-            <button on:click={logout} class="btn">Logout</button>
+        <form action="/list-menu?/logout" method="post">
+                <h3 class="logout-email">{userData?.user_email}</h3>
+                <button class="btn" on:click={logout}>Logout</button>
+            </form>
         {/if}
     </div>
 </dialog>

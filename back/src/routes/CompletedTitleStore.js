@@ -1,7 +1,8 @@
 import { writable } from "svelte/store";
 
 
-const CompletedaStore = writable([])
+const CompletedStore = writable([]);
 
+const guestCompletedStore = writable([]);
 
-export default CompletedaStore;
+export {CompletedStore, guestCompletedStore};

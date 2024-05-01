@@ -3,7 +3,6 @@
 
 	import Icon from "@iconify/svelte";
 	import { createEventDispatcher } from "svelte";
-	import { fly } from 'svelte/transition'
 
 	// @ts-ignore
 	export let showModal; // boolean
@@ -18,15 +17,11 @@
 
 	let dispatch = createEventDispatcher();
 
-	function removeTitle(){
-		console.log('this is the movie', movie.id)
-		dispatch('removeTitle', movie?.id);
+	function addTitle(){
+		console.log('this is the movie', movie)
+		dispatch('addTitle', movie);
 	}
 	
-
-	function completeTitle(){
-		dispatch('completeTitle', movie);
-	}
 	// @ts-ignore
 	/**
 	 * @type {HTMLDialogElement}
@@ -44,7 +39,6 @@
 	bind:this={dialog}
 	on:close={() => (showModal = false)}
 	on:click|self={() => dialog.close()}
-	out:fly={{delay:600}}
 >
 
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -95,18 +89,8 @@
 			</div>
 
 			<div class="action-buttons">
-				<button class="remove-button" on:click={removeTitle}
-					>Remove <Icon
-						class="remove-icon"
-						icon="pixelarticons:close"
-						style="display:inline;"
-					/></button>
-				<button class="complete-button" on:click={completeTitle}
-					>Mark as Complete <Icon
-						class="complete-icon"
-						icon="pixelarticons:check"
-						style="display:inline;"
-					/></button>
+				<button class="add-button" on:click={addTitle}
+					>Add to List <iconify-icon icon="pixelarticons:plus"></iconify-icon></button>
 			</div>
 
 		</div>
@@ -125,6 +109,7 @@
 			border-radius: 10px;
 			color: wheat;
 			height: 95vh;
+			width: 95vw;
 		}
 
 		.movie-container {
@@ -207,31 +192,20 @@
 
 		.action-buttons {
 			position: absolute;
-			width: 91%;
+			width: 100%;
 			height: 1rem;
 			bottom: -5rem;
-			left: 2.5rem;
 		}
 
-		.complete-button {
-			position: absolute;
-			bottom: 1rem;
-			right: 3rem;
-			background-color: #040f41;
-			padding: 5px;
-			border-radius: 10px;
+
+		.add-button {
 			color: green;
-			font-weight: bold;
-		}
-
-		.remove-button {
-			color: darkred;
 			position: absolute;
 			bottom: 1rem;
 			font-weight: bold;
-			right: 14rem;
 			background-color: #040f41;
 			padding: 5px;
+			width: 100%;
 			border-radius: 10px;
 		}
 
@@ -376,7 +350,7 @@
 		.action-buttons {
 			position: absolute;
 			bottom: -8rem;
-			left: -3rem;
+			/* left: -3rem; */
 			width: 100%;
 		}
 		.complete-button {

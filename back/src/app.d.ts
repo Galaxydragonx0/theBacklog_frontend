@@ -5,8 +5,10 @@ declare global {
 		// interface Error {		}
 		interface Locals {
 			user: {
-				apiKey :string
+				apiKey: string,
+				email: string |  undefined,
 			}
+
 		}
 		// interface PageData {}
 		// interface Platform {}

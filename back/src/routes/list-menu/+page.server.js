@@ -15,9 +15,12 @@ let formErrors = {}
 let auth_errors = {status : -1, error: ''};
 let viewPassthrough = {login: true, register: false}
 
-export async function load() {
+export async function load({locals}) {
+
+    if(locals.user) api_key = locals?.user.apiKey;
+    // user_email = locals?.user.user_email;
     let modalPassthrough = true;
-    if(Object.keys(formErrors)!=0 || auth_errors.error){
+    if(Object.keys(formErrors)!=0 || auth_errors.error || !locals.user){
         return {user_email, api_key, formErrors, modalPassthrough, auth_errors, viewPassthrough}
     }
 
@@ -86,6 +89,14 @@ export const actions ={
         }
 
         cookies.set('session', api_key,{
+            path: '/',
+            httpOnly: true,
+            sameSite: 'strict',
+            secure: false, // change to true in prod
+            maxAge: 60 * 60 * 24 * 30,
+        })
+
+        cookies.set('email', email,{
             path: '/',
             httpOnly: true,
             sameSite: 'strict',
@@ -170,5 +181,20 @@ export const actions ={
             maxAge: 60 * 60 * 24 * 30,
         })
         throw redirect(303, "/list-menu");
+    }, 
+
+    logout: async({cookies}) => {
+
+            cookies.delete('session',{path: '/',})
+
+            cookies.delete('email',{path: '/' })
+
+            //remove the api and email
+            user_email = '';
+            api_key = '';
+
+            // redirect to list menu with modal closed
+            throw redirect(303, '/list-menu')
     }
+
 }
