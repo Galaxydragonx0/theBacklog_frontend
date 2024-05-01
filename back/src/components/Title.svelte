@@ -2,7 +2,9 @@
 // @ts-nocheck
     import Icon from "@iconify/svelte";
     import { createEventDispatcher } from "svelte";
-    export let title
+    export let title;
+
+    console.log('this is new');
 
     const dispatch = createEventDispatcher();
     function getData(){
@@ -13,30 +15,47 @@
 
     
 <div class="poster-container">
-        <button class="add-button" on:click={getData}><Icon icon="simple-line-icons:plus" /></button>  
+        <!-- <button class="add-button" on:click={getData}><Icon icon="simple-line-icons:plus" /></button>   -->
         <img alt="movie-poster" class="poster-image" src="https://image.tmdb.org/t/p/w185/{title.poster_path}" />
+        <p class="img-desc">{title.title}</p>
 </div>
 
 
 
 <style>
-
+    @import url("https://fonts.googleapis.com/css2?family=DotGothic16&display=swap");
     @font-face {
         src: url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,600;0,900;1,400;1,600;1,800;1,900&display=swap");
         font-family: "Rubik-Regular", sans-serif;
     }
 
+    .img-desc {
+        visibility:hidden;
+        display: none;
+    }
+
+    .poster-container:hover .img-desc {
+        visibility: visible;
+        opacity: 1;
+    }
+
     .poster-container {
         position: relative;
         margin-bottom: 1rem;
+        grid-template-columns: repeat(3, 1fr);
+        display: grid;
+        justify-items: center;
     }
 
     .poster-image {
         display: block;
-        height: 185px;
+        height: 224px;
         border-radius: 10px;
         width: 159px;
+        grid-column: 1 / -1;
     }
+    
+
 
 
     .add-button{
@@ -90,11 +109,36 @@
 @media screen and (min-width: 1200px){
 
     .poster-image {
-        display: block;
-        height: 18rem;
-        width: 12rem;
+        /* display: block; */
+        transition: transform 0.4s ease-in-out;
+        height: 29rem;
+        width: 20rem;
+        grid-column: 1 / -1;
     }
         
+    .poster-container .poster-image:hover{
+        transform: scale(1.05);
+    }
+
+    .img-desc {
+        position: absolute;
+        bottom: 10px;
+        background: none;
+        backdrop-filter: blur(1.5px);
+        background-color: #181818;
+        color: springgreen;
+        visibility: hidden;
+        text-align: center;
+        opacity: 0;
+        font-family: "DotGothic16", sans-serif;
+        transition: opacity .2s, visibility .2s;
+        grid-column: 1 / -1;
+        padding: 5px;
+        border-radius: 5px;
+        visibility: visible;
+        display: inline;
+    }
+
 
 }
 </style>

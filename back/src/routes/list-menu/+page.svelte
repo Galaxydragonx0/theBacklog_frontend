@@ -3,22 +3,67 @@
 	import Header from '../../components/Header.svelte';
 	import {fade, slide} from 'svelte/transition';
 	import UserDataStore from '../UserDataStore.js';
+	import Icon from '@iconify/svelte';
+    import { browser } from '$app/environment';
 
 
 	let topActive = false;
+	$: showComplete = false;
 
 	export let data;
 	export let form;
 
-	if(!form?.errors){
-		let user_email = data.user_email;
-		let api_key = data.api_key;
-		$UserDataStore = {user_email, api_key}; 
+	if(browser){
+		let emailExists = window.localStorage.getItem('email') as string;
+		if(emailExists) data.user_email = emailExists;
+
+		if(!form?.errors){
+			console.log(browser);
+
+			let user_email = data.user_email;
+			let api_key = data.api_key;
+			UserDataStore.update((data) => {
+				return ({user_email: user_email, api_key: api_key})
+			})
+
+			console.log('this is inside the browser check', $UserDataStore)
+		}
+
 	}
 
+
+	let dialog : HTMLDialogElement;
+
+	$: if (dialog && showComplete) dialog.showModal();
+
+	function showModal(){
+		showComplete=true;
+	}
+
+	// @ts-ignore
+
+	
+	function closeModal(){
+
+		document.querySelector('.complete-grid');
+
+		let compModal = document.getElementsByClassName('completed-grid')[0];
+		compModal.id = 'close';
+		showComplete=false;
+	}
+
+
+
+
+	let width: number;
+	let height: number;
 </script>
 
-<Header modalPassthrough={data.modalPassthrough} auth_errors={data.auth_errors} formData={form} viewPassThrough={data.viewPassthrough}/>
+
+<svelte:window bind:innerWidth={width} bind:innerHeight={height}/>
+{#if browser}
+	<Header modalPassthrough={data.modalPassthrough} auth_errors={data.auth_errors} formData={form} viewPassThrough={data.viewPassthrough}/>
+{/if}
 <nav class="grid" id="menu">
 	<a class="menu-item selected" id="title-1" href="/movie-list">
 		<span class="menu-item-title1">Movies</span>
@@ -42,7 +87,26 @@
 		<!-- <span class="menu-deco">|</span>
 		<span class="menu-cta"><span>explore</span></span> -->
 	</a>
+
+{#if height >= 600}
+	<a href="/complete"><button class='comp-portal'><Icon class="down-icon" icon="pixelarticons:chevron-down" /><Icon class="down-icon" icon="pixelarticons:chevron-down" /></button></a>
+{/if}
+
+{#if width >= 1200}
+	<a href="/complete"><button  class='comp-portal'>Completed <Icon class="down-icon" icon="pixelarticons:chevron-down" /></button></a>
+{/if}
 </nav>
+
+{#if showComplete == true}
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+<dialog bind:this={dialog} class='completed-grid' on:close={() => {closeModal()}} on:click|self={() =>{dialog.close()}}>
+	<!-- {#each data.compTitles as title}
+		<p>This the completed div</p>
+		<button id="close">Close Dialog!</button>
+	{/each} -->
+</dialog>
+{/if}
 
 
 <style>
@@ -59,6 +123,8 @@
 		src: url('../../assets/fonts/PublicPixel.ttf')
 	}
 
+	@import url("https://fonts.googleapis.com/css2?family=DotGothic16&display=swap");
+
 
 	.grid{
 		display: grid;
@@ -68,6 +134,7 @@
 		position: fixed;
 		background-color: #181818;
 	}
+
 
 	a{
 		text-decoration: none;
@@ -112,6 +179,8 @@
 	}
 
 
+
+
 /* short ahhhh phone */
 @media screen and (min-height:600px )
 {
@@ -119,6 +188,7 @@
 		display: grid;
 		grid-template-columns: repeat(12, 1fr);
 		grid-template-rows: repeat(32, 20px);
+		height: calc(100vh - 95px);
 	}
 
 	a{
@@ -145,6 +215,26 @@
 	.menu-item{
 		margin-top: 20px;
 	}
+
+	.comp-portal {
+		position: absolute;
+		bottom: 3rem;;
+		left: 0.5rem;
+		width: 2.2rem;
+		height: 3rem;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		background-color: red;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+	}
+
+	button :global(.down-icon) {
+		font-size: 1.2rem;
+		margin-bottom: -3px;
+	}
 }
 
 
@@ -154,7 +244,8 @@
 	.grid{
 		display: grid;
 		grid-template-columns: repeat(12, 1fr);
-		grid-template-rows: repeat(30, 40px);
+		grid-template-rows: repeat(21, 40px);
+		height: calc(100vh - 100px);
 	}
 
 	a{
@@ -184,6 +275,26 @@
 	.menu-item{
 		margin-top: 20px;
 	}
+
+	.comp-portal {
+		position: absolute;
+		bottom: 3rem;
+		left: 0.5rem;
+		width: 2.2rem;
+		height: 3rem;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		background-color: red;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+	}
+
+	button :global(.down-icon) {
+		font-size: 1.2rem;
+		margin-bottom: -3px;
+	}
 }
 
 /* small tablet styles */
@@ -203,6 +314,57 @@
 /* desktop styles */
 @media screen and (min-width: 1200px){
 
+
+	.comp-portal {
+		width: 12rem;
+		position: absolute;
+		bottom: 12px;
+		left: 9rem;
+		font-size: 1rem;
+		font-family: 'header-font';
+		background-color: #6d0000;
+		color: #8888c9;
+		border: beige;
+		padding: 10px 0 10px 0; 
+		border-radius: 5px;
+		display: flex;
+		flex-direction: row-reverse;
+    	justify-content: center;
+		cursor: pointer;
+	}
+
+
+	.completed-grid{
+		color: white;
+		height: 3rem;
+		width: 100vw;
+		position: absolute;
+		display: grid;
+		background: none;
+		backdrop-filter: blur(25px) saturate(0.5);
+		justify-content: center;
+	}
+
+
+	/* pop up animations */
+
+	.completed-grid{
+		top: -70.5rem;
+		animation: drop 1s ease forwards;
+	}
+
+	 @keyframes drop {
+		0%{opacity: 0;}
+		70%{ transform: translateY(20rem);}
+		100%{transform: translateY(19.5rem);}
+	}
+
+
+	button :global(.down-icon) {
+		font-size: 1.2rem;
+		margin-bottom: -3px;
+		margin-left: -9px;
+	}
 
 	a{
 		font-size: 4.5em;

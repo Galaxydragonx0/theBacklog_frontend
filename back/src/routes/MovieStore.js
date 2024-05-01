@@ -12,6 +12,7 @@ UserDataStore.subscribe((storeData) =>
 
 
 const movieList = writable([]);
+const guestMovieList = writable([]);
 
 
 // const movieListUnsub = movieList.subscribe(async (list) => {
@@ -61,4 +62,4 @@ const movieList = writable([]);
 */ 
 
 
-export default movieList;
+export {movieList, guestMovieList};

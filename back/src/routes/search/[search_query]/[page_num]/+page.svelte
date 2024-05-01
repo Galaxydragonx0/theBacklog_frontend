@@ -5,31 +5,85 @@
     import Header from "../../../../components/Header.svelte";
     import Title from "../../../../components/Title.svelte";
     import Search from "../../../../components/Search.svelte";
-    import movieList from "../../../MovieStore";
+    import {movieList, guestMovieList} from "../../../MovieStore";
     import UserDataStore from "../../../UserDataStore";
-    import ModalTwo from "../../../../components/ModalTwo.svelte";
     import { onDestroy } from "svelte";
     import { addToast } from "../../../../components/Toaster.svelte";
     import { createToaster } from "@melt-ui/svelte";
     import {page} from '$app/stores';
+    import { createContextMenu, melt } from '@melt-ui/svelte'
+    import SearchMovieModal from "../../../../components/SearchMovieModal.svelte";
+    import { browser } from "$app/environment";
+    import EmptyList from "../../../../components/EmptyList.svelte";
 
     export let data;
+
+    $: currentMovie = {};
+    $: showModal = false;
+
+    // context menu
+    const {
+        elements: { menu, item, trigger, arrow }
+    } = createContextMenu()
+
+    function selectMovie(movie){
+        currentMovie = movie;
+    }
 
     let totalPages = data.totalPages;
     $: currentPage = parseInt(data.page_num);
     $: query = data.search_query;
 
-    // we use the update function to let the store be updated
-    function addToList(event) {
 
+    let modalAddToList = (event) =>{
+        console.log('this is the event in the movielist', event.detail)
+        if(data.userData == '00000000-0000-0000-0000-000000000000'){
+            guestAddToList(event.detail);
+        }
+        else{
+            addToList(event.detail);
+        }
+    }
+
+  console.log('Outside the if',data.userData)
+
+//   if (data.userData == '00000000-0000-0000-0000-000000000000'){
+//         let localExists;
+//         if(browser)localExists = localStorage.getItem('guestMovies');
+//         if(localExists){
+//             data.movieArray = localStorage.getItem('guestMovies');
+//         }
+//         console.log('data check', data.movieArray)
+//     }
+
+  // if the key is a guest key we store it using only the localStorage
+  function guestAddToList(movie){
+        if (data.userData == '00000000-0000-0000-0000-000000000000'){
+            let currentMovies = []
+            if(browser){
+
+                guestMovieList.update((currentData) => {
+                    return [movie, ...currentData];
+                })
+
+                currentMovies = JSON.parse(localStorage.getItem('guestMovies'));
+                currentMovies.push(movie);
+                localStorage.setItem('guestMovies', JSON.stringify(currentMovies))
+            }
+        }
+  }
+
+    // we use the update function to let the store be updated
+    function addToList(movie) {
+        console.log('this is triggered')
         movieList.update((data) => {
             if ($movieList.length == 0) {
                 let currentMovies = localStorage.getItem("savedMovies");
-                return [event.detail, ... JSON.parse(currentMovies)]
+                return [movie, ... JSON.parse(currentMovies)]
             }
             const genreKey= 'title_genre';
-            event.detail[genreKey] = 'movie'
-            return [event.detail, ...data];
+            movie[genreKey] = 'movie'
+            return [movie, ...data];
         });
         console.log($movieList);
 
@@ -88,17 +142,21 @@
         onDestroy(movieListUnsub);
     }
 
-    $: currentMovie = {};
-    $: showModal = false;
+
+    let movieStrLength;
 
     let toggleModal = (movie) => {
         currentMovie = movie;
+        movieStrLength = (currentMovie.title).length
         showModal = !showModal;
     };
+
+    let width;
 </script>
 
-<Header />
+<!-- <Header /> -->
 
+<svelte:window bind:innerWidth={width} />
 <!-- search bar -->
 <div class="search-container" style="padding-top: 1.5rem;">
     <Search />
@@ -108,14 +166,22 @@
         {#each data.movieArray as movie}
             {#if movie.poster_path}
                 <!-- <button class="add-button" on:click={addToList(movie)}><Icon icon="simple-line-icons:plus" /></button>   -->
-                <div class="title-container" on:click={toggleModal(movie)}>
-                    <Title title={movie} on:getData={addToList} />
+                <div class="title-container" on:click={toggleModal(movie)} on:contextmenu={selectMovie(movie)}  {...$trigger} use:trigger>
+                    <Title title={movie}/>
                 </div>
             {/if}
         {/each}
     {/if}
+    <div class="context-menu" {...$menu} use:menu>
+        {#if (data.userData == '00000000-0000-0000-0000-000000000000')}
+            <div {...$item} use:item style="color:springgreen; padding-bottom:10px;" on:click={guestAddToList(currentMovie)}>Add to List</div>
+        {:else if data.userData != '00000000-0000-0000-0000-000000000000'}
+            <div {...$item} use:item style="color:springgreen; padding-bottom:10px;" on:click={addToList(currentMovie)}>Add to List</div>
+        {/if}
+    </div>
 
-    <ModalTwo movie={currentMovie} bind:showModal />
+    <SearchMovieModal movie={currentMovie} windowWidth={width} titleLength={movieStrLength} on:addTitle={modalAddToList} bind:showModal />
+    
 </div>
 
 <div class="pagination">
@@ -150,6 +216,16 @@
         font-family: "Rubik-Regular", sans-serif;
     }
 
+    .context-menu{
+    position: absolute;
+    font-family:"DotGothic16", sans-serif;
+    background-color: #181818;
+    /* backdrop-filter: blur(1px); */
+    padding:10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
     .title-container {
         position: relative;
     }
@@ -168,12 +244,9 @@
         color: wheat;
     }
 
-    .previous-page {
+    .next-page, .previous-page {
         padding-top: 9px;
-    }
-
-    .next-page {
-        padding-top: 9px;
+        color: springgreen;
     }
 
     .block {
@@ -187,11 +260,11 @@
 
     .grid {
         display: grid;
-        grid-template-columns: repeat(3, 125px);
+        grid-template-columns: repeat(2, 175px);
         grid-auto-rows: auto;
         justify-content: space-evenly;
         justify-items: center;
-        padding-top: 2rem;
+        padding: 1rem;
         background-color: #181818;
     }
 
@@ -200,7 +273,8 @@
     .search-container {
         display: grid;
         grid-auto-columns: auto;
-        justify-content: space-evenly;
+        justify-content: center;
+        width: 100%;
         background-color: #181818;
     }
 
@@ -223,8 +297,9 @@
     /* desktop styles */
     @media screen and (min-width: 1200px) {
         .grid {
-            grid-template-columns: repeat(9, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             grid-auto-rows: auto;
+            padding: 2rem 6.7rem;
         }
     }
 </style>

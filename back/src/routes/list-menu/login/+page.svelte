@@ -1,19 +1,42 @@
 <script lang="ts">
     // @ts-nocheck
+    import { browser } from '$app/environment';
+    import Icon from '@iconify/svelte';
+    import { createEventDispatcher } from "svelte";
+    import UserDataStore from '../../UserDataStore.js';
 
     export let form;
-        
+    export let data;
+
         // @ts-ignore
-        $: loginView=true
-        $: signupView = false;
+    $: loginView=true
+    $: signupView = false;
+
     
-        import { createEventDispatcher } from "svelte";
-        let dispatch = createEventDispatcher()
-    
-        function login(){
-            console.log("this is triggered")
-            dispatch('login')
+    let dispatch = createEventDispatcher()
+
+    function login(){
+        console.log("this is triggered")
+        dispatch('login')
+    }
+
+    let redirected = false;
+
+    if(browser){
+        console.log("this is the link",document.referrer)
+
+        let words = document.referrer.split('/');
+        if(words[words.length-1] != 'login'){
+            redirected = true;
         }
+
+        window.localStorage.setItem("email", data.user.email);
+    }
+    
+        UserDataStore.update((currdata) => {
+            return {user_email: data.user_email, api_key: ''}
+        })
+
     
         // @ts-ignore
         // $: if (dialog && showModal) dialog.showModal();
@@ -24,61 +47,128 @@
 
         <!-- svelte-ignore a11y-no-static-element-interactions -->
     
-        <div class="form-container" on:click|stopPropagation>
-    
-            <div class="header" style="display: flex; justify-content: space-between;">
-                <p class="login-view" on:click={() => {loginView = true; signupView = false;}}>Login</p><p class="signup-view" on:click={() => {signupView = true; loginView=false;}}>/SignUp</p>
-            </div>
-            {#if loginView}
-            <!-- show validations for form fields -->
-                <form method="POST" action="?/login">
-                    <label for="email">Email</label>
-                    <input type="email" name="email" id="email">
-                    {#if form?.errors?.email}
-                        <p class="error">{form?.errors?.email}</p>
-                    {/if}
-    
-                    <button class="btn">Login</button>
-                </form>
+        
+    <div class="login-container">
+            {#if redirected}
+                <p class="error-message">Seems like you weren't signed in. It's the best way to track your titles <button><Icon class='arrow' icon="pixelarticons:arrow-right" /></button></p>
             {/if}
-            {#if signupView}
-                <form method="post" action="?/register">
-                    <label for="email">Email</label>
-                    <input type="email" name="email" id="email">
+            <p class="welcome-message">Welcome back<button><Icon class='welcome-arrow' icon="pixelarticons:arrow-right" /></button></p>
+            <div class="form-container">
+                <div class="header">
+                    <p class="login-view" on:click={() => {loginView = true; signupView = false;}}>Login</p><p class="signup-view" on:click={() => {signupView = true; loginView=false;}}>/SignUp</p>
+                </div>
+                {#if loginView}
+                <!-- show validations for form fields -->
+                    <!-- <form method="POST" action="?/login">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" id="email">
+                        {#if form?.errors?.email}
+                            <p class="error">{form?.errors?.email}</p>
+                        {/if}
+        
+                        <button class="btn">Login</button>
+                    </form> -->
+                    <form method="POST" action="/list-menu?/login">
+                        <label class="email-label" for="email">Email</label>
+                        <input type="email" name="email" id="email">
+                        {#if form?.errors?.email}
+                            <p class="error">{form?.errors?.email[0]}</p>
+                        {:else if data.auth_errors?.error}
+                            <p class="error">{data.auth_errors?.error}. Try clicking SignUp</p>
+                        {/if}
+                        <!-- <label for="pwd">Password</label>
+                        <input type="password" name="password" id="pwd"> -->
+        
+                        <button class="btn" on:click={login}>Login</button>
+                    </form>
+                {/if}
+                {#if signupView}
+                    <!-- <form method="post" action="?/register">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" id="email">
 
-                    <button class="btn">Register</button>
-                </form>
-            {/if}
+                        <button class="btn">Register</button>
+                    </form> -->
+                    <form method="post" action="/list-menu?/register">
+                        <label class="email-label" for="email">Email</label>
+                        <input type="email" name="email" id="email">
+                        {#if form?.errors?.email}
+                        <p class="error">{form?.errors?.email[0]}</p>
+                        {:else if data.auth_errors?.error}
+                            <p class="error">{data.auth_errors?.error}. Objective failed try again</p>
+                        {/if}
+        
+                        <button class="btn">Register</button>
+                    </form>
+                {/if}
         </div>
-
+    </div>
     
 <style>
     @import '../../../../styles.css';
+    @import url("https://fonts.googleapis.com/css2?family=DotGothic16&display=swap");
     @font-face{	
         font-family: 'header-font';
 		src: url('../../../assets/fonts/PublicPixel.ttf')
     }
 
 
-.form-container{
-    font-family: "header-font";
+.login-container{
+    font-family: "DotGothic16", sans-serif;
     width: 100vw;
     height: 100vh;
     display: grid;
-    grid-template-rows: repeat(10, auto);
-    grid-template-columns: repeat(5, auto);
+    grid-template-rows: repeat(10, 1fr);
+    grid-template-columns: repeat(12, 1fr);
     align-items: center;
     justify-items: center;
     background-color: #181818;
 }
 
+
+.welcome-message{
+    font-family: "DotGothic16", sans-serif;
+    grid-column: 3 / 6;
+    grid-row: 5 / 6;
+    color: aquamarine;
+    position: relative;
+}
+
+.error-message{
+    font-family: "DotGothic16", sans-serif;
+    grid-column: 3 / 6;
+    grid-row: 5 / 6;
+    color: aquamarine;
+    position: relative;
+}
+
+.form-container{
+    grid-column: 8 / -1;
+    grid-row: 5 / 6;
+}
+
+button :global(.welcome-arrow) {
+        font-size: 3rem;
+        position: absolute;
+        right: 5rem;
+        top: 3.5rem;
+        color: aquamarine;
+	}
+
+button :global(.arrow) {
+        font-size: 3rem;
+        position: absolute;
+        right: -6rem;
+        top: 3rem;
+        color: aquamarine;
+	}
+
 .header{
     display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
     text-align: center;
-    grid-row: 2;
-    grid-column: 1 / -1;
-    padding-top: 3rem;
-    color: red;
+    color: aquamarine;
 }
 
 form{
@@ -96,9 +186,9 @@ form{
     color: red;
     background-color: midnightblue;
     height: 2.5rem;
-    margin-top: 3rem;
+    margin-top: 2rem;
     font-family: 'header-font';
-    width: 17rem;
+    width: 16rem;
     box-shadow: none;
 }
 
@@ -124,6 +214,7 @@ label{
     font-size: 1.2rem;
     text-align: left;
     padding-bottom: 0.5rem;
+    padding-top: 1rem;
 }
 /* .dialog-pop{
         backdrop-filter: blur(10px) saturate(4);

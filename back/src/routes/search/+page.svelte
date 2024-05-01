@@ -7,12 +7,12 @@
 
 <Header />
 
-<!-- search bar -->
 <div class="search-container">
     <h1 class="genre">Movies</h1>
     <Search />
-</div>
 
+
+</div>
 <style>
     @import "../../../styles.css";
     @font-face{
@@ -25,22 +25,22 @@
     }
 
     /* mobile styles */
-
     .search-container {
         display: grid;
-        grid-template-columns: repeat(12, auto);
-        grid-template-rows: repeat(10, auto);
-        justify-content: center;
+        grid-template-columns: repeat(12, 1fr);
+        grid-template-rows: repeat(10, 1fr);
+        /* justify-content: center; */
         align-items: center;
+        justify-items: center;
         padding-top: 1.5rem;
-        height: 88%;
+        height: calc(100vh - 112px);
         background-color: #181818;
     }
 
     .genre{
-        grid-column: 5 / 10;
+        grid-column: 1 / -1;
         grid-row: 3;
-        font-size: 3rem;
+        font-size: 2.5rem;
         font-family: 'header-font';
         color: springgreen;
     }
@@ -64,5 +64,25 @@
 
     /* desktop styles */
     @media screen and (min-width: 1200px) {
+        .search-container {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        grid-template-rows: repeat(10, 1fr);
+        /* justify-content: center; */
+        align-items: center;
+        justify-items: center;
+        padding-top: 1.5rem;
+        height: 89.4vh;
+        background-color: #181818;
+    }
+
+        .genre{
+            grid-column: 1 / -1;
+            grid-row: 3;
+            font-size: 3rem;
+            font-family: 'header-font';
+            color: springgreen;
+        }
+
     }
 </style>

@@ -1,22 +1,55 @@
 <script>
   // @ts-nocheck
   import { browser } from "$app/environment";
-  import EmptyList from "../../components/EmptyList.svelte";
   import emblaCarouselSvelte from "embla-carousel-svelte";
-  import movieList from "../MovieStore";
+  import { movieList, guestMovieList } from "../MovieStore";
   import UserDataStore from "../UserDataStore";
   import { addToast } from "../../components/Toaster.svelte";
   import Icon from "@iconify/svelte";
-  import CompletedStore from "../CompletedTitleStore";
-  import { page } from '$app/stores'
+  import {CompletedStore, guestCompletedStore} from "../CompletedTitleStore";
+  import { page } from "$app/stores";
+  import Title from "../../components/Title.svelte";
+  import ModalTwo from "../../components/ModalTwo.svelte";
+  import { createContextMenu, melt, createTooltip } from "@melt-ui/svelte";
+  import { fade, blur } from "svelte/transition";
 
-
+  export let data;
 
   $: userData = $UserDataStore;
   $: movieListItems = $movieList;
+  $: guestMovieListItems = $guestMovieList;
+  $: currentMovie = {};
+  $: showModal = false;
 
-  // data gives us the user_data from the DB
-  export let data;
+  let movieStrLength;
+
+  // if the user is a guest we neeed to load the appropriate lists
+  if (data.api_key == "00000000-0000-0000-0000-000000000000" && !data.movies) {
+    guestMovieList.update((data) => {
+      if (browser) {
+        // takes the saved local storage and updates the guest list to that
+        let savedMovies = JSON.parse(
+          window.localStorage.getItem("guestMovies")
+        );
+        return savedMovies;
+      }
+    });
+    movieListItems = $guestMovieList;
+    console.log($guestMovieList);
+  } else if (data.movies) {
+    movieListItems = data.movies;
+  }
+
+  // context menu
+  const {
+    elements: { menu, item, trigger },
+  } = createContextMenu();
+
+  let toggleModal = (movie) => {
+    currentMovie = movie;
+    movieStrLength = currentMovie.title.length;
+    showModal = !showModal;
+  };
 
   // adds list to localstorage for backup
   movieList.update(() => {
@@ -26,264 +59,380 @@
     return data.movies;
   });
 
- 
-  // EMBLA SLIDES
-  let emblaApi;
-  emblaCarouselSvelte.globalOptions = { loop: true }
-  let options = { loop: true };
-  let plugins = [];
-
-  //initalising carousel
-  function onInit(event) {
-    emblaApi = event.detail;
-    emblaApi.on('scrollNext',scrollNext);
+  function selectMovie(movie) {
+    currentMovie = movie;
   }
 
-  // scroll previous
-  function scrollPrev(){
-    if(emblaApi){
-      if(emblaApi){
-        emblaApi.scrollPrev()
-      }
-    }
-  }
-  // scroll next 
-  function scrollNext(){
-    if(emblaApi){
-      emblaApi.scrollNext()
-    }
-  }
-
- async function removeTitle(id, showToast){
-
-    let updatedMovieList = movieListItems.filter((obj) => obj.id !== id)
-    
-    movieList.update(() => {
+  async function guestRemoveTitle(id, showToast) {
+    try {
+      let updatedMovieList = guestMovieListItems.filter((obj) => obj.id !== id);
+      guestMovieList.update(() => {
         if (browser) {
-          window.localStorage.setItem("savedMovies", JSON.stringify(updatedMovieList));
+          window.localStorage.setItem(
+            "guestMovies",
+            JSON.stringify(updatedMovieList),
+          );
         }
-        console.log(updatedMovieList)
         return updatedMovieList;
+      });
+
+      if(showToast){
+        addToast({
+          data: {
+            title: "Success",
+            description: "The title was removed!",
+            color: "green",
+          },
+          closeDelay: 5000,
+          type: "foreground",
+        });
+      }
+
+    } catch (error) {
+      addToast({
+        data: {
+          title: "Error",
+          description: 'The title was not removed!',
+          color: "red",
+        },
+        closeDelay: 5000,
+        type: "foreground",
+      });
+    }
+  }
+
+  async function guestCompletedTitle(title) {
+
+    try{
+      // add the title to the completed list
+      guestCompletedStore.update((data) => {
+        if (browser) {
+          window.localStorage.setItem(
+            "guestCompletedTitles",
+            JSON.stringify([title, ...data]),
+          );
+        }
+        return [title, ...data];
+      });
+      //remove it from the ongoing list
+      guestRemoveTitle(title.id, false);
+
+      addToast({
+        data: {
+          title: "Success",
+          description: "The title was marked as complete",
+          color: "green",
+        },
+        closeDelay: 5000,
+        type: "foreground",
+      });
+    }
+    catch(error){
+      addToast({
+          data: {
+            title: "Error",
+            description: error,
+            color: "red",
+          },
+          closeDelay: 5000,
+          type: "foreground",
+      });
+    }
+  }
+
+
+  let modalRemove = (event) => {
+    showModal = false;
+    removeTitle(event.detail, false);
+  };
+
+  async function removeTitle(id, showToast) {
+    let updatedMovieList = movieListItems.filter((obj) => obj.id !== id);
+
+    movieList.update(() => {
+      if (browser) {
+        window.localStorage.setItem(
+          "savedMovies",
+          JSON.stringify(updatedMovieList),
+        );
+      }
+      return updatedMovieList;
     });
 
     const server_endpoint = "http://localhost:8200/movies";
     let res = await fetch(server_endpoint, {
-        method: "POST",
-        body: JSON.stringify(updatedMovieList),
-        headers: {
-            "Content-type": "applicaiton/json",
-            Authorization:
-                "ApiKey " +
-                $page.data.user.apiKey,
-        },
+      method: "POST",
+      body: JSON.stringify(updatedMovieList),
+      headers: {
+        "Content-type": "applicaiton/json",
+        Authorization: "ApiKey " + $page.data.user.apiKey,
+      },
     });
 
     const list_data = await res.json();
-    if(showToast){
+    if (showToast) {
       if (res.status >= 400 && res.status < 500) {
-          let update_errors = response?.error;
+        let update_errors = response?.error;
 
-          addToast({
-              data: {
-                  title: "Error",
-                  description: 'The title was not removed',
-                  color: "red",
-              },
-              closeDelay: 5000,
-              type: "foreground",
-          });
+        addToast({
+          data: {
+            title: "Error",
+            description: "The title was not removed",
+            color: "red",
+          },
+          closeDelay: 5000,
+          type: "foreground",
+        });
       }
 
-      
       addToast({
-                data: {
-                    title: "Success",
-                    description: 'The title was removed!',
-                    color: "green",
-                },
-                closeDelay: 5000,
-                type: "foreground",
-              });
-    }    
+        data: {
+          title: "Success",
+          description: "The title was removed!",
+          color: "green",
+        },
+        closeDelay: 5000,
+        type: "foreground",
+      });
+    }
   }
 
-  async function  completedTitle(title){  
-      // add the title to the completed list
-      CompletedStore.update((data) => {
-        return [title,... data]
-      })
-      //remove it from the ongoing list
-      removeTitle(title.id, false);
+  let modalComplete = (event) => {
+    console.log("this is the event in the movielist", event.detail);
+    completedTitle(event.detail);
+  };
 
-      const updateUrl = "http://localhost:8200/completed"
-      let res = await fetch(updateUrl, {
-        method: 'POST',
-        body: JSON.stringify($CompletedStore),
-        headers : {
-          'content-type': 'application/json',
-          Authorization : 'ApiKey ' + $page.data.user.apiKey
-        }
-      })
+  async function completedTitle(title) {
+    // add the title to the completed list
+    CompletedStore.update((data) => {
+      return [title, ...data];
+    });
+    //remove it from the ongoing list
+    removeTitle(title.id, false);
 
-      const completedRes = await res.json();
+    const updateUrl = "http://localhost:8200/completed";
+    let res = await fetch(updateUrl, {
+      method: "POST",
+      body: JSON.stringify($CompletedStore),
+      headers: {
+        "content-type": "application/json",
+        Authorization: "ApiKey " + $page.data.user.apiKey,
+      },
+    });
 
-      if (res.status >= 400 && res.status < 500) {
-          let update_errors = response?.error;
+    const completedRes = await res.json();
 
-          addToast({
-              data: {
-                  title: "Error",
-                  description: "Title was not marked as complete",
-                  color: "red",
-              },
-              closeDelay: 5000,
-              type: "foreground",
-          });
-      }
+    if (res.status >= 400 && res.status < 500) {
+      let update_errors = response?.error;
+
       addToast({
-                data: {
-                    title: "Success",
-                    description: 'Your title has been added to a completed list',
-                    color: "green",
-                },
-                closeDelay: 5000,
-                type: "foreground",
-              });
-   
+        data: {
+          title: "Error",
+          description: "Title was not marked as complete",
+          color: "red",
+        },
+        closeDelay: 5000,
+        type: "foreground",
+      });
+    }
+    addToast({
+      data: {
+        title: "Success",
+        description: "Your title has been added to a completed list",
+        color: "green",
+      },
+      closeDelay: 5000,
+      type: "foreground",
+    });
   }
 
+  let width;
 </script>
 
+<svelte:window bind:innerWidth={width} />
 <div class="ovr-container">
-  <!-- -->
-  {#if movieListItems && movieListItems.length > 0 && $page.data.user.apiKey}
-
-  {/if}
-</div>
-
-<div class="backdrop">
-  <div class="modal">
-    <div class="title">
-      <h1>Movies</h1>
-    </div>
-    <div>
-      {#if !movieListItems || movieListItems.length <= 0}
-        <EmptyList message="nothing in the box office ???" />
-      {/if}
-      <a href="/search">Try adding some titles here => </a>
-    </div>
+  <div class="genre-container">
+    <h1 class="genre">My</h1>
+    <h1 class="genre">Movies</h1>
   </div>
+  {#if browser}
+    {#if data.api_key == "00000000-0000-0000-0000-000000000000"}
+      {#if guestMovieListItems && guestMovieListItems.length > 0 && guestMovieListItems[0] != null}
+        <div class="movie-grid">
+          {#each guestMovieListItems as movie}
+            <div
+              out:blur
+              in:fade
+              on:click={toggleModal(movie)}
+              on:contextmenu={selectMovie(movie)}
+              {...$trigger}
+              use:trigger
+            >
+              <Title title={movie} />
+            </div>
+          {/each}
+        </div>
+      {/if}
+
+      <div class="context-menu" {...$menu} use:menu>
+        <div
+          {...$item}
+          use:item
+          style="color:springgreen; padding-bottom:10px; cursor:pointer;"
+          on:click={guestCompletedTitle(currentMovie)}
+        >
+          Mark as Complete
+        </div>
+        <div
+          {...$item}
+          use:item
+          style="color:red; cursor:pointer;"
+          on:click={guestRemoveTitle(currentMovie.id, true)}
+        >
+          Remove Title
+        </div>
+      </div>
+    {/if}
+    <!-- && $page.data.user.apiKey -->
+    {#if movieListItems && movieListItems.length > 0 && movieListItems[0] != null}
+      <div class="movie-grid">
+        {#each movieListItems as movie}
+          <div
+            out:blur
+            in:fade
+            on:click={toggleModal(movie)}
+            on:contextmenu={selectMovie(movie)}
+            {...$trigger}
+            use:trigger
+          >
+            <Title title={movie} />
+          </div>
+        {/each}
+      </div>
+
+      <div class="context-menu" {...$menu} use:menu>
+        <div
+          {...$item}
+          use:item
+          style="color:springgreen; padding-bottom:10px; cursor:pointer;"
+          on:click={completedTitle(currentMovie)}
+        >
+          Mark as Complete
+        </div>
+        <div
+          {...$item}
+          use:item
+          style="color:red; cursor:pointer;"
+          on:click={removeTitle(currentMovie.id, true)}
+        >
+          Remove Title
+        </div>
+      </div>
+    {/if}
+
+    <ModalTwo
+      movie={currentMovie}
+      windowWidth={width}
+      titleLength={movieStrLength}
+      on:completeTitle={modalComplete}
+      on:removeTitle={modalRemove}
+      bind:showModal
+    />
+
+    <!-- {#if !movieListItems || movieListItems.length <= 0 || movieListItems[0] == null}
+      <div class="empty-container">
+        <p class="message">nothing you want to watch?</p>
+        <a class="search-link" href="/search">Try adding some titles here => </a>
+      </div>
+    {/if} -->
+  {/if}
+  <a href="/search"
+    ><button class="add-movie"><Icon icon="mdi:plus" /></button></a
+  >
 </div>
 
-<style>
+<style lang="postcss">
   @import url("https://fonts.googleapis.com/css2?family=DotGothic16&display=swap");
   @font-face {
     src: url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,600;0,900;1,400;1,600;1,800;1,900&display=swap");
     font-family: "Rubik-Regular", sans-serif;
   }
 
-  .bg-img {
+  @font-face {
+    font-family: "header-font";
+    src: url("../../assets/fonts/PublicPixel.ttf");
+  }
+
+  .add-movie {
+    color: #181818;
+    font-size: 2rem;
+    background-color: springgreen;
+    border-radius: 36px;
+    position: fixed;
+    bottom: 1rem;
+    right: 2rem;
+    z-index: 10;
+    box-shadow:
+      0 8px 16px 0 rgba(0, 0, 0, 0.2),
+      0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
+
+  .empty-container {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    justify-items: center;
+    color: springgreen;
+    font-family: "DotGothic16", sans-serif;
+    margin-top: 9rem;
+  }
+
+  .message {
     grid-column: 1/-1;
     grid-row: 1;
-    opacity: 0.3;
-    z-index: 0;
+  }
+  .search-link {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin-top: 4rem;
+    padding: 10px;
+    color: red;
+    border-radius: 9px;
+    background: midnightblue;
   }
 
-  .bg-poster-img {
-    width: 100vw;
+  .movie-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: auto;
+    justify-items: center;
+    padding: 10px;
   }
 
-  body {
-    margin: 0;
+  .genre {
+    grid-column: 5 / 10;
+    grid-row: 3;
+    font-size: 2rem;
+    font-family: "header-font";
+    color: springgreen;
   }
 
   .ovr-container {
     background: #181818;
-  }
-  .avatar {
-    vertical-align: middle;
-    border-radius: 50%;
-    border: 2px solid black;
+    padding: 0.7rem;
+    overflow: auto;
   }
 
-  .title-name {
-    grid-column: 1 / -1;
-    grid-row: 2;
-    text-align: center;
-    font-style: oblique;
+  .genre-container {
+    padding: 1rem 0 2rem 0rem;
+    line-height: normal;
+  }
+
+  .context-menu {
     font-family: "DotGothic16", sans-serif;
-    font-weight: 400;
-    z-index: 2;
-    padding: 0.4rem;
-  }
-
-  .title-overview {
-    grid-column: 1 / -1;
-    grid-row: 3 / 7;
-    padding: 1rem;
-    font-family: "DotGothic16", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    z-index: 2;
-  }
-
-  .remove {
-    grid-row: 4 / 7;
-    grid-column: 1 / 2;
-    position: absolute;
-    left: 1.5rem;
-  }
-
-  .embla {
-    overflow: hidden;
-    background: #181818;
-  }
-  .embla__container {
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: 100%; /* Each slide covers 100% of the viewport */
-  }
-
-  .info {
-    position: absolute;
-    bottom: 0rem;
-    border-radius: 10px;
-    background-size: 100%;
-    grid-column: 4;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: repeat(10, 1fr);
-    display: grid;
-    grid-column: 1/-1;
-    grid-row: 1/-1;
-    height: 50vh;
-    backdrop-filter: blur(35px) saturate(1);
-    background: linear-gradient(351deg, transparent, black);
-    width: 100%;
-  }
-
-  .embla__slide {
-    height: 100vh;
-    justify-content: center;
-    align-items: center;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: repeat(5, 1fr);
-    color: wheat;
-    background-size: 100%;
-    /* -webkit-backdrop-filter: blur(10px) saturate(180%); */
-    backdrop-filter: blur(10px) saturate(1);
-    /* background-color: rgba(255,255,255,.5);
-    border-radius: 1rem;
-    box-shadow: 0 1rem 2rem rgba(0,0,0,.3); */
-  }
-
-  .image {
-    margin: 1rem;
-    border-radius: 10px;
-    grid-column: 1/-1;
-    grid-row: 1;
-    width: 95vw;
-    z-index: 2;
+    background-color: #181818;
+    padding: 10px;
+    border-radius: 5px;
   }
 
   a:visited {
@@ -301,16 +450,6 @@
     text-align: center;
     background: white;
     overflow-y: auto;
-  }
-
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(2, 180px);
-    grid-auto-rows: auto;
-    justify-content: space-evenly;
-    justify-items: center;
-    align-content: space-evenly;
-    align-items: center;
   }
 
   /* mobile styles */
@@ -341,67 +480,35 @@
 
   /* desktop styles */
   @media screen and (min-width: 1200px) {
-    .info {
-      position: absolute;
-      bottom: 0rem;
-      border-radius: 10px;
-      background-size: 100%;
-      grid-column: 4;
-      grid-template-columns: 1fr 1fr 1fr;
-      grid-template-rows: repeat(10, 1fr);
-      display: grid;
-      grid-column: 2 / -1;
-      grid-row: 1 / -1;
-      text-align: justify;
+    .ovr-container {
+      background: #181818;
+      padding: 2rem 6.7rem;
+      overflow: auto;
       height: 100vh;
-      -webkit-backdrop-filter: blur(35px) saturate(1);
-      /* backdrop-filter: blur(35px) saturate(1); */
-      background: linear-gradient(351deg, transparent, black);
-      width: 100%;
     }
 
-    .title-name {
-      grid-column: 1/-1;
-      grid-row: 3;
-      text-align: center;
-      font-style: oblique;
-      font-family: "DotGothic16", sans-serif;
-      font-weight: 400;
-      z-index: 2;
-      padding: 0.4rem;
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-auto-rows: auto;
+      justify-items: center;
+    }
+
+    .genre {
       font-size: 3rem;
+      font-family: "header-font";
+      color: springgreen;
     }
 
-    .title-overview {
-      grid-column: 1 / -1;
-      grid-row: 4 / 7;
-      padding: 3rem 10rem;
-      font-family: "DotGothic16", sans-serif;
-      font-weight: 400;
-      font-style: normal;
-      z-index: 2;
-      font-size: 1.7rem;
+    .genre-container {
+      padding: 2rem 0 3rem 1rem;
+      line-height: normal;
     }
 
-    .bg-img {
-      grid-column: 1;
-      grid-row: 1;
-      opacity: 0.3;
-      z-index: 0;
-    }
-
-    .remove {
-      grid-row: 10;
-      grid-column: 1 / 2;
-      position: absolute;
-      left: 10.1rem;
-    }
-
-    .completed {
-      grid-row: 10;
-      grid-column: 2 / 3;
-      position: absolute;
-      left: 10.1rem;
+    .add-movie:hover {
+      box-shadow:
+        0 12px 16px 0 rgba(0, 0, 0, 0.24),
+        0 17px 50px 0 rgba(0, 0, 0, 0.19);
     }
   }
 </style>
