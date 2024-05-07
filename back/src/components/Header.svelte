@@ -11,13 +11,16 @@
     export let auth_errors;
     
 
-    $: userStore = $UserDataStore
+    console.log("this is form data", formData)
+    console.log("this is modalPT", modalPassthrough)
+    console.log("this is viewPT", viewPassThrough)
+    console.log("this is auth errors", auth_errors)
 
+    $: userStore = $UserDataStore
     $: showModal = modalPassthrough;
     
     let toggleModal = () => {
         showModal = !showModal;
-        console.log("value of show modal: ", showModal )
     };
 
     let closeModal = (event) =>{
@@ -37,24 +40,26 @@
         <p class="the">the</p>
         <p class="backlog">Backlog</p>
     </a>
-    {#if auth_errors?.status == 200}
-        {#if height >= 945}
-            <!-- logged in larger mobile screens and greater -->
-            {#if userStore.api_key && (!formData?.errors.email || formData == null) && !auth_errors.error}
-                <button class="email" on:click={toggleModal}>
-                    <p class="email-text">{userStore.user_email}</p>
-                </button>
-            {/if}
 
-            <!-- logged out larger mobile screens and greater -->
-            {#if !userStore.api_key && (formData?.errors.email || auth_errors.error)}
-            <button on:click={toggleModal} class="login">
-                <span >
-                    <Icon class="avatar" icon="carbon:user-avatar-filled-alt" />
-                </span>
+{#if auth_errors?.status == -1}
+    {#if height >= 945}
+        <!-- logged in larger mobile screens and greater -->
+        {#if userStore.api_key && (!formData?.errors.email || formData == null) && !auth_errors.error}
+            <button class="email" on:click={toggleModal}>
+                <p class="email-text">{userStore.user_email}</p>
+                
             </button>
-            {/if}
         {/if}
+
+        <!-- logged out larger mobile screens and greater -->
+        {#if !userStore.api_key && (formData?.errors.email || auth_errors.error)}
+        <button on:click={toggleModal} class="login">
+            <span >
+                <Icon class="avatar" icon="carbon:user-avatar-filled-alt" />
+            </span>
+        </button>
+        {/if}
+    {/if}
 
     {#if height <= 944 }
         {#if userStore.api_key && !formData?.errors.email && !auth_errors.error }
@@ -68,19 +73,18 @@
         </button>
         {/if}
     {/if}
-    
 {/if}
 
 {#if height >= 945}
     <!-- logged in larger mobile screens and greater -->
-    {#if userStore.api_key && (!formData?.errors.email || formData == null) && !auth_errors}
+    {#if userStore.api_key && (!formData?.errors.email || formData == null) && !auth_errors.error}
         <button class="email" on:click={toggleModal}>
             <p class="email-text">{userStore.user_email}</p>
         </button>
     {/if}
 
     <!-- logged out larger mobile screens and greater -->
-    {#if !userStore.api_key && (!formData?.errors.email || auth_errors)}
+    {#if !userStore.api_key && (!formData?.errors.email || auth_errors.error)}
     <button on:click={toggleModal} class="login">
         <span >
             <Icon class="avatar" icon="carbon:user-avatar-filled-alt" />
@@ -90,12 +94,12 @@
 {/if}
 
 {#if height <= 944 }
-    {#if userStore.api_key && !formData?.errors.email && !auth_errors }
+    {#if userStore.api_key && !formData?.errors.email && !auth_errors.error }
     <button class="avatar-pic" on:click={toggleModal}>
         <Icon class="avatar" icon="carbon:user-avatar-filled-alt" />
     </button>
     {/if}
-    {#if !userStore.api_key && (formData?.errors.email || auth_errors)}
+    {#if !userStore.api_key && (formData?.errors.email || auth_errors.error)}
     <button class="avatar-pic" on:click={toggleModal}>
         <Icon class="avatar" icon="carbon:user-avatar-filled-alt" />
     </button>

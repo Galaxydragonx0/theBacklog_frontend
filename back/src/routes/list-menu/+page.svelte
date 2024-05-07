@@ -77,7 +77,7 @@
 		<!-- <span class="menu-deco">|</span>
 		<span class="menu-cta"><span>explore</span> -->
 	</a>
-	<a class="menu-item selected" id="title-3" href="#content-3">
+	<a class="menu-item selected" id="title-3" href="/game-list">
 		<span class="menu__item-title">Games</span>
 		<!-- <span class="menu-deco">|</span>
 		<span class="menu-cta"><span>explore</span> -->

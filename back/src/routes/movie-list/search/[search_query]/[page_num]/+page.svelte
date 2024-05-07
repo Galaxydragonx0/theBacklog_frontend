@@ -2,19 +2,19 @@
     // @ts-nocheck
 
     import Icon from "@iconify/svelte";
-    import Header from "../../../../components/Header.svelte";
-    import Title from "../../../../components/Title.svelte";
-    import Search from "../../../../components/Search.svelte";
-    import {movieList, guestMovieList} from "../../../MovieStore";
-    import UserDataStore from "../../../UserDataStore";
+    // import Header from "../../../../components/Header.svelte";
+    import Title from "../../../../../components/Title.svelte";
+    import Search from "../../../../../components/Search.svelte";
+    import {movieList, guestMovieList} from "../../../../MovieStore";
+    import UserDataStore from "../../../../UserDataStore";
     import { onDestroy } from "svelte";
-    import { addToast } from "../../../../components/Toaster.svelte";
+    import { addToast } from "../../../../../components/Toaster.svelte";
     import { createToaster } from "@melt-ui/svelte";
     import {page} from '$app/stores';
     import { createContextMenu, melt } from '@melt-ui/svelte'
-    import SearchMovieModal from "../../../../components/SearchMovieModal.svelte";
+    import SearchMovieModal from "../../../../../components/SearchMovieModal.svelte";
     import { browser } from "$app/environment";
-    import EmptyList from "../../../../components/EmptyList.svelte";
+    // import EmptyList from "../../../../components/EmptyList.svelte";
 
     export let data;
 
@@ -60,6 +60,7 @@
   function guestAddToList(movie){
         if (data.userData == '00000000-0000-0000-0000-000000000000'){
             let currentMovies = []
+            movie['title_genre'] = 'movie';
             if(browser){
 
                 guestMovieList.update((currentData) => {
@@ -75,14 +76,14 @@
 
     // we use the update function to let the store be updated
     function addToList(movie) {
-        console.log('this is triggered')
+        movie['title_genre'] = 'movie';
         movieList.update((data) => {
             if ($movieList.length == 0) {
                 let currentMovies = localStorage.getItem("savedMovies");
                 return [movie, ... JSON.parse(currentMovies)]
             }
-            const genreKey= 'title_genre';
-            movie[genreKey] = 'movie'
+            // const genreKey= 'title_genre';
+            // movie[genreKey] = 'movie'
             return [movie, ...data];
         });
         console.log($movieList);
@@ -167,7 +168,7 @@
             {#if movie.poster_path}
                 <!-- <button class="add-button" on:click={addToList(movie)}><Icon icon="simple-line-icons:plus" /></button>   -->
                 <div class="title-container" on:click={toggleModal(movie)} on:contextmenu={selectMovie(movie)}  {...$trigger} use:trigger>
-                    <Title title={movie}/>
+                    <Title title={movie} titleGenre={'movie'}/>
                 </div>
             {/if}
         {/each}
@@ -210,7 +211,7 @@
 </div>
 
 <style>
-    @import "../../../../../styles.css";
+    @import "../../../../../../styles.css";
     @font-face {
         src: url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,600;0,900;1,400;1,600;1,800;1,900&display=swap");
         font-family: "Rubik-Regular", sans-serif;

@@ -1,26 +1,22 @@
 // @ts-nocheck
 
 import { env } from '$env/dynamic/private';
-import UserDataStore from '../../../UserDataStore';
 
 export const prerender = false;
 
 let totalPages
-let movieArray
-
-
-// on load we can probably show popular movies for easy access 
+let gameArray
 
 
 export async function load({locals  , params }) {
 
     const { search_query, page_num } = params;
 
-    const url = `${env.server_url}/movieSearch/${search_query}/${page_num}`
+    const url = `${env.server_url}/gameSearch/${search_query}/${page_num}`
     const resp = await fetch(url)
     const data = await resp.json()
 
-    movieArray = data.results
+    gameArray = data
     totalPages = data.total_pages
 
     let userData;
@@ -35,8 +31,8 @@ export async function load({locals  , params }) {
      
 
 
-    if (movieArray != null) {
-        return { movieArray, totalPages, search_query, page_num, userData };
+    if (gameArray != null) {
+        return { gameArray, totalPages, search_query, page_num, userData };
     }
 
 }

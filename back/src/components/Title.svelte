@@ -1,26 +1,52 @@
 <script>
-// @ts-nocheck
+    // @ts-nocheck
     import Icon from "@iconify/svelte";
     import { createEventDispatcher } from "svelte";
-    export let title;
 
-    console.log('this is new');
+    export let title;
+    export let titleGenre;
 
     const dispatch = createEventDispatcher();
-    function getData(){
-        console.log("this is triggered")
-        dispatch('getData', title)
-    }    
+    function getData() {
+        console.log("this is triggered");
+        dispatch("getData", title);
+    }
 </script>
 
-    
 <div class="poster-container">
-        <!-- <button class="add-button" on:click={getData}><Icon icon="simple-line-icons:plus" /></button>   -->
-        <img alt="movie-poster" class="poster-image" src="https://image.tmdb.org/t/p/w185/{title.poster_path}" />
+    {#if titleGenre == "movie"}
+        <img
+            alt="movie-poster"
+            class="poster-image"
+            src="https://image.tmdb.org/t/p/w185/{title.poster_path}"
+        />
         <p class="img-desc">{title.title}</p>
+    {/if}
+    {#if titleGenre == "game"}
+        <img
+            alt="movie-poster"
+            class="poster-image"
+            src="{title.image.small_url}"
+        />
+        <p class="img-desc">{title.name}</p>
+    {/if}
+    {#if titleGenre == "book"}
+        <img
+            alt="movie-poster"
+            class="poster-image"
+            src="https://image.tmdb.org/t/p/w185/{title.poster_path}"
+        />
+        <p class="img-desc">{title.title}</p>
+    {/if}
+    {#if titleGenre == "show"}
+        <img
+            alt="movie-poster"
+            class="poster-image"
+            src="https://image.tmdb.org/t/p/w185/{title.poster_path}"
+        />
+        <p class="img-desc">{title.title}</p>
+    {/if}
 </div>
-
-
 
 <style>
     @import url("https://fonts.googleapis.com/css2?family=DotGothic16&display=swap");
@@ -30,7 +56,7 @@
     }
 
     .img-desc {
-        visibility:hidden;
+        visibility: hidden;
         display: none;
     }
 
@@ -54,15 +80,12 @@
         width: 159px;
         grid-column: 1 / -1;
     }
-    
 
-
-
-    .add-button{
+    .add-button {
         border-radius: 8px;
         z-index: 1000;
         position: absolute;
-        left: 4;   
+        left: 4;
         background-color: lightgrey;
         font-size: larger;
     }
@@ -76,69 +99,59 @@
         font-size: 0.9rem;
     }
 
-
-  @media screen and (min-height:600px )
-{
-  .poster{
-    height: 228px;
-    border: 4px solid;
-    width: 159px;
-  }
-}
-
-/* long ahhhh phone */
-@media screen and (min-height:750px )
-{
-
-}
-
-
-/* small tablet styles */
-@media screen and (min-width: 620px){
-
-}
-
-/* large tablet & laptop styles */
-@media screen and (min-width: 960px){
-
-
-
-}
-
-/* desktop styles */
-@media screen and (min-width: 1200px){
-
-    .poster-image {
-        /* display: block; */
-        transition: transform 0.4s ease-in-out;
-        height: 29rem;
-        width: 20rem;
-        grid-column: 1 / -1;
-    }
-        
-    .poster-container .poster-image:hover{
-        transform: scale(1.05);
+    @media screen and (min-height: 600px) {
+        .poster {
+            height: 228px;
+            border: 4px solid;
+            width: 159px;
+        }
     }
 
-    .img-desc {
-        position: absolute;
-        bottom: 10px;
-        background: none;
-        backdrop-filter: blur(1.5px);
-        background-color: #181818;
-        color: springgreen;
-        visibility: hidden;
-        text-align: center;
-        opacity: 0;
-        font-family: "DotGothic16", sans-serif;
-        transition: opacity .2s, visibility .2s;
-        grid-column: 1 / -1;
-        padding: 5px;
-        border-radius: 5px;
-        visibility: visible;
-        display: inline;
+    /* long ahhhh phone */
+    @media screen and (min-height: 750px) {
     }
 
+    /* small tablet styles */
+    @media screen and (min-width: 620px) {
+    }
 
-}
+    /* large tablet & laptop styles */
+    @media screen and (min-width: 960px) {
+    }
+
+    /* desktop styles */
+    @media screen and (min-width: 1200px) {
+        .poster-image {
+            /* display: block; */
+            transition: transform 0.4s ease-in-out;
+            height: 29rem;
+            width: 20rem;
+            grid-column: 1 / -1;
+        }
+
+        .poster-container .poster-image:hover {
+            transform: scale(1.05);
+        }
+
+        .img-desc {
+            position: absolute;
+            bottom: 10px;
+            background: none;
+            backdrop-filter: blur(1.5px);
+            background-color: #181818;
+            color: springgreen;
+            visibility: hidden;
+            text-align: center;
+            opacity: 0;
+            font-family: "DotGothic16", sans-serif;
+            transition:
+                opacity 0.2s,
+                visibility 0.2s;
+            grid-column: 1 / -1;
+            padding: 5px;
+            border-radius: 5px;
+            visibility: visible;
+            display: inline;
+        }
+    }
 </style>
