@@ -1,20 +1,20 @@
 <script>
     // @ts-nocheck
 
-    import Header from "../../components/Header.svelte";
-    import Search from "../../components/Search.svelte";
+    import Header from "../../../components/Header.svelte";
+    import Search from "../../../components/Search.svelte";
 </script>
 
 <Header />
 
 <div class="search-container">
     <h1 class="genre">Movies</h1>
-    <Search />
+    <Search titleGenre={'movie'} />
 
 
 </div>
 <style>
-    @import "../../../styles.css";
+    @import "../../../../styles.css";
     @font-face{
 		font-family: 'header-font';
 		src: url('../../assets/fonts/PublicPixel.ttf')

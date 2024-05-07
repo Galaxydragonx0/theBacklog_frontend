@@ -32,14 +32,14 @@
     {#if guestCompletedTitles && guestCompletedTitles.length > 0 && guestCompletedTitles[0] != null}
         {#each guestCompletedTitles as title}
             <div class="title-container">
-                <Title title={title}/>
+                <Title title={title} titleGenre={title.title_genre}/>
             </div>
         {/each}
     {/if}
 {:else if (data.compTitles)}
     {#each data.compTitles as title}
         <div class="title-container">
-            <Title title={title}/>
+            <Title title={title} titleGenre={title.title_genre}/>
         </div>
     {/each} 
 {/if}

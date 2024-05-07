@@ -2,7 +2,7 @@
   // @ts-nocheck
   import { browser } from "$app/environment";
   import emblaCarouselSvelte from "embla-carousel-svelte";
-  import { movieList, guestMovieList } from "../MovieStore";
+  import { gameList, guestGameList } from "../GameStore";
   import UserDataStore from "../UserDataStore";
   import { addToast } from "../../components/Toaster.svelte";
   import Icon from "@iconify/svelte";
@@ -16,29 +16,29 @@
   export let data;
 
   $: userData = $UserDataStore;
-  $: movieListItems = $movieList;
-  $: guestMovieListItems = $guestMovieList;
-  $: currentMovie = {};
+  $: gameListItems = $gameList;
+  $: guestGameListItems = $guestGameList;
+  $: currentGame = {};
   $: showModal = false;
 
-  let movieStrLength;
+  let gameStrLength;
 
   // if the user is a guest we neeed to load the appropriate lists
-  if (data.api_key == "00000000-0000-0000-0000-000000000000" && !data.movies) {
-    guestMovieList.update((data) => {
+  if (data.api_key == "00000000-0000-0000-0000-000000000000" && !data.games) {
+    guestGameList.update(() => {
       if (browser) {
         // takes the saved local storage and updates the guest list to that
-        let savedMovies = JSON.parse(
-          window.localStorage.getItem("guestMovies")
+        let savedGames = JSON.parse(
+          window.localStorage.getItem("guestGames")
         );
-        return savedMovies;
+        return savedGames;
       }
     });
-    movieListItems = $guestMovieList;
-    console.log($guestMovieList);
+    gameListItems = $guestGameList;
+    console.log($guestGameList);
   } 
-  else if (data.movies) {
-    movieListItems = data.movies;
+  else if (data.games) {
+    gameListItems = data.games;
   }
 
   // context menu
@@ -46,35 +46,35 @@
     elements: { menu, item, trigger },
   } = createContextMenu();
 
-  let toggleModal = (movie) => {
-    currentMovie = movie;
-    movieStrLength = currentMovie.title.length;
+  let toggleModal = (game) => {
+    currentGame = game;
+    gameStrLength = currentGame.title.length;
     showModal = !showModal;
   };
 
   // adds list to localstorage for backup
-  movieList.update(() => {
+  gameList.update(() => {
     if (browser) {
-      window.localStorage.setItem("savedMovies", JSON.stringify(data.movies));
+      window.localStorage.setItem("savedGames", JSON.stringify(data.games));
     }
-    return data.movies;
+    return data.games;
   });
 
-  function selectMovie(movie) {
-    currentMovie = movie;
+  function selectGame(game) {
+    currentGame = game;
   }
 
   async function guestRemoveTitle(id, showToast) {
     try {
-      let updatedMovieList = guestMovieListItems.filter((obj) => obj.id !== id);
-      guestMovieList.update(() => {
+      let updatedGameList = guestGameListItems.filter((obj) => obj.id !== id);
+      guestGameList.update(() => {
         if (browser) {
           window.localStorage.setItem(
-            "guestMovies",
-            JSON.stringify(updatedMovieList),
+            "guestGames",
+            JSON.stringify(updatedGameList),
           );
         }
-        return updatedMovieList;
+        return updatedGameList;
       });
 
       if(showToast){
@@ -148,22 +148,22 @@
   };
 
   async function removeTitle(id, showToast) {
-    let updatedMovieList = movieListItems.filter((obj) => obj.id !== id);
+    let updatedGameList = gameListItems.filter((obj) => obj.id !== id);
 
-    movieList.update(() => {
+    gameList.update(() => {
       if (browser) {
         window.localStorage.setItem(
-          "savedMovies",
-          JSON.stringify(updatedMovieList),
+          "savedGames",
+          JSON.stringify(updatedGameList),
         );
       }
-      return updatedMovieList;
+      return updatedGameList;
     });
 
-    const server_endpoint = "http://localhost:8200/movies";
+    const server_endpoint = "http://localhost:8200/games";
     let res = await fetch(server_endpoint, {
       method: "POST",
-      body: JSON.stringify(updatedMovieList),
+      body: JSON.stringify(updatedGameList),
       headers: {
         "Content-type": "applicaiton/json",
         Authorization: "ApiKey " + $page.data.user.apiKey,
@@ -199,7 +199,7 @@
   }
 
   let modalComplete = (event) => {
-    console.log("this is the event in the movielist", event.detail);
+    console.log("this is the event in the gamelist", event.detail);
     completedTitle(event.detail);
   };
 
@@ -254,22 +254,22 @@
 <div class="ovr-container">
   <div class="genre-container">
     <h1 class="genre">My</h1>
-    <h1 class="genre">Movies</h1>
+    <h1 class="genre">Games</h1>
   </div>
   {#if browser}
     {#if data.api_key == "00000000-0000-0000-0000-000000000000"}
-      {#if guestMovieListItems && guestMovieListItems.length > 0 && guestMovieListItems[0] != null}
+      {#if guestGameListItems && guestGameListItems.length > 0 && guestGameListItems[0] != null}
         <div class="movie-grid">
-          {#each guestMovieListItems as movie}
+          {#each guestGameListItems as game}
             <div
               out:blur
               in:fade
-              on:click={toggleModal(movie)}
-              on:contextmenu={selectMovie(movie)}
+              on:click={toggleModal(game)}
+              on:contextmenu={selectGame(game)}
               {...$trigger}
               use:trigger
             >
-              <Title title={movie} />
+              <Title title={game} titleGenre={"game"}/>
             </div>
           {/each}
         </div>
@@ -280,7 +280,7 @@
           {...$item}
           use:item
           style="color:springgreen; padding-bottom:10px; cursor:pointer;"
-          on:click={guestCompletedTitle(currentMovie)}
+          on:click={guestCompletedTitle(currentGame)}
         >
           Mark as Complete
         </div>
@@ -288,25 +288,25 @@
           {...$item}
           use:item
           style="color:red; cursor:pointer;"
-          on:click={guestRemoveTitle(currentMovie.id, true)}
+          on:click={guestRemoveTitle(currentGame.id, true)}
         >
           Remove Title
         </div>
       </div>
     {/if}
     <!-- && $page.data.user.apiKey -->
-    {#if movieListItems && movieListItems.length > 0 && movieListItems[0] != null}
+    {#if gameListItems && gameListItems.length > 0 && gameListItems[0] != null}
       <div class="movie-grid">
-        {#each movieListItems as movie}
+        {#each gameListItems as game}
           <div
             out:blur
             in:fade
-            on:click={toggleModal(movie)}
-            on:contextmenu={selectMovie(movie)}
+            on:click={toggleModal(game)}
+            on:contextmenu={selectGame(game)}
             {...$trigger}
             use:trigger
           >
-            <Title title={movie} titleGenre={"movie"} />
+            <Title title={game} titleGenre={"game"}/>
           </div>
         {/each}
       </div>
@@ -316,7 +316,7 @@
           {...$item}
           use:item
           style="color:springgreen; padding-bottom:10px; cursor:pointer;"
-          on:click={completedTitle(currentMovie)}
+          on:click={completedTitle(currentGame)}
         >
           Mark as Complete
         </div>
@@ -324,7 +324,7 @@
           {...$item}
           use:item
           style="color:red; cursor:pointer;"
-          on:click={removeTitle(currentMovie.id, true)}
+          on:click={removeTitle(currentGame.id, true)}
         >
           Remove Title
         </div>
@@ -332,22 +332,22 @@
     {/if}
 
     <ModalTwo
-      movie={currentMovie}
+      movie={currentGame}
       windowWidth={width}
-      titleLength={movieStrLength}
+      titleLength={gameStrLength}
       on:completeTitle={modalComplete}
       on:removeTitle={modalRemove}
       bind:showModal
     />
 
-    <!-- {#if !movieListItems || movieListItems.length <= 0 || movieListItems[0] == null}
+    <!-- {#if !gameListItems || gameListItems.length <= 0 || gameListItems[0] == null}
       <div class="empty-container">
         <p class="message">nothing you want to watch?</p>
         <a class="search-link" href="/search">Try adding some titles here => </a>
       </div>
     {/if} -->
   {/if}
-  <a href="movie-list/search/"
+  <a href="/game-list/search/"
     ><button class="add-movie"><Icon icon="mdi:plus" /></button></a
   >
 </div>
@@ -405,9 +405,10 @@
   .movie-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: auto;
+    grid-template-rows: repeat(10, 1fr);
     justify-items: center;
     padding: 10px;
+    height: calc(100vh - 134px)
   }
 
   .genre {
