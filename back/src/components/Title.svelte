@@ -11,8 +11,11 @@
         console.log("this is triggered");
         dispatch("getData", title);
     }
+
+    let width;
 </script>
 
+<svelte:window bind:innerWidth={width} />
 <div class="poster-container">
     {#if titleGenre == "movie"}
         <img
@@ -31,12 +34,21 @@
         <p class="img-desc">{title.name}</p>
     {/if}
     {#if titleGenre == "book"}
-        <img
-            alt="movie-poster"
-            class="poster-image"
-            src="https://image.tmdb.org/t/p/w185/{title.poster_path}"
-        />
-        <p class="img-desc">{title.title}</p>
+        {#if width >= 1200}
+            <img
+                style="height: 19rem; width:14rem"
+                alt="movie-poster"
+                class="poster-image"
+                src="https://books.google.com/books?id={title.id}&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+            />
+        {:else}
+                <img
+                alt="movie-poster"
+                class="poster-image"
+                src="https://books.google.com/books?id={title.id}&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+            />
+        {/if}
+        <p class="img-desc">{title.volumeInfo.title}</p>
     {/if}
     {#if titleGenre == "show"}
         <img

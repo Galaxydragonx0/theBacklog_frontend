@@ -16,10 +16,7 @@
             return savedMovies;
         }
     });
-//     movieListItems = $guestMovieList;
-//     console.log($guestMovieList);
-//   } else if (data.movies) {
-//     movieListItems = data.movies;
+    
   }
 </script>
 

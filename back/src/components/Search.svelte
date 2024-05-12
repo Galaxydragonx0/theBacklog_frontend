@@ -10,20 +10,22 @@
     let pageNum = "1";
     const handleSearch = () => {
         if(onMainSearch){
-            switch(titleGenre){
-                case 'movie':
-                goto(`search/${searchValue}/${pageNum}`);
-                break;
-                case 'game':
-                goto(`search/${searchValue}/${pageNum}`);
-                break;
-                case 'show':
-                goto(`show-list/search/${searchValue}/${pageNum}`);
-                break;
-                case 'book':
-                goto(`book-list/search/${searchValue}/${pageNum}`);
-                break;
-            }
+
+            return goto(`search/${searchValue}/${pageNum}`);
+            // switch(titleGenre){
+            //     case 'movie':
+            //     goto(`search/${searchValue}/${pageNum}`);
+            //     break;
+            //     case 'game':
+            //     goto(`search/${searchValue}/${pageNum}`);
+            //     break;
+            //     case 'show':
+            //     goto(`show-list/search/${searchValue}/${pageNum}`);
+            //     break;
+            //     case 'book':
+            //     goto(`book-list/search/${searchValue}/${pageNum}`);
+            //     break;
+            // }
         }
         else{
             switch(titleGenre){
@@ -31,13 +33,13 @@
                 goto(`search/${searchValue}/${pageNum}`);
                 break;
                 case 'game':
-                goto(`/game-list/search/${searchValue}/${pageNum}`);
+                goto(`/search/${searchValue}/${pageNum}`);
                 break;
                 case 'show':
-                goto(`show-list/search/${searchValue}/${pageNum}`);
+                goto(`/search/${searchValue}/${pageNum}`);
                 break;
                 case 'book':
-                goto(`book-list/search/${searchValue}/${pageNum}`);
+                goto(`/search/${searchValue}/${pageNum}`);
                 break;
             }
         }

@@ -15,6 +15,9 @@ let formErrors = {}
 let auth_errors = {status : -1, error: ''};
 let viewPassthrough = {login: true, register: false}
 
+
+let completedListData;
+
 export async function load({locals}) {
 
     if(locals.user) api_key = locals?.user.apiKey;
@@ -25,7 +28,7 @@ export async function load({locals}) {
     }
 
     modalPassthrough = false;
-    return {user_email, api_key, formErrors, modalPassthrough, auth_errors, viewPassthrough}
+    return {user_email, api_key, formErrors, modalPassthrough, auth_errors, viewPassthrough, completedListData}
     
 }
 
@@ -88,15 +91,20 @@ export const actions ={
             api_key = response.api_key
         }
 
-        cookies.set('session', api_key,{
-            path: '/',
-            httpOnly: true,
-            sameSite: 'strict',
-            secure: false, // change to true in prod
-            maxAge: 60 * 60 * 24 * 30,
-        })
+        const completeEndPoint = `${env.server_url}/getCompleted`
+        let completedListRaw = await fetch(completeEndPoint,
+            {
+                method: "GET",
+                headers:{
+                    "Content-type":"application/json;",
+                    Authorization: "ApiKey " +`${api_key}`,
+                }
+            }
+        )
 
-        cookies.set('email', email,{
+        completedListData = await completedListRaw.json()
+
+        cookies.set('session', api_key,{
             path: '/',
             httpOnly: true,
             sameSite: 'strict',
@@ -172,22 +180,22 @@ export const actions ={
 
         //if no auth errors get the generated key from the user 
         // store the api key for authentication
-        api_key = returnData.api_key;
-        cookies.set('session', api_key,{
+        cookies.set('session', returnData.api_key,{
             path: '/',
             httpOnly: true,
             sameSite: 'strict',
             secure: false, // change to true in prod
             maxAge: 60 * 60 * 24 * 30,
         })
+
+
+
         throw redirect(303, "/list-menu");
     }, 
 
     logout: async({cookies}) => {
 
             cookies.delete('session',{path: '/',})
-
-            cookies.delete('email',{path: '/' })
 
             //remove the api and email
             user_email = '';
