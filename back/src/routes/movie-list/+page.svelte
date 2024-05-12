@@ -202,12 +202,26 @@
     console.log("this is the event in the movielist", event.detail);
     completedTitle(event.detail);
   };
-
+ 
+  
   async function completedTitle(title) {
+
+    if(browser){
+      if(!window.localStorage.getItem('completedTitles')){
+          window.localStorage.setItem('completedTitles', JSON.stringify(title))
+      }      
+    }
+
+
+    
+
+    
     // add the title to the completed list
     CompletedStore.update((data) => {
       return [title, ...data];
     });
+    window.localStorage.setItem('completedTitles', JSON.stringify($CompletedStore))
+    
     //remove it from the ongoing list
     removeTitle(title.id, false);
 

@@ -2,7 +2,7 @@
   // @ts-nocheck
   import { browser } from "$app/environment";
   import emblaCarouselSvelte from "embla-carousel-svelte";
-  import { gameList, guestGameList } from "../GameStore";
+  import { bookList, guestBookList } from "../BookStore";
   import UserDataStore from "../UserDataStore";
   import { addToast } from "../../components/Toaster.svelte";
   import Icon from "@iconify/svelte";
@@ -16,65 +16,67 @@
   export let data;
 
   $: userData = $UserDataStore;
-  $: gameListItems = $gameList;
-  $: guestGameListItems = $guestGameList;
-  $: currentGame = {};
+  $: bookListItems = $bookList;
+  $: guestBookListItems = $guestBookList;
+  $: currentBook = {};
   $: showModal = false;
 
-  let gameStrLength;
+  let bookStrLength;
 
   // if the user is a guest we neeed to load the appropriate lists
-  if (data.api_key == "00000000-0000-0000-0000-000000000000" && !data.games) {
-    guestGameList.update(() => {
+  if (data.api_key == "00000000-0000-0000-0000-000000000000" && !data.books) {
+    guestBookList.update(() => {
       if (browser) {
         // takes the saved local storage and updates the guest list to that
-        let savedGames = JSON.parse(
-          window.localStorage.getItem("guestGames")
+        let savedBooks = JSON.parse(
+          window.localStorage.getItem("guestBooks")
         );
-        return savedGames;
+        return savedBooks;
       }
     });
-    gameListItems = $guestGameList;
-    console.log($guestGameList);
+    bookListItems = $guestBookList;
+    console.log($guestBookList);
   } 
-  else if (data.games) {
-    gameListItems = data.games;
+  else if (data.books) {
+    bookListItems = data.books;
   }
+
+
 
   // context menu
   const {
     elements: { menu, item, trigger },
   } = createContextMenu();
 
-  let toggleModal = (game) => {
-    currentGame = game;
-    gameStrLength = currentGame.title.length;
+  let toggleModal = (book) => {
+    currentBook = book;
+    bookStrLength = currentBook.title.length;
     showModal = !showModal;
   };
 
   // adds list to localstorage for backup
-  gameList.update(() => {
+  bookList.update(() => {
     if (browser) {
-      window.localStorage.setItem("savedGames", JSON.stringify(data.games));
+      window.localStorage.setItem("savedBooks", JSON.stringify(data.books));
     }
-    return data.games;
+    return data.books;
   });
 
-  function selectGame(game) {
-    currentGame = game;
+  function selectBook(book) {
+    currentBook = book;
   }
 
   async function guestRemoveTitle(id, showToast) {
     try {
-      let updatedGameList = guestGameListItems.filter((obj) => obj.id !== id);
-      guestGameList.update(() => {
+      let updatedBookList = guestBookListItems.filter((obj) => obj.id !== id);
+      guestBookList.update(() => {
         if (browser) {
           window.localStorage.setItem(
-            "guestGames",
-            JSON.stringify(updatedGameList),
+            "guestBooks",
+            JSON.stringify(updatedBookList),
           );
         }
-        return updatedGameList;
+        return updatedBookList;
       });
 
       if(showToast){
@@ -148,22 +150,22 @@
   };
 
   async function removeTitle(id, showToast) {
-    let updatedGameList = gameListItems.filter((obj) => obj.id !== id);
+    let updatedBookList = bookListItems.filter((obj) => obj.id !== id);
 
-    gameList.update(() => {
+    bookList.update(() => {
       if (browser) {
         window.localStorage.setItem(
-          "savedGames",
-          JSON.stringify(updatedGameList),
+          "savedBooks",
+          JSON.stringify(updatedBookList),
         );
       }
-      return updatedGameList;
+      return updatedBookList;
     });
 
-    const server_endpoint = "http://localhost:8200/games";
+    const server_endpoint = "http://localhost:8200/books";
     let res = await fetch(server_endpoint, {
       method: "POST",
-      body: JSON.stringify(updatedGameList),
+      body: JSON.stringify(updatedBookList),
       headers: {
         "Content-type": "applicaiton/json",
         Authorization: "ApiKey " + $page.data.user.apiKey,
@@ -199,22 +201,23 @@
   }
 
   let modalComplete = (event) => {
-    console.log("this is the event in the gamelist", event.detail);
+    console.log("this is the event in the booklist", event.detail);
     completedTitle(event.detail);
   };
 
   async function completedTitle(title) {
+
 
     if(browser){
       if(!window.localStorage.getItem('completedTitles')){
           window.localStorage.setItem('completedTitles', JSON.stringify(title))
       }
     }
+
     // add the title to the completed list
     CompletedStore.update((data) => {
       return [title, ...data];
     });
-
     window.localStorage.setItem('completedTitles', JSON.stringify($CompletedStore))
     
     //remove it from the ongoing list
@@ -263,22 +266,22 @@
 <div class="ovr-container">
   <div class="genre-container">
     <h1 class="genre">My</h1>
-    <h1 class="genre">Games</h1>
+    <h1 class="genre">Books</h1>
   </div>
   {#if browser}
     {#if data.api_key == "00000000-0000-0000-0000-000000000000"}
-      {#if guestGameListItems && guestGameListItems.length > 0 && guestGameListItems[0] != null}
+      {#if guestBookListItems && guestBookListItems.length > 0 && guestBookListItems[0] != null}
         <div class="movie-grid">
-          {#each guestGameListItems as game}
+          {#each guestBookListItems as book}
             <div
               out:blur
               in:fade
-              on:click={toggleModal(game)}
-              on:contextmenu={selectGame(game)}
+              on:click={toggleModal(book)}
+              on:contextmenu={selectBook(book)}
               {...$trigger}
               use:trigger
             >
-              <Title title={game} titleGenre={"game"}/>
+              <Title title={book} titleGenre={"book"}/>
             </div>
           {/each}
         </div>
@@ -289,7 +292,7 @@
           {...$item}
           use:item
           style="color:springgreen; padding-bottom:10px; cursor:pointer;"
-          on:click={guestCompletedTitle(currentGame)}
+          on:click={guestCompletedTitle(currentBook)}
         >
           Mark as Complete
         </div>
@@ -297,25 +300,25 @@
           {...$item}
           use:item
           style="color:red; cursor:pointer;"
-          on:click={guestRemoveTitle(currentGame.id, true)}
+          on:click={guestRemoveTitle(currentBook.id, true)}
         >
           Remove Title
         </div>
       </div>
     {/if}
     <!-- && $page.data.user.apiKey -->
-    {#if gameListItems && gameListItems.length > 0 && gameListItems[0] != null}
+    {#if bookListItems && bookListItems.length > 0 && bookListItems[0] != null}
       <div class="movie-grid">
-        {#each gameListItems as game}
+        {#each bookListItems as book}
           <div
             out:blur
             in:fade
-            on:click={toggleModal(game)}
-            on:contextmenu={selectGame(game)}
+            on:click={toggleModal(book)}
+            on:contextmenu={selectBook(book)}
             {...$trigger}
             use:trigger
           >
-            <Title title={game} titleGenre={"game"}/>
+            <Title title={book} titleGenre={"book"}/>
           </div>
         {/each}
       </div>
@@ -325,7 +328,7 @@
           {...$item}
           use:item
           style="color:springgreen; padding-bottom:10px; cursor:pointer;"
-          on:click={completedTitle(currentGame)}
+          on:click={completedTitle(currentBook)}
         >
           Mark as Complete
         </div>
@@ -333,7 +336,7 @@
           {...$item}
           use:item
           style="color:red; cursor:pointer;"
-          on:click={removeTitle(currentGame.id, true)}
+          on:click={removeTitle(currentBook.id, true)}
         >
           Remove Title
         </div>
@@ -341,22 +344,22 @@
     {/if}
 
     <ModalTwo
-      movie={currentGame}
+      movie={currentBook}
       windowWidth={width}
-      titleLength={gameStrLength}
+      titleLength={bookStrLength}
       on:completeTitle={modalComplete}
       on:removeTitle={modalRemove}
       bind:showModal
     />
 
-    <!-- {#if !gameListItems || gameListItems.length <= 0 || gameListItems[0] == null}
+    <!-- {#if !bookListItems || bookListItems.length <= 0 || bookListItems[0] == null}
       <div class="empty-container">
         <p class="message">nothing you want to watch?</p>
         <a class="search-link" href="/search">Try adding some titles here => </a>
       </div>
     {/if} -->
   {/if}
-  <a href="/game-list/search/"
+  <a href="/book-list/search/"
     ><button class="add-movie"><Icon icon="mdi:plus" /></button></a
   >
 </div>
@@ -500,7 +503,7 @@
 
     .movie-grid {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(7, 1fr);
       grid-auto-rows: auto;
       justify-items: center;
     }

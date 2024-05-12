@@ -1,8 +1,12 @@
-<script lang="ts">
+<script>
 
 	import Header from '../../components/Header.svelte';
+	// @ts-ignore
+	// @ts-ignore
 	import {fade, slide} from 'svelte/transition';
 	import UserDataStore from '../UserDataStore.js';
+	import { CompletedStore } from '../CompletedTitleStore';
+	import { visitCount } from '../VisitedCountStore';
 	import Icon from '@iconify/svelte';
     import { browser } from '$app/environment';
 
@@ -10,32 +14,59 @@
 	let topActive = false;
 	$: showComplete = false;
 
+	// @ts-ignore
+	// @ts-ignore
 	export let data;
+	// @ts-ignore
+	// @ts-ignore
 	export let form;
 
+
+	
 	if(browser){
-		let emailExists = window.localStorage.getItem('email') as string;
+		// @ts-ignore
+		let emailExists = window.localStorage.getItem('email');
 		if(emailExists) data.user_email = emailExists;
 
+		if(!window.localStorage.getItem('completedTitles') && data){
+			window.localStorage.setItem('completedTitles', JSON.stringify(data.completedListData))
+		}
+
 		if(!form?.errors){
-			console.log(browser);
 
 			let user_email = data.user_email;
 			let api_key = data.api_key;
+			// @ts-ignore
+			// @ts-ignore
 			UserDataStore.update((data) => {
 				return ({user_email: user_email, api_key: api_key})
 			})
-
-			console.log('this is inside the browser check', $UserDataStore)
 		}
 
 	}
 
+	if(data?.completedListData && $visitCount > 0){
+		for(let i=0; i< data?.completedListData.length; i++){
+			// @ts-ignore
+			CompletedStore.update((currData) => {
+				return [data.completedListData[i], ...currData];
+			});
+		}
+		visitCount.update(data => { return data++})
+		console.log($CompletedStore)
+	}
 
-	let dialog : HTMLDialogElement;
 
-	$: if (dialog && showComplete) dialog.showModal();
 
+	/**@type {HTMLDialogElement}*/
+	let dialog;
+
+// @ts-ignore
+	// @ts-ignore
+			$: if (dialog && showComplete) dialog.showModal();
+
+	// @ts-ignore
+	// @ts-ignore
 	function showModal(){
 		showComplete=true;
 	}
@@ -55,8 +86,10 @@
 
 
 
-	let width: number;
-	let height: number;
+	/**@type {number}*/
+	let width;
+	/**@type {number}*/
+	let height;
 </script>
 
 
@@ -82,7 +115,7 @@
 		<!-- <span class="menu-deco">|</span>
 		<span class="menu-cta"><span>explore</span> -->
 	</a>
-	<a class="menu-item selected" id="title-4" href="#content-4">
+	<a class="menu-item selected" id="title-4" href="/book-list">
 		<span class="menu__item-title">Books</span>
 		<!-- <span class="menu-deco">|</span>
 		<span class="menu-cta"><span>explore</span></span> -->
