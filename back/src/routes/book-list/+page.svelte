@@ -226,7 +226,7 @@
     const updateUrl = "http://localhost:8200/completed";
     let res = await fetch(updateUrl, {
       method: "POST",
-      body: JSON.stringify($CompletedStore),
+      body: JSON.stringify(title),
       headers: {
         "content-type": "application/json",
         Authorization: "ApiKey " + $page.data.user.apiKey,

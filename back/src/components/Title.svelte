@@ -56,7 +56,7 @@
             class="poster-image"
             src="https://image.tmdb.org/t/p/w185/{title.poster_path}"
         />
-        <p class="img-desc">{title.title}</p>
+        <p class="img-desc">{title.name}</p>
     {/if}
 </div>
 

@@ -36,7 +36,7 @@
                 goto(`/search/${searchValue}/${pageNum}`);
                 break;
                 case 'show':
-                goto(`/search/${searchValue}/${pageNum}`);
+                goto(`search/${searchValue}/${pageNum}`);
                 break;
                 case 'book':
                 goto(`/search/${searchValue}/${pageNum}`);
