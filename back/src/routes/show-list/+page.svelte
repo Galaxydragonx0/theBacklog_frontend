@@ -1,8 +1,7 @@
 <script>
   // @ts-nocheck
   import { browser } from "$app/environment";
-  import emblaCarouselSvelte from "embla-carousel-svelte";
-  import { movieList, guestMovieList } from "../MovieStore";
+  import { showList, guestShowList } from "../ShowStore";
   import UserDataStore from "../UserDataStore";
   import { addToast } from "../../components/Toaster.svelte";
   import Icon from "@iconify/svelte";
@@ -16,65 +15,65 @@
   export let data;
 
   $: userData = $UserDataStore;
-  $: movieListItems = $movieList;
-  $: guestMovieListItems = $guestMovieList;
-  $: currentMovie = {};
+  $: showListItems = $showList;
+  $: guestShowListItems = $guestShowList;
+  $: currentShow = {};
   $: showModal = false;
 
-  let movieStrLength;
+  let showStrLength;
 
   // if the user is a guest we neeed to load the appropriate lists
-  if (data.api_key == "00000000-0000-0000-0000-000000000000" && !data.movies) {
-    guestMovieList.update((data) => {
+  if (data.api_key == "00000000-0000-0000-0000-000000000000" && !data.shows) {
+    guestShowList.update((data) => {
       if (browser) {
         // takes the saved local storage and updates the guest list to that
-        let savedMovies = JSON.parse(
-          window.localStorage.getItem("guestMovies")
+        let savedShows = JSON.parse(
+          window.localStorage.getItem("guestShows")
         );
-        return savedMovies;
+        return savedShows;
       }
     });
-    movieListItems = $guestMovieList;
-    console.log($guestMovieList);
+    guestShowListItems = $guestShowList;
+    console.log($guestShowList);
   } 
-  else if (data.movies) {
-    movieListItems = data.movies;
+  else if (data.shows) {
+    showListItems = data.shows;
   }
 
   // context menu
-  const {
+  const { 
     elements: { menu, item, trigger },
   } = createContextMenu();
 
-  let toggleModal = (movie) => {
-    currentMovie = movie;
-    movieStrLength = currentMovie.title.length;
+  let toggleModal = (show) => {
+    currentShow = show;
+    showStrLength = currentShow.name.length;
     showModal = !showModal;
   };
 
   // adds list to localstorage for backup
-  movieList.update(() => {
+  showList.update(() => {
     if (browser) {
-      window.localStorage.setItem("savedMovies", JSON.stringify(data.movies));
+      window.localStorage.setItem("savedShows", JSON.stringify(data.shows));
     }
-    return data.movies;
+    return data.shows;
   });
 
-  function selectMovie(movie) {
-    currentMovie = movie;
+  function selectShow(show) {
+    currentShow = show;
   }
 
   async function guestRemoveTitle(id, showToast) {
     try {
-      let updatedMovieList = guestMovieListItems.filter((obj) => obj.id !== id);
-      guestMovieList.update(() => {
+      let updatedShowList = guestShowListItems.filter((obj) => obj.id !== id);
+      guestShowList.update(() => {
         if (browser) {
           window.localStorage.setItem(
-            "guestMovies",
-            JSON.stringify(updatedMovieList),
+            "guestShows",
+            JSON.stringify(updatedShowList),
           );
         }
-        return updatedMovieList;
+        return updatedShowList;
       });
 
       if(showToast){
@@ -148,22 +147,22 @@
   };
 
   async function removeTitle(id, showToast) {
-    let updatedMovieList = movieListItems.filter((obj) => obj.id !== id);
+    let updatedShowList = showListItems.filter((obj) => obj.id !== id);
 
-    movieList.update(() => {
+    showList.update(() => {
       if (browser) {
         window.localStorage.setItem(
-          "savedMovies",
-          JSON.stringify(updatedMovieList),
+          "savedShows",
+          JSON.stringify(updatedShowList),
         );
       }
-      return updatedMovieList;
+      return updatedShowList;
     });
 
-    const server_endpoint = "http://localhost:8200/movies";
+    const server_endpoint = "http://localhost:8200/shows";
     let res = await fetch(server_endpoint, {
       method: "POST",
-      body: JSON.stringify(updatedMovieList),
+      body: JSON.stringify(updatedShowList),
       headers: {
         "Content-type": "applicaiton/json",
         Authorization: "ApiKey " + $page.data.user.apiKey,
@@ -199,7 +198,7 @@
   }
 
   let modalComplete = (event) => {
-    console.log("this is the event in the movielist", event.detail);
+    console.log("this is the event in the showlist", event.detail);
     completedTitle(event.detail);
   };
  
@@ -207,11 +206,11 @@
   async function completedTitle(title) {
 
     if(browser){
-      if($page.data.user.apiKey && !window.localStorage.getItem('completedTitles')){
+      if(!window.localStorage.getItem('completedTitles')){
           window.localStorage.setItem('completedTitles', JSON.stringify(title))
       }      
     }
-
+  
     // add the title to the completed list
     CompletedStore.update((data) => {
       return [title, ...data];
@@ -264,22 +263,22 @@
 <div class="ovr-container">
   <div class="genre-container">
     <h1 class="genre">My</h1>
-    <h1 class="genre">Movies</h1>
+    <h1 class="genre">Shows</h1>
   </div>
   {#if browser}
     {#if data.api_key == "00000000-0000-0000-0000-000000000000"}
-      {#if guestMovieListItems && guestMovieListItems.length > 0 && guestMovieListItems[0] != null}
+      {#if guestShowListItems && guestShowListItems.length > 0 && guestShowListItems[0] != null}
         <div class="movie-grid">
-          {#each guestMovieListItems as movie}
+          {#each guestShowListItems as show}
             <div
               out:blur
               in:fade
-              on:click={toggleModal(movie)}
-              on:contextmenu={selectMovie(movie)}
+              on:click={toggleModal(show)}
+              on:contextmenu={selectShow(show)}
               {...$trigger}
               use:trigger
             >
-              <Title title={movie} />
+              <Title title={show} titleGenre={"show"}/>
             </div>
           {/each}
         </div>
@@ -290,7 +289,7 @@
           {...$item}
           use:item
           style="color:springgreen; padding-bottom:10px; cursor:pointer;"
-          on:click={guestCompletedTitle(currentMovie)}
+          on:click={guestCompletedTitle(currentShow)}
         >
           Mark as Complete
         </div>
@@ -298,25 +297,25 @@
           {...$item}
           use:item
           style="color:red; cursor:pointer;"
-          on:click={guestRemoveTitle(currentMovie.id, true)}
+          on:click={guestRemoveTitle(currentShow.id, true)}
         >
           Remove Title
         </div>
       </div>
     {/if}
     <!-- && $page.data.user.apiKey -->
-    {#if movieListItems && movieListItems.length > 0 && movieListItems[0] != null}
+    {#if showListItems && showListItems.length > 0 && showListItems[0] != null}
       <div class="movie-grid">
-        {#each movieListItems as movie}
+        {#each showListItems as show}
           <div
             out:blur
             in:fade
-            on:click={toggleModal(movie)}
-            on:contextmenu={selectMovie(movie)}
+            on:click={toggleModal(show)}
+            on:contextmenu={selectShow(show)}
             {...$trigger}
             use:trigger
           >
-            <Title title={movie} titleGenre={"movie"} />
+            <Title title={show} titleGenre={"show"} />
           </div>
         {/each}
       </div>
@@ -326,7 +325,7 @@
           {...$item}
           use:item
           style="color:springgreen; padding-bottom:10px; cursor:pointer;"
-          on:click={completedTitle(currentMovie)}
+          on:click={completedTitle(currentShow)}
         >
           Mark as Complete
         </div>
@@ -334,7 +333,7 @@
           {...$item}
           use:item
           style="color:red; cursor:pointer;"
-          on:click={removeTitle(currentMovie.id, true)}
+          on:click={removeTitle(currentShow.id, true)}
         >
           Remove Title
         </div>
@@ -342,22 +341,22 @@
     {/if}
 
     <ModalTwo
-      movie={currentMovie}
+      movie={currentShow}
       windowWidth={width}
-      titleLength={movieStrLength}
+      titleLength={showStrLength}
       on:completeTitle={modalComplete}
       on:removeTitle={modalRemove}
       bind:showModal
     />
 
-    <!-- {#if !movieListItems || movieListItems.length <= 0 || movieListItems[0] == null}
+    <!-- {#if !showListItems || showListItems.length <= 0 || showListItems[0] == null}
       <div class="empty-container">
         <p class="message">nothing you want to watch?</p>
         <a class="search-link" href="/search">Try adding some titles here => </a>
       </div>
     {/if} -->
   {/if}
-  <a href="/movie-list/search/"
+  <a href="/show-list/search/"
     ><button class="add-movie"><Icon icon="mdi:plus" /></button></a
   >
 </div>

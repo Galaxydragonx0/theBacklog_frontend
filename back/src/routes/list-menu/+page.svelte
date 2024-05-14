@@ -28,7 +28,7 @@
 		let emailExists = window.localStorage.getItem('email');
 		if(emailExists) data.user_email = emailExists;
 
-		if(!window.localStorage.getItem('completedTitles') && data){
+		if(!window.localStorage.getItem('completedTitles') && data.completedListData){
 			window.localStorage.setItem('completedTitles', JSON.stringify(data.completedListData))
 		}
 
@@ -105,7 +105,7 @@
 		<span in:fade={{delay:300, duration:500}} class="menu-cta"><span>explore</span></span>
 	{/if}
 	</a>
-	<a class="menu-item selected" id="title-2" href="#content-2">
+	<a class="menu-item selected" id="title-2" href="/show-list">
 		<span class="menu__item-title">Shows</span>
 		<!-- <span class="menu-deco">|</span>
 		<span class="menu-cta"><span>explore</span> -->
