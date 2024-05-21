@@ -70,10 +70,8 @@
 		<div class="position-change">
 			<div class="information">
 				<div class="misc">
-					<!-- <p>Release Date:{game.release_date}</p>
+					<p>Release Date:{game.original_release_date}</p>
 					&nbsp;&nbsp;
-					<p>Rating:{game.vote_average}</p> -->
-					<!-- <p>runtime</p> -->
 				</div>
 				{#if game.deck}
 					{#if titleLength >= 42}

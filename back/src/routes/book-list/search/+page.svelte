@@ -9,7 +9,7 @@
 
 <div class="search-container">
     <h1 class="genre">Books</h1>
-    <Search titleGenre={'book'} onMainSearch={true}/>
+    <Search titleGenre={'book'} />
 
 
 </div>
@@ -33,7 +33,7 @@
         align-items: center;
         justify-items: center;
         padding-top: 1.5rem;
-        height: calc(100vh - 112px);
+        height: calc(100vh - 96px);
         background-color: #181818;
     }
 
@@ -42,7 +42,7 @@
         grid-row: 3;
         font-size: 2.5rem;
         font-family: 'header-font';
-        color: springgreen;
+        color: #f1dd00;
     }
 
 
@@ -72,7 +72,7 @@
         align-items: center;
         justify-items: center;
         padding-top: 1.5rem;
-        height: 89.4vh;
+        height: 88.2vh;
         background-color: #181818;
     }
 
@@ -81,7 +81,7 @@
             grid-row: 3;
             font-size: 3rem;
             font-family: 'header-font';
-            color: springgreen;
+            color: #f1dd00;
         }
 
     }

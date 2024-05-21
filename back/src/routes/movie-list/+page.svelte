@@ -34,7 +34,7 @@
         return savedMovies;
       }
     });
-    movieListItems = $guestMovieList;
+    guestMovieListItems = $guestMovieList;
     console.log($guestMovieList);
   } 
   else if (data.movies) {
@@ -106,15 +106,36 @@
 
     try{
       // add the title to the completed list
-      guestCompletedStore.update((data) => {
-        if (browser) {
-          window.localStorage.setItem(
-            "guestCompletedTitles",
-            JSON.stringify([title, ...data]),
-          );
+      if(browser){
+        var localExists = JSON.parse(window.localStorage.getItem('guestCompletedTitles'));
+        console.log("guest storage", localExists)
+        
+        // get localstorage data into store if it exists
+        if(localExists != null){
+          guestCompletedStore.update(() => {return []})
+
+          if(localExists instanceof Array){
+            guestCompletedStore.set(JSON.parse(window.localStorage.getItem('guestCompletedTitles')));
+            guestCompletedStore.update((data) => {return [title, ...data];});
+        
+          }
+          else{
+            guestCompletedStore.set([JSON.parse(window.localStorage.getItem('guestCompletedTitles')), ...data]);
+            guestCompletedStore.update((data) => {data.push(title); return data;});
+            console.log("completed title", $guestCompletedStore)
+          }
+
+          // store data into localstorage
+          window.localStorage.setItem('guestCompletedTitles', JSON.stringify($guestCompletedStore))
         }
-        return [title, ...data];
-      });
+        else{
+          // otherwise we set the localStorage then add it to the guestStore
+          window.localStorage.setItem('guestCompletedTitles', JSON.stringify([title]))
+          guestCompletedStore.update((data) => {return [title];});
+        }
+          
+      }
+
       //remove it from the ongoing list
       guestRemoveTitle(title.id, false);
 
@@ -132,7 +153,7 @@
       addToast({
           data: {
             title: "Error",
-            description: error,
+            description: "Could not add to completed list",
             color: "red",
           },
           closeDelay: 5000,
@@ -144,6 +165,10 @@
 
   let modalRemove = (event) => {
     showModal = false;
+    if (data.api_key == "00000000-0000-0000-0000-000000000000"){
+      guestRemoveTitle(event.detail, false);
+      return;
+    }
     removeTitle(event.detail, false);
   };
 
@@ -199,7 +224,10 @@
   }
 
   let modalComplete = (event) => {
-    console.log("this is the event in the movielist", event.detail);
+    if (data.api_key == "00000000-0000-0000-0000-000000000000"){
+      guestCompletedTitle(event.detail, false);
+      return;
+    }
     completedTitle(event.detail);
   };
  
@@ -263,6 +291,10 @@
 <svelte:window bind:innerWidth={width} />
 <div class="ovr-container">
   <div class="genre-container">
+    {#if width >= 1200}
+      <a href="/list-menu" class="return-button"><Icon class="back-icon" icon="pixelarticons:arrow-left" /><p class="back-text">Back to Menu <p></a>
+    {/if}
+    <a href="/list-menu" class="return-button"><Icon class="back-icon" icon="pixelarticons:arrow-left" /></a>
     <h1 class="genre">My</h1>
     <h1 class="genre">Movies</h1>
   </div>
@@ -279,7 +311,7 @@
               {...$trigger}
               use:trigger
             >
-              <Title title={movie} />
+              <Title title={movie} titleGenre={"movie"} />
             </div>
           {/each}
         </div>
@@ -342,7 +374,8 @@
     {/if}
 
     <ModalTwo
-      movie={currentMovie}
+      title={currentMovie}
+      titleGenre={"movie"}
       windowWidth={width}
       titleLength={movieStrLength}
       on:completeTitle={modalComplete}
@@ -350,12 +383,17 @@
       bind:showModal
     />
 
-    <!-- {#if !movieListItems || movieListItems.length <= 0 || movieListItems[0] == null}
+    {#if data.api_key == "00000000-0000-0000-0000-000000000000" && (guestMovieListItems?.length == 0 || !guestMovieListItems)}
       <div class="empty-container">
-        <p class="message">nothing you want to watch?</p>
-        <a class="search-link" href="/search">Try adding some titles here => </a>
+        <p class="message" style="text-align: center;">I know cinema is dead but creating lists isn't</p>
+        <a class="search-link" href="/search">Try adding some movie here => </a>
       </div>
-    {/if} -->
+    {:else if (movieListItems?.length || !movieListItems) == 0 && data.api_key}
+      <div class="empty-container">
+        <p class="message" style="text-align: center;">I know cinema is dead but creating lists isn't</p>
+        <a class="search-link" href="/search">Try adding some movie here => </a>
+      </div>
+    {/if}
   {/if}
   <a href="/movie-list/search/"
     ><button class="add-movie"><Icon icon="mdi:plus" /></button></a
@@ -431,6 +469,7 @@
   .ovr-container {
     background: #181818;
     padding: 0.7rem;
+    height: 100vh;
     overflow: auto;
   }
 
@@ -475,10 +514,58 @@
 
   /* short ahhhh phone */
   @media screen and (min-height: 600px) {
+    .genre-container {
+      padding: 2rem 0 3rem 1rem;
+      line-height: normal;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      position: relative;
+    }
+
+    .return-button{
+      position: absolute;
+      top: 64px;
+      left: 29px;
+      background: springgreen;
+      font-size: 2rem;
+      vertical-align: middle;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    a :global(.back-icon) {
+			font-size: 1.75rem;
+		}
   }
 
   /* long ahhhh phone */
   @media screen and (min-height: 750px) {
+    .genre-container {
+      padding: 2rem 0 3rem 1rem;
+      line-height: normal;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      position: relative;
+    }
+
+    .return-button{
+      position: absolute;
+      top: 64px;
+      left: 29px;
+      background: springgreen;
+      font-size: 2rem;
+      vertical-align: middle;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    a :global(.back-icon) {
+			font-size: 1.75rem;
+		}
   }
 
   /* small tablet styles */
@@ -494,7 +581,7 @@
     .ovr-container {
       background: #181818;
       padding: 2rem 6.7rem;
-      overflow: auto;
+      overflow-y: hidden;
       height: 100vh;
     }
 
@@ -514,7 +601,34 @@
     .genre-container {
       padding: 2rem 0 3rem 1rem;
       line-height: normal;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      position: relative;
     }
+
+    .back-text{
+        font-size: 1.25rem;
+        font-family:"DotGothic16", sans-serif;
+        padding-left: 10px;
+        padding-right: 7px;
+    }
+
+    .return-button{
+      position: absolute;
+      top: 38%;
+      left: 29px;
+      background: springgreen;
+      font-size: 2rem;
+      vertical-align: middle;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    a :global(.back-icon) {
+			font-size: 1.5rem;
+		}
 
     .add-movie:hover {
       box-shadow:

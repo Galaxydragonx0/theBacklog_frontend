@@ -6,7 +6,7 @@
   import UserDataStore from "../UserDataStore";
   import { addToast } from "../../components/Toaster.svelte";
   import Icon from "@iconify/svelte";
-  import {CompletedStore, guestCompletedStore} from "../CompletedTitleStore";
+  import { CompletedStore, guestCompletedStore } from "../CompletedTitleStore";
   import { page } from "$app/stores";
   import Title from "../../components/Title.svelte";
   import ModalTwo from "../../components/ModalTwo.svelte";
@@ -28,16 +28,13 @@
     guestGameList.update(() => {
       if (browser) {
         // takes the saved local storage and updates the guest list to that
-        let savedGames = JSON.parse(
-          window.localStorage.getItem("guestGames")
-        );
+        let savedGames = JSON.parse(window.localStorage.getItem("guestGames"));
         return savedGames;
       }
     });
-    gameListItems = $guestGameList;
+    guestGameListItems = $guestGameList;
     console.log($guestGameList);
-  } 
-  else if (data.games) {
+  } else if (data.games) {
     gameListItems = data.games;
   }
 
@@ -48,7 +45,7 @@
 
   let toggleModal = (game) => {
     currentGame = game;
-    gameStrLength = currentGame.title.length;
+    gameStrLength = currentGame.name.length;
     showModal = !showModal;
   };
 
@@ -77,7 +74,7 @@
         return updatedGameList;
       });
 
-      if(showToast){
+      if (showToast) {
         addToast({
           data: {
             title: "Success",
@@ -88,12 +85,11 @@
           type: "foreground",
         });
       }
-
     } catch (error) {
       addToast({
         data: {
           title: "Error",
-          description: 'The title was not removed!',
+          description: "The title was not removed!",
           color: "red",
         },
         closeDelay: 5000,
@@ -103,18 +99,56 @@
   }
 
   async function guestCompletedTitle(title) {
-
-    try{
+    try {
       // add the title to the completed list
-      guestCompletedStore.update((data) => {
-        if (browser) {
+      if (browser) {
+        var localExists = JSON.parse(
+          window.localStorage.getItem("guestCompletedTitles"),
+        );
+        console.log("guest storage", localExists);
+
+        // get localstorage data into store if it exists
+        if (localExists != null) {
+          guestCompletedStore.update(() => {
+            return [];
+          });
+
+          if (localExists instanceof Array) {
+            guestCompletedStore.set(
+              JSON.parse(window.localStorage.getItem("guestCompletedTitles")),
+            );
+            guestCompletedStore.update((data) => {
+              return [title, ...data];
+            });
+          } else {
+            guestCompletedStore.set([
+              JSON.parse(window.localStorage.getItem("guestCompletedTitles")),
+              ...data,
+            ]);
+            guestCompletedStore.update((data) => {
+              data.push(title);
+              return data;
+            });
+            console.log("completed title", $guestCompletedStore);
+          }
+
+          // store data into localstorage
           window.localStorage.setItem(
             "guestCompletedTitles",
-            JSON.stringify([title, ...data]),
+            JSON.stringify($guestCompletedStore),
           );
+        } else {
+          // otherwise we set the localStorage then add it to the guestStore
+          window.localStorage.setItem(
+            "guestCompletedTitles",
+            JSON.stringify([title]),
+          );
+          guestCompletedStore.update((data) => {
+            return [title];
+          });
         }
-        return [title, ...data];
-      });
+      }
+
       //remove it from the ongoing list
       guestRemoveTitle(title.id, false);
 
@@ -127,20 +161,18 @@
         closeDelay: 5000,
         type: "foreground",
       });
-    }
-    catch(error){
+    } catch (error) {
       addToast({
-          data: {
-            title: "Error",
-            description: error,
-            color: "red",
-          },
-          closeDelay: 5000,
-          type: "foreground",
+        data: {
+          title: "Error",
+          description: "Could not add to completed list",
+          color: "red",
+        },
+        closeDelay: 5000,
+        type: "foreground",
       });
     }
   }
-
 
   let modalRemove = (event) => {
     showModal = false;
@@ -204,10 +236,9 @@
   };
 
   async function completedTitle(title) {
-
-    if(browser){
-      if(!window.localStorage.getItem('completedTitles')){
-          window.localStorage.setItem('completedTitles', JSON.stringify(title))
+    if (browser) {
+      if (!window.localStorage.getItem("completedTitles")) {
+        window.localStorage.setItem("completedTitles", JSON.stringify(title));
       }
     }
     // add the title to the completed list
@@ -215,8 +246,11 @@
       return [title, ...data];
     });
 
-    window.localStorage.setItem('completedTitles', JSON.stringify($CompletedStore))
-    
+    window.localStorage.setItem(
+      "completedTitles",
+      JSON.stringify($CompletedStore),
+    );
+
     //remove it from the ongoing list
     removeTitle(title.id, false);
 
@@ -262,6 +296,16 @@
 <svelte:window bind:innerWidth={width} />
 <div class="ovr-container">
   <div class="genre-container">
+    {#if width >= 1200}
+      <a href="/list-menu" class="return-button"
+        ><Icon class="back-icon" icon="pixelarticons:arrow-left" />
+        <p class="back-text">Back to Menu</p>
+        <p></p></a
+      >
+    {/if}
+    <a href="/list-menu" class="return-button"
+      ><Icon class="back-icon" icon="pixelarticons:arrow-left" /></a
+    >
     <h1 class="genre">My</h1>
     <h1 class="genre">Games</h1>
   </div>
@@ -278,7 +322,7 @@
               {...$trigger}
               use:trigger
             >
-              <Title title={game} titleGenre={"game"}/>
+              <Title title={game} titleGenre={"game"} />
             </div>
           {/each}
         </div>
@@ -315,7 +359,7 @@
             {...$trigger}
             use:trigger
           >
-            <Title title={game} titleGenre={"game"}/>
+            <Title title={game} titleGenre={"game"} />
           </div>
         {/each}
       </div>
@@ -341,7 +385,8 @@
     {/if}
 
     <ModalTwo
-      movie={currentGame}
+      title={currentGame}
+      titleGenre={"game"}
       windowWidth={width}
       titleLength={gameStrLength}
       on:completeTitle={modalComplete}
@@ -349,12 +394,17 @@
       bind:showModal
     />
 
-    <!-- {#if !gameListItems || gameListItems.length <= 0 || gameListItems[0] == null}
+    {#if data.api_key == "00000000-0000-0000-0000-000000000000" && guestGameListItems?.length == 0}
       <div class="empty-container">
-        <p class="message">nothing you want to watch?</p>
-        <a class="search-link" href="/search">Try adding some titles here => </a>
+        <p class="message">cat got your analog stick ??</p>
+        <a class="search-link" href="/search">Try adding some games here => </a>
       </div>
-    {/if} -->
+    {:else if gameListItems?.length == 0 && data.api_key}
+      <div class="empty-container">
+        <p class="message">cat got your analog stick ??</p>
+        <a class="search-link" href="/search">Try adding some games here => </a>
+      </div>
+    {/if}
   {/if}
   <a href="/game-list/search/"
     ><button class="add-movie"><Icon icon="mdi:plus" /></button></a
@@ -376,7 +426,7 @@
   .add-movie {
     color: #181818;
     font-size: 2rem;
-    background-color: springgreen;
+    background-color: #5755FE;
     border-radius: 36px;
     position: fixed;
     bottom: 1rem;
@@ -417,7 +467,7 @@
     grid-template-rows: repeat(10, 1fr);
     justify-items: center;
     padding: 10px;
-    height: calc(100vh - 134px)
+    height: calc(100vh - 134px);
   }
 
   .genre {
@@ -425,7 +475,7 @@
     grid-row: 3;
     font-size: 2rem;
     font-family: "header-font";
-    color: springgreen;
+    color: #5755FE;
   }
 
   .ovr-container {
@@ -475,10 +525,58 @@
 
   /* short ahhhh phone */
   @media screen and (min-height: 600px) {
+    .genre-container {
+      padding: 2rem 0 3rem 1rem;
+      line-height: normal;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      position: relative;
+    }
+
+    .return-button {
+      position: absolute;
+      top: 64px;
+      left: 29px;
+      background: #5755FE;
+      font-size: 2rem;
+      vertical-align: middle;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    a :global(.back-icon) {
+      font-size: 1.75rem;
+    }
   }
 
   /* long ahhhh phone */
   @media screen and (min-height: 750px) {
+    .genre-container {
+      padding: 2rem 0 3rem 1rem;
+      line-height: normal;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      position: relative;
+    }
+
+    .return-button {
+      position: absolute;
+      top: 64px;
+      left: 29px;
+      background: #5755FE;
+      font-size: 2rem;
+      vertical-align: middle;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    a :global(.back-icon) {
+      font-size: 1.75rem;
+    }
   }
 
   /* small tablet styles */
@@ -508,12 +606,39 @@
     .genre {
       font-size: 3rem;
       font-family: "header-font";
-      color: springgreen;
+      color: #5755FE;
     }
 
     .genre-container {
       padding: 2rem 0 3rem 1rem;
       line-height: normal;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      position: relative;
+    }
+
+    .back-text {
+      font-size: 1.25rem;
+      font-family: "DotGothic16", sans-serif;
+      padding-left: 10px;
+      padding-right: 7px;
+    }
+
+    .return-button {
+      position: absolute;
+      top: 38%;
+      left: 29px;
+      background: #5755FE;
+      font-size: 2rem;
+      vertical-align: middle;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    a :global(.back-icon) {
+      font-size: 1.5rem;
     }
 
     .add-movie:hover {

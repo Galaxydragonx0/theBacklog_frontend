@@ -31,7 +31,7 @@
             class="poster-image"
             src="{title.image.small_url}"
         />
-        <p class="img-desc">{title.name}</p>
+        <p class="img-desc" style="color: rgb(115 112 255);">{title.name}</p>
     {/if}
     {#if titleGenre == "book"}
         {#if width >= 1200}
@@ -48,7 +48,7 @@
                 src="https://books.google.com/books?id={title.id}&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
             />
         {/if}
-        <p class="img-desc">{title.volumeInfo.title}</p>
+        <p class="img-desc" style="color: #f1dd00;">{title.volumeInfo.title}</p>
     {/if}
     {#if titleGenre == "show"}
         <img
@@ -56,7 +56,7 @@
             class="poster-image"
             src="https://image.tmdb.org/t/p/w185/{title.poster_path}"
         />
-        <p class="img-desc">{title.name}</p>
+        <p class="img-desc" style="color: rgb(255 108 39 / 97%);">{title.name}</p>
     {/if}
 </div>
 

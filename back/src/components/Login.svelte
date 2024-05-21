@@ -80,15 +80,15 @@
     <div class="form-container" on:click|stopPropagation>
 
         <div class="header" style="display: flex; justify-content: space-between;">
-            {#if !userData?.user_email || !userData.api_key}
+            {#if !$UserDataStore.user_email && $UserDataStore.api_key == "00000000-0000-0000-0000-000000000000"}
                 <p class="login-view" on:click={() => {loginView = true; signupView = false;}}>Login</p>
                 <p class="signup-view" on:click={() => {signupView = true; loginView=false;}}>/SignUp</p>
-            {:else if userData?.user_email}
+            {:else if $UserDataStore.user_email}
                 <p class="logout-view">Logout</p>
             {/if}
             
         </div>
-        {#if loginView && !userData.api_key}
+        {#if loginView && (userData.api_key == "00000000-0000-0000-0000-000000000000")}
         <!-- show validations for form fields -->
             <form method="POST" action="/list-menu?/login">
                 <label class="email-label" for="email">Email</label>
@@ -104,7 +104,7 @@
                 <button class="btn" on:click={login}>Login</button>
             </form>
         {/if}
-        {#if signupView && !userData.api_key}
+        {#if signupView && (userData.api_key == "00000000-0000-0000-0000-000000000000")}
             <form method="post" action="/list-menu?/register">
                 <label class="email-label" for="email">Email</label>
                 <input type="email" name="email" id="email">
@@ -117,7 +117,7 @@
                 <button class="btn">Register</button>
             </form>
         {/if}
-        {#if userData.api_key && !form?.errors?.email[0]}
+        {#if userData.api_key && userData.api_key != "00000000-0000-0000-0000-000000000000" && !form?.errors?.email[0]}
         <form action="/list-menu?/logout" method="post">
                 <h3 class="logout-email">{userData?.user_email}</h3>
                 <button class="btn" on:click={logout}>Logout</button>
@@ -217,6 +217,7 @@ label{
 		background: rgb(0 0 0 / 69%);
 		border-radius: 10px;
 		color: wheat;
+        padding:1rem;
 	}
 
     dialog::backdrop {

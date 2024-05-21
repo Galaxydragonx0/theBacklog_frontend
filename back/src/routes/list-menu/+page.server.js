@@ -21,8 +21,11 @@ let completedListData;
 export async function load({locals}) {
 
     if(locals.user) api_key = locals?.user.apiKey;
+    else{
+        api_key = "00000000-0000-0000-0000-000000000000";
+    }
     // user_email = locals?.user.user_email;
-    let modalPassthrough = true;
+    let modalPassthrough = false;
     if(Object.keys(formErrors)!=0 || auth_errors.error || !locals.user){
         return {user_email, api_key, formErrors, modalPassthrough, auth_errors, viewPassthrough}
     }

@@ -70,10 +70,11 @@
 		<div class="position-change">
 			<div class="information">
 				<div class="misc">
-					<!-- <p>Release Date:{book.release_date}</p>
+					<p>Published Date:{book.volumeInfo?.publishedDate}</p>
 					&nbsp;&nbsp;
-					<p>Rating:{book.vote_average}</p> -->
-					<!-- <p>runtime</p> -->
+					{#if book.volumeInfo?.averageRating}
+						<p>Rating:{book.volumeInfo?.averageRating}</p>
+					{/if}
 				</div>
 				{#if book?.volumeInfo}
 					{#if titleLength >= 42}

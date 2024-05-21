@@ -9,7 +9,7 @@
 
 <div class="search-container">
     <h1 class="genre">Games</h1>
-    <Search titleGenre={'game'} onMainSearch={true}/>
+    <Search titleGenre={'game'} />
 
 
 </div>
@@ -29,11 +29,10 @@
         display: grid;
         grid-template-columns: repeat(12, 1fr);
         grid-template-rows: repeat(10, 1fr);
-        /* justify-content: center; */
         align-items: center;
         justify-items: center;
         padding-top: 1.5rem;
-        height: calc(100vh - 112px);
+        height: calc(100vh - 96px);
         background-color: #181818;
     }
 
@@ -42,7 +41,7 @@
         grid-row: 3;
         font-size: 2.5rem;
         font-family: 'header-font';
-        color: springgreen;
+        color: #5755FE;
     }
 
 
@@ -72,7 +71,7 @@
         align-items: center;
         justify-items: center;
         padding-top: 1.5rem;
-        height: 89.4vh;
+        height: 88.2vh;
         background-color: #181818;
     }
 
@@ -81,7 +80,7 @@
             grid-row: 3;
             font-size: 3rem;
             font-family: 'header-font';
-            color: springgreen;
+            color: #5755FE;
         }
 
     }
