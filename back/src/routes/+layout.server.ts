@@ -1,8 +1,4 @@
 import type { LayoutServerLoad } from './$types'
-import { env } from '$env/dynamic/private';
-import { fail, redirect } from '@sveltejs/kit';
-import { zfd } from 'zod-form-data';
-import { z } from "zod";
 
 
 let api_key = ""
@@ -18,4 +14,5 @@ export const load: LayoutServerLoad = async ({ locals}) => {
     }
   }
 
+  export const prerender = true;
 

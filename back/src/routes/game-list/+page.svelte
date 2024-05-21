@@ -315,8 +315,8 @@
         <div class="movie-grid">
           {#each guestGameListItems as game}
             <div
-              out:blur
-              in:fade
+              out:blur|global
+              in:fade|global
               on:click={toggleModal(game)}
               on:contextmenu={selectGame(game)}
               {...$trigger}
@@ -352,8 +352,8 @@
       <div class="movie-grid">
         {#each gameListItems as game}
           <div
-            out:blur
-            in:fade
+            out:blur|global
+            in:fade|global
             on:click={toggleModal(game)}
             on:contextmenu={selectGame(game)}
             {...$trigger}

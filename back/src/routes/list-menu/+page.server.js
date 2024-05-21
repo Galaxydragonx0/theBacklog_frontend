@@ -12,7 +12,7 @@ export const prerender = false;
 let api_key = ""
 let user_email = ""
 let formErrors = {}
-let auth_errors = {status : -1, error: ''};
+let auth_errors = {status : '-1', error: ''};
 let viewPassthrough = {login: true, register: false}
 
 

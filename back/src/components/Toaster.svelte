@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-  export type ToastData = {
+  type ToastData = {
     title: string;
     description: string;
     color: string;
@@ -31,8 +31,8 @@
     <div
       use:melt={$content(id)}
       animate:flip={{ duration: 500 }}
-      in:fly={{ duration: 150, x: "100%" }}
-      out:fly={{ duration: 150, x: "100%" }}
+      in:fly|global={{ duration: 150, x: "100%" }}
+      out:fly|global={{ duration: 150, x: "100%" }}
       class="rounded-lg bg-neutral-800 text-white shadow-md"
     >
       <div

@@ -45,7 +45,7 @@
 	bind:this={dialog}
 	on:close={() => (showModal = false)}
 	on:click|self={() => dialog.close()}
-	out:fly={{delay:600}}
+	out:fly|global={{delay:600}}
 >
 
 	<!-- svelte-ignore a11y-no-static-element-interactions -->

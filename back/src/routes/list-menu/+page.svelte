@@ -100,10 +100,10 @@
 	<a class="menu-item selected" id="title-1" href="/movie-list">
 		<span class="menu-item-title1">Movies</span>
 		{#if topActive}
-			<span in:fade={{ delay: 300, duration: 500 }} class="menu-deco"
+			<span in:fade|global={{ delay: 300, duration: 500 }} class="menu-deco"
 				>/</span
 			>
-			<span in:fade={{ delay: 300, duration: 500 }} class="menu-cta"
+			<span in:fade|global={{ delay: 300, duration: 500 }} class="menu-cta"
 				><span>explore</span></span
 			>
 		{/if}
