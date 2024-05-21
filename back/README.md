@@ -1,6 +1,8 @@
 # The Backlog
+I was annoyed that I couldn't find a site that you can keep all entertainment titles (movies, shows, games and books) in one place, so I made one. I am still figuring out on how to build the project properly as I am getting errors but the site works when running in development mode. So, how do you do that for the time being ??? Just continue reading ...
 
-## Developing
+
+## Running the development app
 
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
@@ -11,14 +13,7 @@ npm run dev
 npm run dev -- --open
 ```
 
-## Building
+## That's all for now 
 
-To create a production version of your app:
+Nothing to much to add to this for now but I hope you enjoy the app and design for now it was tiring process to design but lovely to see come together
 
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
