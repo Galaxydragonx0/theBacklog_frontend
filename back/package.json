@@ -7,7 +7,8 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch"
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
+		"deploy": "pnpm build && pnpx gh-pages -d build -t true"
 	},
 	"devDependencies": {
 		"@iconify/svelte": "^3.1.4",
@@ -16,6 +17,7 @@
 		"@sveltejs/adapter-static": "^2.0.3",
 		"@sveltejs/kit": "^1.20.4",
 		"autoprefixer": "^10.4.18",
+		"gh-pages": "^6.1.1",
 		"postcss": "^8.4.35",
 		"sass": "^1.71.1",
 		"svelte": "^4.0.5",
