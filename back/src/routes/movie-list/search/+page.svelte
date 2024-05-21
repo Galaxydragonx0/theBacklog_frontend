@@ -33,7 +33,7 @@
         align-items: center;
         justify-items: center;
         padding-top: 1.5rem;
-        height: calc(100vh - 112px);
+        height: calc(100vh - 96px);
         background-color: #181818;
     }
 
@@ -72,17 +72,17 @@
         align-items: center;
         justify-items: center;
         padding-top: 1.5rem;
-        height: 89.4vh;
+        height: 88.2vh;
         background-color: #181818;
     }
 
-        .genre{
-            grid-column: 1 / -1;
-            grid-row: 3;
-            font-size: 3rem;
-            font-family: 'header-font';
-            color: springgreen;
-        }
+    .genre{
+        grid-column: 1 / -1;
+        grid-row: 3;
+        font-size: 3rem;
+        font-family: 'header-font';
+        color: springgreen;
+    }
 
     }
 </style>

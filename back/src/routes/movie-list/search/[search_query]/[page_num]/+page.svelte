@@ -4,7 +4,7 @@
     import Icon from "@iconify/svelte";
     // import Header from "../../../../components/Header.svelte";
     import Title from "../../../../../components/Title.svelte";
-    import Search from "../../../../../components/Search.svelte";
+    import PageSearch from "../../../../../components/PageSearch.svelte";
     import {movieList, guestMovieList} from "../../../../MovieStore";
     import UserDataStore from "../../../../UserDataStore";
     import { onDestroy } from "svelte";
@@ -67,10 +67,28 @@
                     return [movie, ...currentData];
                 })
 
-                currentMovies = JSON.parse(localStorage.getItem('guestMovies'));
-                currentMovies.push(movie);
-                localStorage.setItem('guestMovies', JSON.stringify(currentMovies))
+                console.log($guestMovieList)
+
+                if(localStorage.getItem('guestMovies')){
+                    currentMovies = JSON.parse(localStorage.getItem('guestMovies'));
+                    currentMovies.push(movie);
+                    localStorage.setItem('guestMovies', JSON.stringify(currentMovies))
+                }
+                else{
+                    localStorage.setItem('guestMovies', JSON.stringify(movie))
+                }
+                
             }
+
+                addToast({
+                    data: {
+                        title: "Success",
+                        description: "Add movie to your list",
+                        color: "green",
+                    },
+                    closeDelay: 5000,
+                    type: "foreground",
+                });
         }
   }
 
@@ -95,15 +113,15 @@
             if (storeData.api_key) {
                 api_key = storeData.api_key;
             } else {
-                addToast({
-                    data: {
-                        title: "Warning",
-                        description: "Please login to add titles!",
-                        color: "yellow",
-                    },
-                    closeDelay: 5000,
-                    type: "foreground",
-                });
+                // addToast({
+                //     data: {
+                //         title: "Warning",
+                //         description: "Please login to add titles!",
+                //         color: "yellow",
+                //     },
+                //     closeDelay: 5000,
+                //     type: "foreground",
+                // });
             }
         });
 
@@ -136,8 +154,18 @@
                     type: "foreground",
                 });
             }
-            // this is needs to be error handled and displayed to the user
-            // gets the correct errors already
+            
+            if(res.status == 200){
+                addToast({
+                    data: {
+                        title: "Success",
+                        description: "Add movie to your list",
+                        color: "green",
+                    },
+                    closeDelay: 5000,
+                    type: "foreground",
+                });
+            }
         });
 
         onDestroy(movieListUnsub);
@@ -159,9 +187,14 @@
 
 <svelte:window bind:innerWidth={width} />
 <!-- search bar -->
-<div class="search-container" style="padding-top: 1.5rem;">
-    <Search />
+
+<div class="search-container" style="padding-top: 1.5rem; position:fixed; z-index:10;">
+    {#if width >=1200}
+        <a href="/movie-list" class="return-button"><Icon class="back-icon" icon="pixelarticons:arrow-left" /><p class="back-text">Back to List <p></a>
+    {/if}
+    <PageSearch titleGenre="movie"/>
 </div>
+
 <div class="grid">
     {#if data.movieArray}
         {#each data.movieArray as movie}
@@ -182,7 +215,9 @@
     </div>
 
     <SearchMovieModal movie={currentMovie} windowWidth={width} titleLength={movieStrLength} on:addTitle={modalAddToList} bind:showModal />
-    
+    {#if width <= 415}
+        <a href="/movie-list" class="return-button"><Icon class="back-icon" icon="pixelarticons:arrow-left" /></a>
+    {/if}
 </div>
 
 <div class="pagination">
@@ -190,7 +225,7 @@
     {#if currentPage > 1}
         <a
             class="previous-page block"
-            href="/search/{query}/{currentPage - parseInt('1')}"
+            href="/movie-list/search/{query}/{currentPage - parseInt('1')}"
             ><Icon
                 style="font-size:2rem;"
                 icon="emojione-monotone:left-arrow"
@@ -200,7 +235,7 @@
     <p class="page-num block">{currentPage}</p>
     <a
         class="next-page block"
-        href="/search/{query}/{currentPage + parseInt('1')}"
+        href="/movie-list/search/{query}/{currentPage + parseInt('1')}"
         ><Icon
             style="font-size:2rem;"
             icon="emojione-monotone:right-arrow"
@@ -218,18 +253,30 @@
     }
 
     .context-menu{
-    position: absolute;
-    font-family:"DotGothic16", sans-serif;
-    background-color: #181818;
-    /* backdrop-filter: blur(1px); */
-    padding:10px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
+        position: absolute;
+        font-family:"DotGothic16", sans-serif;
+        background-color: #181818;
+        /* backdrop-filter: blur(1px); */
+        padding:10px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 
     .title-container {
         position: relative;
     }
+
+    /* .return-button{
+        position: absolute;
+        top: 35px;
+        left: 51px;
+        background: springgreen;
+        font-size: 2rem;
+        vertical-align: middle;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+    } */
 
     .add-button {
         border-radius: 8px;
@@ -267,6 +314,7 @@
         justify-items: center;
         padding: 1rem;
         background-color: #181818;
+        padding-top: 5rem;
     }
 
     /* mobile styles */
@@ -277,14 +325,73 @@
         justify-content: center;
         width: 100%;
         background-color: #181818;
+        padding-bottom: 2rem;
     }
 
     /* short ahhhh phone */
     @media screen and (min-height: 600px) {
+        .grid {
+            padding-top: 7rem;
+        }
+        
+        .search-container {
+            display: grid;
+            grid-auto-columns: auto;
+            justify-content: center;
+            width: 100%;
+            background-color: #181818;
+            padding-bottom: 1.3rem;
+            position: relative;
+        }
+
+        .return-button{
+            position: fixed;
+            bottom: 45px;
+            left: 22px;
+            background: springgreen;
+            font-size: 2rem;
+            vertical-align: middle;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        a :global(.back-icon) {
+			font-size: 2rem;
+		}
     }
 
     /* long ahhhh phone */
     @media screen and (min-height: 750px) {
+        .grid {
+            padding-top: 7rem;
+        }
+
+        .search-container {
+            display: grid;
+            grid-auto-columns: auto;
+            justify-content: center;
+            width: 100%;
+            background-color: #181818;
+            padding-bottom: 1.3rem;
+            position: relative;
+        }
+
+        .return-button{
+            position: fixed;
+            bottom: 45px;
+            left: 22px;
+            background: springgreen;
+            font-size: 2rem;
+            vertical-align: middle;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        a :global(.back-icon) {
+			font-size: 2rem;
+		}
     }
 
     /* small tablet styles */
@@ -301,6 +408,40 @@
             grid-template-columns: repeat(5, 1fr);
             grid-auto-rows: auto;
             padding: 2rem 6.7rem;
+            padding-top: 7rem;
+        }
+
+        a :global(.back-icon) {
+			font-size: 1.5rem;
+		}
+
+        .back-text{
+            font-size: 1.25rem;
+            font-family:"DotGothic16", sans-serif;
+            padding-left: 10px;
+            padding-right: 7px;
+        }
+
+        .search-container {
+            display: grid;
+            grid-auto-columns: auto;
+            justify-content: center;
+            width: 100%;
+            background-color: #181818;
+            padding-bottom: 2rem;
+        }
+
+        .return-button{
+            position: absolute;
+            top: 35px;
+            left: 51px;
+            padding: 12px;
+            background: springgreen;
+            font-size: 2rem;
+            vertical-align: middle;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
         }
     }
 </style>

@@ -12,20 +12,21 @@
 	/**
 	 * @type {{ poster: any; }}
 	 */
-	export let movie;
+	export let title;
+	export let titleGenre;
 	export let titleLength;
 	export let windowWidth;
 
 	let dispatch = createEventDispatcher();
 
 	function removeTitle(){
-		console.log('this is the movie', movie.id)
-		dispatch('removeTitle', movie?.id);
+		console.log('this is the title', title.id)
+		dispatch('removeTitle', title?.id);
 	}
 	
 
 	function completeTitle(){
-		dispatch('completeTitle', movie);
+		dispatch('completeTitle', title);
 	}
 	// @ts-ignore
 	/**
@@ -55,30 +56,31 @@
 		on:close={() => (showModal = false)}
 		on:click|self={() => dialog.close()}
 	>
+	{#if titleGenre == "movie"}
 		<img
 			alt="movie poster"
 			class="poster"
-			src="https://image.tmdb.org/t/p/w185{movie.poster_path}"
+			src="https://image.tmdb.org/t/p/w185{title?.poster_path}"
 		/>
 		{#if windowWidth < 1200}
 			{#if titleLength >= 42}
-				<h2 class="name" style:font-size="normal">{movie.title}</h2>
+				<h2 class="name" style:font-size="normal">{title?.title}</h2>
 			{:else if titleLength < 42}
-				<h2 class="name" style:font-size="1.5rem">{movie.title}</h2>
+				<h2 class="name" style:font-size="1.5rem">{title?.title}</h2>
 			{/if}
 		{:else if windowWidth >= 1200}
 			{#if titleLength >= 42}
-				<h2 class="name" style:font-size="1.5rem">{movie.title}</h2>
+				<h2 class="name" style:font-size="1.5rem">{title?.title}</h2>
 			{:else if titleLength < 42}
-				<h2 class="name" style:font-size="2.5rem">{movie.title}</h2>
+				<h2 class="name" style:font-size="2.5rem">{title?.title}</h2>
 			{/if}
 		{/if}
 		<div class="position-change">
 			<div class="information">
 				<div class="misc">
-					<p>Release Date:{movie.release_date}</p>
+					<p>Release Date:{title?.release_date}</p>
 					&nbsp;&nbsp;
-					<p>Rating:{movie.vote_average}</p>
+					<p>Rating:{title?.vote_average}</p>
 					<!-- <p>runtime</p> -->
 				</div>
 				{#if titleLength >= 42}
@@ -87,13 +89,13 @@
 						style="grid-row:9/14; isplay: flex;
 				flex-direction: column-reverse;
 				justify-content: center;"
-					>{movie.overview}
+					>{title?.overview}
 					</h3>
 				{:else if titleLength < 42}
-					<h3 class="desc">{movie.overview}</h3>
+					<h3 class="desc">{title?.overview}</h3>
 				{/if}
 			</div>
-
+	
 			<div class="action-buttons">
 				<button class="remove-button" on:click={removeTitle}
 					>Remove <Icon
@@ -108,8 +110,180 @@
 						style="display:inline;"
 					/></button>
 			</div>
-
 		</div>
+	{/if}
+
+	{#if titleGenre == "show"}
+		<img
+			alt="movie poster"
+			class="poster"
+			src="https://image.tmdb.org/t/p/w185{title?.poster_path}"
+		/>
+		{#if windowWidth < 1200}
+			{#if titleLength >= 42}
+				<h2 class="name" style:font-size="normal">{title?.name}</h2>
+			{:else if titleLength < 42}
+				<h2 class="name" style:font-size="1.5rem">{title?.name}</h2>
+			{/if}
+		{:else if windowWidth >= 1200}
+			{#if titleLength >= 42}
+				<h2 class="name" style:font-size="1.5rem">{title?.name}</h2>
+			{:else if titleLength < 42}
+				<h2 class="name" style:font-size="2.5rem">{title?.name}</h2>
+			{/if}
+		{/if}
+		<div class="position-change">
+			<div class="information">
+				<div class="misc">
+					<p>Release Date:{title?.first_air_date}</p>
+					&nbsp;&nbsp;
+					<p>Rating:{title?.vote_average}</p>
+					<!-- <p>runtime</p> -->
+				</div>
+				{#if titleLength >= 42}
+					<h3
+						class="desc"
+						style="grid-row:9/14; isplay: flex;
+				flex-direction: column-reverse;
+				justify-content: center;"
+					>{title?.overview}
+					</h3>
+				{:else if titleLength < 42}
+					<h3 class="desc">{title?.overview}</h3>
+				{/if}
+			</div>
+	
+			<div class="action-buttons">
+				<button class="remove-button" on:click={removeTitle}
+					>Remove <Icon
+						class="remove-icon"
+						icon="pixelarticons:close"
+						style="display:inline;"
+					/></button>
+				<button class="complete-button" on:click={completeTitle}
+					>Mark as Complete <Icon
+						class="complete-icon"
+						icon="pixelarticons:check"
+						style="display:inline;"
+					/></button>
+			</div>
+		</div>
+	{/if}
+
+	{#if titleGenre == "book"}
+		<img
+			alt="movie poster"
+			class="poster"
+			src="https://books.google.com/books?id={title?.id}&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+		/>
+		{#if windowWidth < 1200}
+			{#if titleLength >= 42}
+				<h2 class="name" style:font-size="normal">{title?.volumeInfo.title}</h2>
+			{:else if titleLength < 42}
+				<h2 class="name" style:font-size="1.5rem">{title?.volumeInfo.title}</h2>
+			{/if}
+		{:else if windowWidth >= 1200}
+			{#if titleLength >= 42}
+				<h2 class="name" style:font-size="1.5rem">{title?.volumeInfo.title}</h2>
+			{:else if titleLength < 42}
+				<h2 class="name" style:font-size="2.5rem">{title?.volumeInfo.title}</h2>
+			{/if}
+		{/if}
+		<div class="position-change">
+			<div class="information">
+				<div class="misc">
+					<p>Published Date:{title?.volumeInfo?.publishedDate}</p>
+					&nbsp;&nbsp;
+					{#if title?.volumeInfo?.averageRating}
+						<p>Rating:{title?.volumeInfo?.averageRating}</p>
+					{/if}
+				</div>
+				{#if titleLength >= 42}
+					<h3
+						class="desc"
+						style="grid-row:9/14; isplay: flex;
+				flex-direction: column-reverse;
+				justify-content: center;"
+					>{title?.volumeInfo?.description}
+					</h3>
+				{:else if titleLength < 42}
+					<h3 class="desc">{title?.volumeInfo?.description}</h3>
+				{/if}
+			</div>
+	
+			<div class="action-buttons">
+				<button class="remove-button" on:click={removeTitle}
+					>Remove <Icon
+						class="remove-icon"
+						icon="pixelarticons:close"
+						style="display:inline;"
+					/></button>
+				<button class="complete-button" on:click={completeTitle}
+					>Mark as Complete <Icon
+						class="complete-icon"
+						icon="pixelarticons:check"
+						style="display:inline;"
+					/></button>
+			</div>
+		</div>
+	{/if}
+	
+	{#if titleGenre == "game"}
+		<img
+			alt="movie poster"
+			class="poster"
+			src="{title?.image?.small_url}"
+		/>
+		{#if windowWidth < 1200}
+			{#if titleLength >= 42}
+				<h2 class="name" style:font-size="normal">{title?.name}</h2>
+			{:else if titleLength < 42}
+				<h2 class="name" style:font-size="1.5rem">{title?.name}</h2>
+			{/if}
+		{:else if windowWidth >= 1200}
+			{#if titleLength >= 42}
+				<h2 class="name" style:font-size="1.5rem">{title?.name}</h2>
+			{:else if titleLength < 42}
+				<h2 class="name" style:font-size="2.5rem">{title?.name}</h2>
+			{/if}
+		{/if}
+		<div class="position-change">
+			<div class="information">
+				<div class="misc">
+					<p>Release Date:{title?.original_release_date}</p>
+					&nbsp;&nbsp;
+				</div>
+				{#if title?.deck}
+					{#if titleLength >= 42}
+						<h3
+							class="desc"
+							style="grid-row:9/14; isplay: flex;
+					flex-direction: column-reverse;
+					justify-content: center;"
+						>{title?.deck}
+						</h3>
+					{:else if titleLength < 42}
+						<h3 class="desc">{title?.deck}</h3>
+					{/if}
+				{/if}
+			</div>
+	
+			<div class="action-buttons">
+				<button class="remove-button" on:click={removeTitle}
+					>Remove <Icon
+						class="remove-icon"
+						icon="pixelarticons:close"
+						style="display:inline;"
+					/></button>
+				<button class="complete-button" on:click={completeTitle}
+					>Mark as Complete <Icon
+						class="complete-icon"
+						icon="pixelarticons:check"
+						style="display:inline;"
+					/></button>
+			</div>
+		</div>
+	{/if}
 	</div>
 	<button class="close-button" on:click={() => dialog.close()}><Icon icon="pixelarticons:close" /></button>
 </dialog>

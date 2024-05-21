@@ -4,29 +4,30 @@
     import Icon from "@iconify/svelte";
 
     export let titleGenre = '';
-    export let onMainSearch;
 
     let searchValue = "";
     let pageNum = "1";
     const handleSearch = () => {
 
-        switch(titleGenre){
-            case 'movie':
-            goto(`/movie-list/search/${searchValue}/${pageNum}`);
-            break;
-            case 'game':
-            goto(`/game-list/search/${searchValue}/${pageNum}`);
-            break;
-            case 'show':
-            goto(`/show-list/search/${searchValue}/${pageNum}`);
-            break;
-            case 'book':
-            goto(`/book-list/search/${searchValue}/${pageNum}`);
-            break;
-        }
+            switch(titleGenre){
+                case 'movie':
+                goto(`/movie-list/search/${searchValue}/${pageNum}`);
+                break;
+                case 'game':
+                goto(`/game-list/search/${searchValue}/${pageNum}`);
+                break;
+                case 'show':
+                goto(`/show-list/search/${searchValue}/${pageNum}`);
+                break;
+                case 'book':
+                goto(`/book-list/search/${searchValue}/${pageNum}`);
+                break;
+            }
         
-    };
+        
+    }
 </script>
+
 
 <!-- search bar -->
 <form class="search-bar" on:submit|preventDefault={() => handleSearch}>
@@ -111,7 +112,7 @@
             font-family: "DotGothic16";
             letter-spacing: 0.1rem;
             padding: 0 5px 0 5px;
-            margin: 0;
+            margin-left: -23px;
         }
     }
 
@@ -141,7 +142,7 @@
             font-family: "DotGothic16";
             letter-spacing: 0.1rem;
             padding: 0 5px 0 5px;
-            margin-left: 0;
+            margin-left: -29px;
         }
     }
 

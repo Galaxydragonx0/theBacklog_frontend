@@ -4,7 +4,7 @@
     import Icon from "@iconify/svelte";
     // import Header from "../../../../components/Header.svelte";
     import Title from "../../../../../components/Title.svelte";
-    import Search from "../../../../../components/Search.svelte";
+    import PageSearch from "../../../../../components/PageSearch.svelte";
     import {bookList, guestBookList} from "../../../../BookStore";
     import UserDataStore from "../../../../UserDataStore";
     import { onDestroy } from "svelte";
@@ -166,8 +166,11 @@
 
 <svelte:window bind:innerWidth={width} />
 <!-- search bar -->
-<div class="search-container" style="padding-top: 1.5rem;">
-    <Search titleGenre={"book"} onMainSearch={false}/>
+<div class="search-container" style="padding-top: 1.5rem; position:fixed; z-index:10;">
+    {#if width >=1200}
+        <a href="/book-list" class="return-button"><Icon class="back-icon" icon="pixelarticons:arrow-left" /><p class="back-text">Back to List <p></a>
+    {/if}
+    <PageSearch titleGenre="book"/>
 </div>
 <div class="grid">
     {#if data.bookArray}
@@ -189,7 +192,9 @@
     </div>
 
     <SearchBookModal book={currentBook} windowWidth={width} titleLength={bookStrLength} on:addTitle={modalAddToList} bind:showModal />
-    
+    {#if width <= 415}
+        <a href="/book-list" class="return-button"><Icon class="back-icon" icon="pixelarticons:arrow-left" /></a>
+    {/if}
 </div>
 
 <div class="pagination">
@@ -225,14 +230,14 @@
     }
 
     .context-menu{
-    position: absolute;
-    font-family:"DotGothic16", sans-serif;
-    background-color: #181818;
-    /* backdrop-filter: blur(1px); */
-    padding:10px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
+        position: absolute;
+        font-family:"DotGothic16", sans-serif;
+        background-color: #181818;
+        /* backdrop-filter: blur(1px); */
+        padding:10px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 
     .title-container {
         position: relative;
@@ -254,7 +259,7 @@
 
     .next-page, .previous-page {
         padding-top: 9px;
-        color: springgreen;
+        color: #f1dd00;
     }
 
     .block {
@@ -288,10 +293,70 @@
 
     /* short ahhhh phone */
     @media screen and (min-height: 600px) {
+
+        .grid {
+            padding-top: 7rem;
+        }
+        
+        .search-container {
+            display: grid;
+            grid-auto-columns: auto;
+            justify-content: center;
+            width: 100%;
+            background-color: #181818;
+            padding-bottom: 1.3rem;
+            position: relative;
+        }
+
+        .return-button{
+            position: fixed;
+            bottom: 45px;
+            left: 22px;
+            background: #f1dd00;
+            font-size: 2rem;
+            vertical-align: middle;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        a :global(.back-icon) {
+			font-size: 2rem;
+		}
     }
 
     /* long ahhhh phone */
     @media screen and (min-height: 750px) {
+
+        .grid {
+            padding-top: 7rem;
+        }
+
+        .search-container {
+            display: grid;
+            grid-auto-columns: auto;
+            justify-content: center;
+            width: 100%;
+            background-color: #181818;
+            padding-bottom: 1.3rem;
+            position: relative;
+        }
+
+        .return-button{
+            position: fixed;
+            bottom: 45px;
+            left: 22px;
+            background: #f1dd00;
+            font-size: 2rem;
+            vertical-align: middle;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        a :global(.back-icon) {
+			font-size: 2rem;
+		}
     }
 
     /* small tablet styles */
@@ -308,7 +373,41 @@
             grid-template-columns: repeat(7, 1fr);
             grid-template-rows: repeat(3, 1fr);
             padding: 2rem 8.7rem;
-            height: calc(100vh - 64px);
+            height: 100vh;
+            padding-top: 7rem;
+        }
+
+        a :global(.back-icon) {
+			font-size: 1.5rem;
+		}
+
+        .back-text{
+            font-size: 1.25rem;
+            font-family:"DotGothic16", sans-serif;
+            padding-left: 10px;
+            padding-right: 7px;
+        }
+
+        .search-container {
+            display: grid;
+            grid-auto-columns: auto;
+            justify-content: center;
+            width: 100%;
+            background-color: #181818;
+            padding-bottom: 2rem;
+        }
+
+        .return-button{
+            position: absolute;
+            top: 35px;
+            left: 51px;
+            padding: 12px;
+            background: #f1dd00;
+            font-size: 2rem;
+            vertical-align: middle;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
         }
 
         .pagination {

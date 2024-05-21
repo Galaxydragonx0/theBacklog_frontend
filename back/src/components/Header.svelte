@@ -11,10 +11,10 @@
     export let auth_errors;
     
 
-    // console.log("this is form data", formData)
-    // console.log("this is modalPT", modalPassthrough)
-    // console.log("this is viewPT", viewPassThrough)
-    // console.log("this is auth errors", auth_errors)
+    console.log("this is form data", formData)
+    console.log("this is modalPT", modalPassthrough)
+    console.log("this is viewPT", viewPassThrough)
+    console.log("this is auth errors", auth_errors)
 
     $: userStore = $UserDataStore
     $: showModal = modalPassthrough;
@@ -44,7 +44,7 @@
 {#if auth_errors?.status == -1}
     {#if height >= 945}
         <!-- logged in larger mobile screens and greater -->
-        {#if userStore.api_key && (!formData?.errors.email || formData == null) && !auth_errors.error}
+        {#if $UserDataStore.api_key != "00000000-0000-0000-0000-000000000000" && (!formData?.errors.email || formData == null) && !auth_errors.error}
             <button class="email" on:click={toggleModal}>
                 <p class="email-text">{userStore.user_email}</p>
                 
@@ -52,7 +52,7 @@
         {/if}
 
         <!-- logged out larger mobile screens and greater -->
-        {#if !userStore.api_key && (formData?.errors.email || auth_errors.error)}
+        {#if $UserDataStore.api_key == "00000000-0000-0000-0000-000000000000" && (formData?.errors.email || auth_errors.error)}
         <button on:click={toggleModal} class="login">
             <span >
                 <Icon class="avatar" icon="carbon:user-avatar-filled-alt" />
@@ -77,14 +77,14 @@
 
 {#if height >= 945}
     <!-- logged in larger mobile screens and greater -->
-    {#if userStore.api_key && (!formData?.errors.email || formData == null) && !auth_errors.error}
+    {#if $UserDataStore.api_key != "00000000-0000-0000-0000-000000000000" && (!formData?.errors.email || formData == null) && !auth_errors.error}
         <button class="email" on:click={toggleModal}>
             <p class="email-text">{userStore.user_email}</p>
         </button>
     {/if}
 
     <!-- logged out larger mobile screens and greater -->
-    {#if !userStore.api_key && (!formData?.errors.email || auth_errors.error)}
+    {#if $UserDataStore.api_key == "00000000-0000-0000-0000-000000000000" && (!formData?.errors.email || auth_errors.error)}
     <button on:click={toggleModal} class="login">
         <span >
             <Icon class="avatar" icon="carbon:user-avatar-filled-alt" />
@@ -136,7 +136,7 @@
     .avatar-pic{
         color: wheat;
         position: absolute;
-        top: 2.2rem;
+        top: 1.2rem;
         right: 1rem;
         height: 4rem;
         width: 4rem;
@@ -174,7 +174,7 @@
         .the, .backlog{
         font-weight: 1000;
         font-family: 'header-font';
-        font-size: 2rem;
+        font-size: 1.5rem;
         color: red;
         margin: 0;
     }
@@ -246,6 +246,22 @@
         h1
         {
             font-size: 3.5rem;
+        }
+
+        header
+        {
+            background: #181818;
+            padding: 1rem;
+            padding-top: 2rem;
+            padding-left: 3rem;
+        }
+
+        .the, .backlog{
+            font-weight: 1000;
+            font-family: 'header-font';
+            font-size: 2rem;
+            color: red;
+            margin: 0;
         }
 
         .email{
