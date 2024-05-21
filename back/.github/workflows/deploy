@@ -28,7 +28,7 @@ jobs:
 
       - name: build
         env:
-          BASE_PATH: '/theBacklog_frontend'
+          BASE_PATH: '/backlog'
         run: |
           npm run build
 
