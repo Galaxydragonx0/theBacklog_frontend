@@ -61,16 +61,20 @@
   function guestAddToList(book){
         if (data.userData == '00000000-0000-0000-0000-000000000000'){
             let currentBooks = []
+            book['title_genre'] = 'book'
             if(browser){
-                book['title_genre'] = 'book'
                 guestBookList.update((currentData) => {
                     return [book, ...currentData];
                 })
                 if(localStorage.getItem('guestBooks')){
                     currentBooks = JSON.parse(localStorage.getItem('guestBooks'));
+                    currentBooks.push(book);
+                    localStorage.setItem('guestBooks', JSON.stringify(currentBooks))
                 }
-                currentBooks.push(book);
-                localStorage.setItem('guestBooks', JSON.stringify(currentBooks))
+                else{
+                    localStorage.setItem('guestBooks', JSON.stringify([book]))
+                }
+
             }
         }
   }

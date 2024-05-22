@@ -60,17 +60,23 @@
   // if the key is a guest key we store it using only the localStorage
   function guestAddToList(game){
         if (data.userData == '00000000-0000-0000-0000-000000000000'){
-            let currentGames = []
+            let currentGames = [];
+            game['title_genre'] = 'game';
             if(browser){
-                game['title_genre'] = 'game'
+                
                 guestGameList.update((currentData) => {
                     return [game, ...currentData];
                 })
+
                 if(localStorage.getItem('guestGames')){
                     currentGames = JSON.parse(localStorage.getItem('guestGames'));
+                    currentGames.push(game);
+                    localStorage.setItem('guestGames', JSON.stringify(currentGames))
                 }
-                currentGames.push(game);
-                localStorage.setItem('guestGames', JSON.stringify(currentGames))
+                else{
+                    localStorage.setItem('guestShows', JSON.stringify([game]))
+                }
+
             }
         }
   }
