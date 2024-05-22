@@ -67,8 +67,6 @@
                     return [movie, ...currentData];
                 })
 
-                console.log($guestMovieList)
-
                 if(localStorage.getItem('guestMovies')){
                     currentMovies = JSON.parse(localStorage.getItem('guestMovies'));
                     currentMovies.push(movie);

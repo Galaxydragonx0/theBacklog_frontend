@@ -59,18 +59,20 @@
             let currentShows = []
             show['title_genre'] = 'show';
             if(browser){
-
-                if(!localStorage.getItem('guestShows')){
-                    localStorage.setItem('guestShows', JSON.stringify(currentShows))
-                }
-
+                
                 guestShowList.update((currentData) => {
                     return [show, ...currentData];
                 })
 
-                currentShows = JSON.parse(localStorage.getItem('guestShows'));
-                currentShows.push(show);
-                localStorage.setItem('guestShows', JSON.stringify(currentShows))
+                if(!localStorage.getItem('guestShows')){
+                    localStorage.setItem('guestShows', JSON.stringify(currentShows))
+                    currentShows.push(show)
+                    localStorage.setItem('guestMovies', JSON.stringify(currentShows))
+                }
+                else{
+                    localStorage.setItem('guestShows', JSON.stringify([show]))
+                }
+                
             }
         }
   }
