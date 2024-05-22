@@ -18,7 +18,7 @@
 	let dispatch = createEventDispatcher();
 
 	function addTitle(){
-		console.log('this is the movie', movie)
+
 		dispatch('addTitle', movie);
 	}
 	

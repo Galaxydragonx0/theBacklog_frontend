@@ -18,7 +18,6 @@
 
     export let data;
 
-    console.log(data.bookArray)
     $: currentBook = {};
     $: showModal = false;
 
@@ -37,7 +36,7 @@
 
 
     let modalAddToList = (event) =>{
-        console.log('this is the event in the booklist', event.detail)
+
         if(data.userData == '00000000-0000-0000-0000-000000000000'){
             guestAddToList(event.detail);
         }
@@ -46,7 +45,7 @@
         }
     }
 
-  console.log('Outside the if',data.userData)
+
 
 //   if (data.userData == '00000000-0000-0000-0000-000000000000'){
 //         let localExists;
@@ -54,7 +53,6 @@
 //         if(localExists){
 //             data.bookArray = localStorage.getItem('guestBooks');
 //         }
-//         console.log('data check', data.bookArray)
 //     }
 
   // if the key is a guest key we store it using only the localStorage
@@ -63,9 +61,9 @@
             let currentBooks = []
             book['title_genre'] = 'book'
             if(browser){
-                guestBookList.update((currentData) => {
-                    return [book, ...currentData];
-                })
+                // guestBookList.update((currentData) => {
+                //     return [book, ...currentData];
+                // })
                 if(localStorage.getItem('guestBooks')){
                     currentBooks = JSON.parse(localStorage.getItem('guestBooks'));
                     currentBooks.push(book);
@@ -97,7 +95,7 @@
             // book[genreKey] = 'book'
             return [book, ...data];
         });
-        console.log($bookList);
+
 
         //get api key for the user to send request for auth
         let api_key = "";

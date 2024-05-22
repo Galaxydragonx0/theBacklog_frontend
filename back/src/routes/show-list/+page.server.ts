@@ -44,8 +44,6 @@ export const load = async ({locals}) => {
         
     })
 
-    // console.log(movies);
-
 // };
 
 return {shows};

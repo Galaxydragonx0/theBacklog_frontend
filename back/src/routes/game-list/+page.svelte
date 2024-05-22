@@ -33,7 +33,6 @@
       }
     });
     guestGameListItems = $guestGameList;
-    console.log($guestGameList);
   } else if (data.games) {
     gameListItems = data.games;
   }
@@ -105,7 +104,6 @@
         var localExists = JSON.parse(
           window.localStorage.getItem("guestCompletedTitles"),
         );
-        console.log("guest storage", localExists);
 
         // get localstorage data into store if it exists
         if (localExists != null) {
@@ -129,7 +127,6 @@
               data.push(title);
               return data;
             });
-            console.log("completed title", $guestCompletedStore);
           }
 
           // store data into localstorage
@@ -231,7 +228,6 @@
   }
 
   let modalComplete = (event) => {
-    console.log("this is the event in the gamelist", event.detail);
     completedTitle(event.detail);
   };
 
@@ -396,12 +392,12 @@
     {#if data.api_key == "00000000-0000-0000-0000-000000000000" && guestGameListItems?.length == 0 || !guestGameListItems}
       <div class="empty-container">
         <p class="message">cat got your analog stick ??</p>
-        <a class="search-link" href="/search">Try adding some games here => </a>
+        <a class="search-link" href="/game-list/search">Try adding some games here => </a>
       </div>
     {:else if gameListItems?.length || !gameListItems == 0 && data.api_key}
       <div class="empty-container">
         <p class="message">cat got your analog stick ??</p>
-        <a class="search-link" href="/search">Try adding some games here => </a>
+        <a class="search-link" href="/game-list/search">Try adding some games here => </a>
       </div>
     {/if}
   {/if}

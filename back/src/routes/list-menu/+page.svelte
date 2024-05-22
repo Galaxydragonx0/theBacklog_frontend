@@ -55,7 +55,6 @@
 		visitCount.update((data) => {
 			return data++;
 		});
-		console.log($CompletedStore);
 	}
 
 	/**@type {HTMLDialogElement}*/

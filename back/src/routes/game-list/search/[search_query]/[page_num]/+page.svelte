@@ -18,7 +18,6 @@
 
     export let data;
 
-    console.log(data.gameArray)
     $: currentGame = {};
     $: showModal = false;
 
@@ -37,7 +36,6 @@
 
 
     let modalAddToList = (event) =>{
-        console.log('this is the event in the gamelist', event.detail)
         if(data.userData == '00000000-0000-0000-0000-000000000000'){
             guestAddToList(event.detail);
         }
@@ -46,7 +44,6 @@
         }
     }
 
-  console.log('Outside the if',data.userData)
 
 //   if (data.userData == '00000000-0000-0000-0000-000000000000'){
 //         let localExists;
@@ -54,7 +51,6 @@
 //         if(localExists){
 //             data.gameArray = localStorage.getItem('guestGames');
 //         }
-//         console.log('data check', data.gameArray)
 //     }
 
   // if the key is a guest key we store it using only the localStorage
@@ -64,9 +60,9 @@
             game['title_genre'] = 'game';
             if(browser){
                 
-                guestGameList.update((currentData) => {
-                    return [game, ...currentData];
-                })
+                // guestGameList.update((currentData) => {
+                //     return [game, ...currentData];
+                // })
 
                 if(localStorage.getItem('guestGames')){
                     currentGames = JSON.parse(localStorage.getItem('guestGames'));
@@ -74,7 +70,7 @@
                     localStorage.setItem('guestGames', JSON.stringify(currentGames))
                 }
                 else{
-                    localStorage.setItem('guestShows', JSON.stringify([game]))
+                    localStorage.setItem('guestGames', JSON.stringify([game]))
                 }
 
             }
@@ -99,7 +95,6 @@
             // game[genreKey] = 'game'
             return [game, ...data];
         });
-        console.log($gameList);
 
         //get api key for the user to send request for auth
         let api_key = "";

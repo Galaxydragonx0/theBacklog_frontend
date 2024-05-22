@@ -16,14 +16,12 @@
     let dispatch = createEventDispatcher()
 
     function login(){
-        console.log("this is triggered")
         dispatch('login')
     }
 
     let redirected = false;
 
     if(browser){
-        console.log("this is the link",document.referrer)
 
         let words = document.referrer.split('/');
         if(words[words.length-1] != 'login'){

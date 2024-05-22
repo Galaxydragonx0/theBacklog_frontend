@@ -20,7 +20,6 @@
 	let dispatch = createEventDispatcher();
 
 	function removeTitle(){
-		console.log('this is the title', title.id)
 		dispatch('removeTitle', title?.id);
 	}
 	

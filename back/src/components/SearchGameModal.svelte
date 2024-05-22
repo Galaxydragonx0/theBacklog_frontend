@@ -18,7 +18,6 @@
 	let dispatch = createEventDispatcher();
 
 	function addTitle(){
-		console.log('this is the game', game)
 		dispatch('addTitle', game);
 	}
 	

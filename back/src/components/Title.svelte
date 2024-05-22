@@ -8,7 +8,6 @@
 
     const dispatch = createEventDispatcher();
     function getData() {
-        console.log("this is triggered");
         dispatch("getData", title);
     }
 

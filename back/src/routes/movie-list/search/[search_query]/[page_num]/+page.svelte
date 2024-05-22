@@ -36,7 +36,6 @@
 
 
     let modalAddToList = (event) =>{
-        console.log('this is the event in the movielist', event.detail)
         if(data.userData == '00000000-0000-0000-0000-000000000000'){
             guestAddToList(event.detail);
         }
@@ -45,7 +44,6 @@
         }
     }
 
-  console.log('Outside the if',data.userData)
 
 //   if (data.userData == '00000000-0000-0000-0000-000000000000'){
 //         let localExists;
@@ -53,7 +51,6 @@
 //         if(localExists){
 //             data.movieArray = localStorage.getItem('guestMovies');
 //         }
-//         console.log('data check', data.movieArray)
 //     }
 
   // if the key is a guest key we store it using only the localStorage
@@ -63,9 +60,9 @@
             movie['title_genre'] = 'movie';
             if(browser){
 
-                guestMovieList.update((currentData) => {
-                    return [movie, ...currentData];
-                })
+                // guestMovieList.update((currentData) => {
+                //     return [movie, ...currentData];
+                // })
 
                 if(localStorage.getItem('guestMovies')){
                     currentMovies = JSON.parse(localStorage.getItem('guestMovies'));
@@ -102,7 +99,6 @@
             // movie[genreKey] = 'movie'
             return [movie, ...data];
         });
-        console.log($movieList);
 
         //get api key for the user to send request for auth
         let api_key = "";

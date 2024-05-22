@@ -23,7 +23,6 @@
     // update the store to collect the user info
     $: userData = $UserDataStore;
 
-    console.log('this is when it loads in', $UserDataStore)
 	// @ts-ignore
 	/**
      * @type {HTMLDialogElement}
@@ -61,7 +60,6 @@
      * @type {{ errors: { email: any[]; }; }}
      */
      export let form;
-    //  console.log(form?.errors)
     // @ts-ignore
    // @ts-ignore
      $: if (dialog && showModal) dialog.showModal();

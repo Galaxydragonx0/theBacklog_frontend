@@ -11,11 +11,6 @@
     export let auth_errors;
     
 
-    console.log("this is form data", formData)
-    console.log("this is modalPT", modalPassthrough)
-    console.log("this is viewPT", viewPassThrough)
-    console.log("this is auth errors", auth_errors)
-
     $: userStore = $UserDataStore
     $: showModal = modalPassthrough;
     

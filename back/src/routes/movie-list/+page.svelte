@@ -35,7 +35,7 @@
       }
     });
     guestMovieListItems = $guestMovieList;
-    console.log($guestMovieList);
+
   } 
   else if (data.movies) {
     movieListItems = data.movies;
@@ -108,7 +108,6 @@
       // add the title to the completed list
       if(browser){
         var localExists = JSON.parse(window.localStorage.getItem('guestCompletedTitles'));
-        console.log("guest storage", localExists)
         
         // get localstorage data into store if it exists
         if(localExists != null){
@@ -122,7 +121,6 @@
           else{
             guestCompletedStore.set([JSON.parse(window.localStorage.getItem('guestCompletedTitles')), ...data]);
             guestCompletedStore.update((data) => {data.push(title); return data;});
-            console.log("completed title", $guestCompletedStore)
           }
 
           // store data into localstorage
@@ -387,12 +385,12 @@
     {#if data.api_key == "00000000-0000-0000-0000-000000000000" && (guestMovieListItems?.length == 0 || !guestMovieListItems)}
       <div class="empty-container">
         <p class="message" style="text-align: center;">I know cinema is dead but creating lists aren't</p>
-        <a class="search-link" href="/search">Try adding some movie here => </a>
+        <a class="search-link" href="/movie-list/search">Try adding some movie here => </a>
       </div>
     {:else if (movieListItems?.length || !movieListItems) == 0 && data.api_key}
       <div class="empty-container">
         <p class="message" style="text-align: center;">I know cinema is dead but creating lists aren't</p>
-        <a class="search-link" href="/search">Try adding some movie here => </a>
+        <a class="search-link" href="/movie-list/search">Try adding some movie here => </a>
       </div>
     {/if}
   {/if}
@@ -583,7 +581,6 @@
     .ovr-container {
       background: #181818;
       padding: 2rem 6.7rem;
-      overflow-y: hidden;
       height: calc(100vh - 64px);
     }
 

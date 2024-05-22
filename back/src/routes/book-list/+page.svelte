@@ -33,7 +33,6 @@
       }
     });
     guestBookListItems = $guestBookList;
-    console.log($guestBookList);
   } else if (data.books) {
     bookListItems = data.books;
   }
@@ -105,7 +104,6 @@
         var localExists = JSON.parse(
           window.localStorage.getItem("guestCompletedTitles"),
         );
-        console.log("guest storage", localExists);
 
         // get localstorage data into store if it exists
         if (localExists != null) {
@@ -129,7 +127,6 @@
               data.push(title);
               return data;
             });
-            console.log("completed title", $guestCompletedStore);
           }
 
           // store data into localstorage
@@ -231,7 +228,6 @@
   }
 
   let modalComplete = (event) => {
-    console.log("this is the event in the booklist", event.detail);
     completedTitle(event.detail);
   };
 
@@ -397,12 +393,12 @@
     {#if data.api_key == "00000000-0000-0000-0000-000000000000" && (guestBookListItems?.length == 0 || !guestBookListItems)}
       <div class="empty-container">
         <p class="message">library's empty right now</p>
-        <a class="search-link" href="/search">Try adding some books here => </a>
+        <a class="search-link" href="/book-list/search">Try adding some books here => </a>
       </div>
     {:else if (bookListItems?.length || !bookListItems) == 0 && data.api_key}
       <div class="empty-container">
         <p class="message">library's empty right now</p>
-        <a class="search-link" href="/search">Try adding some books here => </a>
+        <a class="search-link" href="/book-list/search">Try adding some books here => </a>
       </div>
     {/if}
   {/if}

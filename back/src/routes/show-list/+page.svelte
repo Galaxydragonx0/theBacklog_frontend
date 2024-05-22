@@ -32,7 +32,7 @@
       }
     });
     guestShowListItems = $guestShowList;
-    console.log($guestShowList);
+
   } else if (data.shows) {
     showListItems = data.shows;
   }
@@ -104,7 +104,6 @@
         var localExists = JSON.parse(
           window.localStorage.getItem("guestCompletedTitles"),
         );
-        console.log("guest storage", localExists);
 
         // get localstorage data into store if it exists
         if (localExists != null) {
@@ -128,7 +127,6 @@
               data.push(title);
               return data;
             });
-            console.log("completed title", $guestCompletedStore);
           }
 
           // store data into localstorage
@@ -401,23 +399,23 @@
       bind:showModal
     />
 
-    {#if data.api_key == "00000000-0000-0000-0000-000000000000" && guestShowListItems?.length == 0 || !guestShowListItems}
+    {#if data.api_key == "00000000-0000-0000-0000-000000000000" && (guestShowListItems?.length == 0 || !guestShowListItems)}
       <div class="empty-container">
         <p class="message">
           If you add a CW show, you should pay me for this app (I don't judge
           tho)
         </p>
-        <a class="search-link" href="/search"
-          >Try adding some shows here0 =>
+        <a class="search-link" href="/show-list/search"
+          >Try adding some shows here =>
         </a>
       </div>
-    {:else if !showListItems || showListItems?.length == 0 && data.api_key}
+    {:else if (!showListItems || showListItems?.length) == 0 && data.api_key}
       <div class="empty-container">
         <p class="message">
           If you add a CW show, you should pay me for this app (I don't judge
           tho)
         </p>
-        <a class="search-link" href="/search">Try adding some shows here => </a>
+        <a class="search-link" href="/show-list/search">Try adding some shows here => </a>
       </div>
     {/if}
   {/if}
