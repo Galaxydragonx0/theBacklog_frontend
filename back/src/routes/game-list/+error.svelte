@@ -34,7 +34,7 @@
 <style>
 	@import '../../../styles.css';
 	@font-face{
-		src: url('../../assets/fonts/PublicPixel.ttf');
+		src: url('../../static/fonts/PublicPixel.ttf');
 		font-family: 'header-font'
 	}
 

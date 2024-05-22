@@ -1,9 +1,6 @@
-<script lang="ts" context="module">
-  type ToastData = {
-    title: string;
-    description: string;
-    color: string;
-  };
+<!-- <script lang="ts" context="module">
+
+import type { ToastData } from "./ToastData";
 
   const {
     elements: { content, title, description, close },
@@ -12,6 +9,8 @@
     actions: { portal },
   } = createToaster<ToastData>();
 
+    
+
   export const addToast = helpers.addToast;
 </script>
 
@@ -19,8 +18,8 @@
   import { createToaster, melt } from "@melt-ui/svelte";
 
   import "../app.css";
-    import { flip } from "svelte/animate";
-    import { fly } from "svelte/transition";
+  import { flip } from "svelte/animate";
+  import { fly } from "svelte/transition";
 </script>
 
 <div
@@ -63,4 +62,4 @@
 </div>
 
 <style lang="postcss">
-</style>
+</style> -->

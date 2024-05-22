@@ -59,7 +59,7 @@ on:emblaScrollNext={scrollNext}
 
   @font-face{
 		font-family: 'header-font';
-		src: url('../../assets/fonts/PublicPixel.ttf');
+		src: url('../../static/fonts/PublicPixel.ttf');
 	}
 
 

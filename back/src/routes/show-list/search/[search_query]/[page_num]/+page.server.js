@@ -2,7 +2,7 @@
 
 import { env } from '$env/dynamic/private';
 
-export const prerender = false;
+// export const prerender = false;
 
 let totalPages
 let showArray
@@ -15,8 +15,16 @@ export async function load({locals  , params }) {
 
     const { search_query, page_num } = params;
 
-    const url = `${env.server_url}/showSearch/${search_query}/${page_num}`
-    const resp = await fetch(url)
+    const url = `https://api.themoviedb.org/3/search/tv?query=${search_query}&include_adult=false&language=en-US&page=${page_num}`
+    const resp = await fetch(url, 
+        {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzOTI3ZGNiYzBkNjFlODFkNGYwZmY3MDNhM2U5MTNiMCIsInN1YiI6IjY1NTNmYzgzMDgxNmM3MDBhYmJiZmQ1OCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.BUTY6swPgxrytMFboGO4qoTEUcq1gNaUFbMQ18s-4cY'
+              }
+        }
+    )
     const data = await resp.json()
 
     showArray = data.results

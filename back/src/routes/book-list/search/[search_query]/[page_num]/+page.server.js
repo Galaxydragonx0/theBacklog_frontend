@@ -2,17 +2,25 @@
 
 import { env } from '$env/dynamic/private';
 
-export const prerender = false;
+// export const prerender = false;
 
 let totalPages
 let bookArray
-
+let searchOffset = 0
+let url = ''
 
 export async function load({locals  , params }) {
 
     const { search_query, page_num } = params;
 
-    const url = `${env.server_url}/bookSearch/${search_query}/${page_num}`
+    if(parseInt(page_num) == 1){
+        url = `https://www.googleapis.com/books/v1/volumes?q=${search_query}&startIndex=0&maxResults=14&key=${env.book_api}`
+    }
+    else{
+        searchOffset = (parseInt(page_num) - 1) * 15
+        url = `https://www.googleapis.com/books/v1/volumes?q=${search_query}&startIndex=${searchOffset}&maxResults=14&key=${env.book_api}`
+    }
+
     const resp = await fetch(url)
     const data = await resp.json()
 

@@ -8,7 +8,7 @@
     import {gameList, guestGameList} from "../../../../GameStore";
     import UserDataStore from "../../../../UserDataStore";
     import { onDestroy } from "svelte";
-    import { addToast } from "../../../../../components/Toaster.svelte";
+    // import { addToast } from "../../../../../components/Toaster.svelte";
     import { createToaster } from "@melt-ui/svelte";
     import {page} from '$app/stores';
     import { createContextMenu, melt } from '@melt-ui/svelte'
@@ -102,15 +102,15 @@
             if (storeData.api_key) {
                 api_key = storeData.api_key;
             } else {
-                addToast({
-                    data: {
-                        title: "Warning",
-                        description: "Please login to add titles!",
-                        color: "yellow",
-                    },
-                    closeDelay: 5000,
-                    type: "foreground",
-                });
+                // addToast({
+                //     data: {
+                //         title: "Warning",
+                //         description: "Please login to add titles!",
+                //         color: "yellow",
+                //     },
+                //     closeDelay: 5000,
+                //     type: "foreground",
+                // });
             }
         });
 
@@ -133,15 +133,15 @@
             if (res.status >= 400 && res.status < 500) {
                 let update_errors = response?.error;
 
-                addToast({
-                    data: {
-                        title: "Error",
-                        description: update_errors,
-                        color: "red",
-                    },
-                    closeDelay: 5000,
-                    type: "foreground",
-                });
+                // addToast({
+                //     data: {
+                //         title: "Error",
+                //         description: update_errors,
+                //         color: "red",
+                //     },
+                //     closeDelay: 5000,
+                //     type: "foreground",
+                // });
             }
             // this is needs to be error handled and displayed to the user
             // gets the correct errors already
@@ -202,7 +202,7 @@
     {#if currentPage > 1}
         <a
             class="previous-page block"
-            href="{currentPage - parseInt('1')}"
+            href='/game-list/search/{data.search_query}/{currentPage - parseInt('1')}'
             ><Icon
                 style="font-size:2rem;"
                 icon="emojione-monotone:left-arrow"
@@ -212,7 +212,7 @@
     <p class="page-num block">{currentPage}</p>
     <a
         class="next-page block"
-        href="{currentPage + parseInt('1')}"
+        href="/game-list/search/{data.search_query}/{currentPage + parseInt('1')}"
         ><Icon
             style="font-size:2rem;"
             icon="emojione-monotone:right-arrow"
@@ -295,7 +295,7 @@
     @media screen and (min-height: 600px) {
 
         .grid {
-            padding-top: 7rem;
+            padding: 7rem 0.7rem 0rem;
         }
 
         .search-container {
@@ -329,7 +329,7 @@
     @media screen and (min-height: 750px) {
 
         .grid {
-            padding-top: 7rem;
+            padding: 7rem 1.7rem 0rem;
         }
 
         .search-container {

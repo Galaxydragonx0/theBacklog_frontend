@@ -180,7 +180,7 @@
 
 	@font-face {
 		font-family: "header-font";
-		src: url("../../assets/fonts/PublicPixel.ttf");
+		src: url("../../static/fonts/PublicPixel.ttf");
 	}
 
 	@import url("https://fonts.googleapis.com/css2?family=DotGothic16&display=swap");

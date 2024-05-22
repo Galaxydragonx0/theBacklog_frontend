@@ -3,7 +3,7 @@
   import { browser } from "$app/environment";
   import { showList, guestShowList } from "../ShowStore";
   import UserDataStore from "../UserDataStore";
-  import { addToast } from "../../components/Toaster.svelte";
+  // import { addToast } from "../../components/Toaster.svelte";
   import Icon from "@iconify/svelte";
   import { CompletedStore, guestCompletedStore } from "../CompletedTitleStore";
   import { page } from "$app/stores";
@@ -74,26 +74,26 @@
       });
 
       if (showToast) {
-        addToast({
-          data: {
-            title: "Success",
-            description: "The title was removed!",
-            color: "green",
-          },
-          closeDelay: 5000,
-          type: "foreground",
-        });
+        // addToast({
+        //   data: {
+        //     title: "Success",
+        //     description: "The title was removed!",
+        //     color: "green",
+        //   },
+        //   closeDelay: 5000,
+        //   type: "foreground",
+        // });
       }
     } catch (error) {
-      addToast({
-        data: {
-          title: "Error",
-          description: "The title was not removed!",
-          color: "red",
-        },
-        closeDelay: 5000,
-        type: "foreground",
-      });
+      // addToast({
+      //   data: {
+      //     title: "Error",
+      //     description: "The title was not removed!",
+      //     color: "red",
+      //   },
+      //   closeDelay: 5000,
+      //   type: "foreground",
+      // });
     }
   }
 
@@ -151,25 +151,25 @@
       //remove it from the ongoing list
       guestRemoveTitle(title.id, false);
 
-      addToast({
-        data: {
-          title: "Success",
-          description: "The title was marked as complete",
-          color: "green",
-        },
-        closeDelay: 5000,
-        type: "foreground",
-      });
+      // addToast({
+      //   data: {
+      //     title: "Success",
+      //     description: "The title was marked as complete",
+      //     color: "green",
+      //   },
+      //   closeDelay: 5000,
+      //   type: "foreground",
+      // });
     } catch (error) {
-      addToast({
-        data: {
-          title: "Error",
-          description: "Could not add to completed list",
-          color: "red",
-        },
-        closeDelay: 5000,
-        type: "foreground",
-      });
+      // addToast({
+      //   data: {
+      //     title: "Error",
+      //     description: "Could not add to completed list",
+      //     color: "red",
+      //   },
+      //   closeDelay: 5000,
+      //   type: "foreground",
+      // });
     }
   }
 
@@ -210,26 +210,26 @@
       if (res.status >= 400 && res.status < 500) {
         let update_errors = response?.error;
 
-        addToast({
-          data: {
-            title: "Error",
-            description: "The title was not removed",
-            color: "red",
-          },
-          closeDelay: 5000,
-          type: "foreground",
-        });
+        // addToast({
+        //   data: {
+        //     title: "Error",
+        //     description: "The title was not removed",
+        //     color: "red",
+        //   },
+        //   closeDelay: 5000,
+        //   type: "foreground",
+        // });
       }
 
-      addToast({
-        data: {
-          title: "Success",
-          description: "The title was removed!",
-          color: "green",
-        },
-        closeDelay: 5000,
-        type: "foreground",
-      });
+      // addToast({
+      //   data: {
+      //     title: "Success",
+      //     description: "The title was removed!",
+      //     color: "green",
+      //   },
+      //   closeDelay: 5000,
+      //   type: "foreground",
+      // });
     }
   }
 
@@ -275,25 +275,25 @@
     if (res.status >= 400 && res.status < 500) {
       let update_errors = response?.error;
 
-      addToast({
-        data: {
-          title: "Error",
-          description: "Title was not marked as complete",
-          color: "red",
-        },
-        closeDelay: 5000,
-        type: "foreground",
-      });
+      // addToast({
+      //   data: {
+      //     title: "Error",
+      //     description: "Title was not marked as complete",
+      //     color: "red",
+      //   },
+      //   closeDelay: 5000,
+      //   type: "foreground",
+      // });
     }
-    addToast({
-      data: {
-        title: "Success",
-        description: "Your title has been added to a completed list",
-        color: "green",
-      },
-      closeDelay: 5000,
-      type: "foreground",
-    });
+    // addToast({
+    //   data: {
+    //     title: "Success",
+    //     description: "Your title has been added to a completed list",
+    //     color: "green",
+    //   },
+    //   closeDelay: 5000,
+    //   type: "foreground",
+    // });
   }
 
   let width;
@@ -308,10 +308,11 @@
         <p class="back-text">Back to Menu</p>
         <p></p></a
       >
-    {/if}
+    {:else if width<1200}
     <a href="/list-menu" class="return-button"
       ><Icon class="back-icon" icon="pixelarticons:arrow-left" /></a
     >
+    {/if}
     <h1 class="genre">My</h1>
     <h1 class="genre">Shows</h1>
   </div>
@@ -400,7 +401,7 @@
       bind:showModal
     />
 
-    {#if data.api_key == "00000000-0000-0000-0000-000000000000" && guestShowListItems?.length == 0}
+    {#if data.api_key == "00000000-0000-0000-0000-000000000000" && guestShowListItems?.length == 0 || !guestShowListItems}
       <div class="empty-container">
         <p class="message">
           If you add a CW show, you should pay me for this app (I don't judge
@@ -410,7 +411,7 @@
           >Try adding some shows here0 =>
         </a>
       </div>
-    {:else if showListItems?.length == 0 && data.api_key}
+    {:else if !showListItems || showListItems?.length == 0 && data.api_key}
       <div class="empty-container">
         <p class="message">
           If you add a CW show, you should pay me for this app (I don't judge
@@ -434,7 +435,7 @@
 
   @font-face {
     font-family: "header-font";
-    src: url("../../assets/fonts/PublicPixel.ttf");
+    src: url("../../static/fonts/PublicPixel.ttf");
   }
 
   .add-movie {
@@ -489,6 +490,7 @@
     font-size: 2rem;
     font-family: "header-font";
     color: #ff5200;
+    margin: 0;
   }
 
   .ovr-container {
@@ -606,8 +608,8 @@
     .ovr-container {
       background: #181818;
       padding: 2rem 6.7rem;
-      overflow: auto;
-      height: 100vh;
+      overflow-y: hidden;
+      height: calc(100vh - 64px);
     }
 
     .movie-grid {
@@ -621,6 +623,7 @@
       font-size: 3rem;
       font-family: "header-font";
       color: #ff5200;
+      margin: 0;
     }
 
     .genre-container {
@@ -637,12 +640,14 @@
       font-family: "DotGothic16", sans-serif;
       padding-left: 10px;
       padding-right: 7px;
+      margin: 0px;
     }
 
     .return-button {
       position: absolute;
       top: 38%;
       left: 29px;
+      height: 3rem;
       background: #ff5200;
       font-size: 2rem;
       vertical-align: middle;

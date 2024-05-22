@@ -8,7 +8,7 @@
     import {showList, guestShowList} from "../../../../ShowStore";
     import UserDataStore from "../../../../UserDataStore";
     import { onDestroy } from "svelte";
-    import { addToast } from "../../../../../components/Toaster.svelte";
+    // import { addToast } from "../../../../../components/Toaster.svelte";
     import { createContextMenu, melt } from '@melt-ui/svelte'
     import SearchShowModal from "../../../../../components/SearchShowModal.svelte";
     import { browser } from "$app/environment";
@@ -96,15 +96,15 @@
             if (storeData.api_key) {
                 api_key = storeData.api_key;
             } else {
-                addToast({
-                    data: {
-                        title: "Warning",
-                        description: "Please login to add titles!",
-                        color: "yellow",
-                    },
-                    closeDelay: 5000,
-                    type: "foreground",
-                });
+                // addToast({
+                //     data: {
+                //         title: "Warning",
+                //         description: "Please login to add titles!",
+                //         color: "yellow",
+                //     },
+                //     closeDelay: 5000,
+                //     type: "foreground",
+                // });
             }
         });
 
@@ -127,15 +127,15 @@
             if (res.status >= 400 && res.status < 500) {
                 let update_errors = response?.error;
 
-                addToast({
-                    data: {
-                        title: "Error",
-                        description: update_errors,
-                        color: "red",
-                    },
-                    closeDelay: 5000,
-                    type: "foreground",
-                });
+                // addToast({
+                //     data: {
+                //         title: "Error",
+                //         description: update_errors,
+                //         color: "red",
+                //     },
+                //     closeDelay: 5000,
+                //     type: "foreground",
+                // });
             }
             // this is needs to be error handled and displayed to the user
             // gets the correct errors already
@@ -287,6 +287,11 @@
 
     /* short ahhhh phone */
     @media screen and (min-height: 600px) {
+
+        .grid {
+            padding: 7rem 0.7rem 0rem;
+        }
+
         .search-container {
             display: grid;
             grid-auto-columns: auto;
@@ -316,6 +321,10 @@
 
     /* long ahhhh phone */
     @media screen and (min-height: 750px) {
+        .grid {
+            padding: 7rem 1.7rem 0rem;
+        }
+
         .search-container {
             display: grid;
             grid-auto-columns: auto;

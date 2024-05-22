@@ -4,7 +4,7 @@
   import emblaCarouselSvelte from "embla-carousel-svelte";
   import { movieList, guestMovieList } from "../MovieStore";
   import UserDataStore from "../UserDataStore";
-  import { addToast } from "../../components/Toaster.svelte";
+  // import { addToast } from "../../components/Toaster.svelte";
   import Icon from "@iconify/svelte";
   import {CompletedStore, guestCompletedStore} from "../CompletedTitleStore";
   import { page } from "$app/stores";
@@ -78,27 +78,27 @@
       });
 
       if(showToast){
-        addToast({
-          data: {
-            title: "Success",
-            description: "The title was removed!",
-            color: "green",
-          },
-          closeDelay: 5000,
-          type: "foreground",
-        });
+        // addToast({
+        //   data: {
+        //     title: "Success",
+        //     description: "The title was removed!",
+        //     color: "green",
+        //   },
+        //   closeDelay: 5000,
+        //   type: "foreground",
+        // });
       }
 
     } catch (error) {
-      addToast({
-        data: {
-          title: "Error",
-          description: 'The title was not removed!',
-          color: "red",
-        },
-        closeDelay: 5000,
-        type: "foreground",
-      });
+      // addToast({
+      //   data: {
+      //     title: "Error",
+      //     description: 'The title was not removed!',
+      //     color: "red",
+      //   },
+      //   closeDelay: 5000,
+      //   type: "foreground",
+      // });
     }
   }
 
@@ -139,26 +139,26 @@
       //remove it from the ongoing list
       guestRemoveTitle(title.id, false);
 
-      addToast({
-        data: {
-          title: "Success",
-          description: "The title was marked as complete",
-          color: "green",
-        },
-        closeDelay: 5000,
-        type: "foreground",
-      });
+      // addToast({
+      //   data: {
+      //     title: "Success",
+      //     description: "The title was marked as complete",
+      //     color: "green",
+      //   },
+      //   closeDelay: 5000,
+      //   type: "foreground",
+      // });
     }
     catch(error){
-      addToast({
-          data: {
-            title: "Error",
-            description: "Could not add to completed list",
-            color: "red",
-          },
-          closeDelay: 5000,
-          type: "foreground",
-      });
+      // addToast({
+      //     data: {
+      //       title: "Error",
+      //       description: "Could not add to completed list",
+      //       color: "red",
+      //     },
+      //     closeDelay: 5000,
+      //     type: "foreground",
+      // });
     }
   }
 
@@ -200,26 +200,26 @@
       if (res.status >= 400 && res.status < 500) {
         let update_errors = response?.error;
 
-        addToast({
-          data: {
-            title: "Error",
-            description: "The title was not removed",
-            color: "red",
-          },
-          closeDelay: 5000,
-          type: "foreground",
-        });
+        // addToast({
+        //   data: {
+        //     title: "Error",
+        //     description: "The title was not removed",
+        //     color: "red",
+        //   },
+        //   closeDelay: 5000,
+        //   type: "foreground",
+        // });
       }
 
-      addToast({
-        data: {
-          title: "Success",
-          description: "The title was removed!",
-          color: "green",
-        },
-        closeDelay: 5000,
-        type: "foreground",
-      });
+      // addToast({
+      //   data: {
+      //     title: "Success",
+      //     description: "The title was removed!",
+      //     color: "green",
+      //   },
+      //   closeDelay: 5000,
+      //   type: "foreground",
+      // });
     }
   }
 
@@ -264,25 +264,25 @@
     if (res.status >= 400 && res.status < 500) {
       let update_errors = response?.error;
 
-      addToast({
-        data: {
-          title: "Error",
-          description: "Title was not marked as complete",
-          color: "red",
-        },
-        closeDelay: 5000,
-        type: "foreground",
-      });
+      // addToast({
+      //   data: {
+      //     title: "Error",
+      //     description: "Title was not marked as complete",
+      //     color: "red",
+      //   },
+      //   closeDelay: 5000,
+      //   type: "foreground",
+      // });
     }
-    addToast({
-      data: {
-        title: "Success",
-        description: "Your title has been added to a completed list",
-        color: "green",
-      },
-      closeDelay: 5000,
-      type: "foreground",
-    });
+    // addToast({
+    //   data: {
+    //     title: "Success",
+    //     description: "Your title has been added to a completed list",
+    //     color: "green",
+    //   },
+    //   closeDelay: 5000,
+    //   type: "foreground",
+    // });
   }
 
   let width;
@@ -293,8 +293,9 @@
   <div class="genre-container">
     {#if width >= 1200}
       <a href="/list-menu" class="return-button"><Icon class="back-icon" icon="pixelarticons:arrow-left" /><p class="back-text">Back to Menu <p></a>
-    {/if}
+    {:else if width < 1200}
     <a href="/list-menu" class="return-button"><Icon class="back-icon" icon="pixelarticons:arrow-left" /></a>
+    {/if}
     <h1 class="genre">My</h1>
     <h1 class="genre">Movies</h1>
   </div>
@@ -385,12 +386,12 @@
 
     {#if data.api_key == "00000000-0000-0000-0000-000000000000" && (guestMovieListItems?.length == 0 || !guestMovieListItems)}
       <div class="empty-container">
-        <p class="message" style="text-align: center;">I know cinema is dead but creating lists isn't</p>
+        <p class="message" style="text-align: center;">I know cinema is dead but creating lists aren't</p>
         <a class="search-link" href="/search">Try adding some movie here => </a>
       </div>
     {:else if (movieListItems?.length || !movieListItems) == 0 && data.api_key}
       <div class="empty-container">
-        <p class="message" style="text-align: center;">I know cinema is dead but creating lists isn't</p>
+        <p class="message" style="text-align: center;">I know cinema is dead but creating lists aren't</p>
         <a class="search-link" href="/search">Try adding some movie here => </a>
       </div>
     {/if}
@@ -409,7 +410,7 @@
 
   @font-face {
     font-family: "header-font";
-    src: url("../../assets/fonts/PublicPixel.ttf");
+    src: url("../../static/fonts/PublicPixel.ttf");
   }
 
   .add-movie {
@@ -464,6 +465,7 @@
     font-size: 2rem;
     font-family: "header-font";
     color: springgreen;
+    margin: 0;
   }
 
   .ovr-container {
@@ -582,7 +584,7 @@
       background: #181818;
       padding: 2rem 6.7rem;
       overflow-y: hidden;
-      height: 100vh;
+      height: calc(100vh - 64px);
     }
 
     .movie-grid {
@@ -596,6 +598,7 @@
       font-size: 3rem;
       font-family: "header-font";
       color: springgreen;
+      margin: 0;
     }
 
     .genre-container {
@@ -612,12 +615,14 @@
         font-family:"DotGothic16", sans-serif;
         padding-left: 10px;
         padding-right: 7px;
+        margin: 0px;
     }
 
     .return-button{
       position: absolute;
       top: 38%;
       left: 29px;
+      height: 3rem;
       background: springgreen;
       font-size: 2rem;
       vertical-align: middle;

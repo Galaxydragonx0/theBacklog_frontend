@@ -5,7 +5,7 @@
 // @ts-nocheck
 
     import UserDataStore from "../routes/UserDataStore";
-    export const prerender = false
+    // export const prerender = false
 	// @ts-ignore
 	export let showModal; // boolean
     // @ts-ignore
@@ -130,7 +130,7 @@
 
 @font-face{
     font-family: "header-font";
-    src: url('../../assets/fonts/PublicPixel.ttf');
+    src: url('../../static/fonts/PublicPixel.ttf');
 
     font-family: "Rubik";
     src: url('../../src/assets/fonts/Rubik-Regular.ttf');

@@ -8,7 +8,7 @@
     import {movieList, guestMovieList} from "../../../../MovieStore";
     import UserDataStore from "../../../../UserDataStore";
     import { onDestroy } from "svelte";
-    import { addToast } from "../../../../../components/Toaster.svelte";
+    // import { addToast } from "../../../../../components/Toaster.svelte";
     import { createToaster } from "@melt-ui/svelte";
     import {page} from '$app/stores';
     import { createContextMenu, melt } from '@melt-ui/svelte'
@@ -75,20 +75,20 @@
                     localStorage.setItem('guestMovies', JSON.stringify(currentMovies))
                 }
                 else{
-                    localStorage.setItem('guestMovies', JSON.stringify(movie))
+                    localStorage.setItem('guestMovies', JSON.stringify([movie]))
                 }
                 
             }
 
-                addToast({
-                    data: {
-                        title: "Success",
-                        description: "Add movie to your list",
-                        color: "green",
-                    },
-                    closeDelay: 5000,
-                    type: "foreground",
-                });
+                // addToast({
+                //     data: {
+                //         title: "Success",
+                //         description: "Add movie to your list",
+                //         color: "green",
+                //     },
+                //     closeDelay: 5000,
+                //     type: "foreground",
+                // });
         }
   }
 
@@ -144,27 +144,27 @@
             if (res.status >= 400 && res.status < 500) {
                 let update_errors = response?.error;
 
-                addToast({
-                    data: {
-                        title: "Error",
-                        description: update_errors,
-                        color: "red",
-                    },
-                    closeDelay: 5000,
-                    type: "foreground",
-                });
+                // addToast({
+                //     data: {
+                //         title: "Error",
+                //         description: update_errors,
+                //         color: "red",
+                //     },
+                //     closeDelay: 5000,
+                //     type: "foreground",
+                // });
             }
             
             if(res.status == 200){
-                addToast({
-                    data: {
-                        title: "Success",
-                        description: "Add movie to your list",
-                        color: "green",
-                    },
-                    closeDelay: 5000,
-                    type: "foreground",
-                });
+                // addToast({
+                //     data: {
+                //         title: "Success",
+                //         description: "Add movie to your list",
+                //         color: "green",
+                //     },
+                //     closeDelay: 5000,
+                //     type: "foreground",
+                // });
             }
         });
 
@@ -331,7 +331,7 @@
     /* short ahhhh phone */
     @media screen and (min-height: 600px) {
         .grid {
-            padding-top: 7rem;
+            padding: 7rem 0.7rem 0rem;
         }
         
         .search-container {
@@ -364,7 +364,7 @@
     /* long ahhhh phone */
     @media screen and (min-height: 750px) {
         .grid {
-            padding-top: 7rem;
+            padding: 7rem 1.7rem 0rem;
         }
 
         .search-container {

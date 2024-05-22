@@ -5,7 +5,7 @@
     import Search from "../../../components/Search.svelte";
 </script>
 
-<Header />
+<!-- <Header /> -->
 
 <div class="search-container">
     <h1 class="genre">Games</h1>
@@ -32,7 +32,7 @@
         align-items: center;
         justify-items: center;
         padding-top: 1.5rem;
-        height: calc(100vh - 96px);
+        /* height: calc(100vh - 96px); */
         background-color: #181818;
     }
 
@@ -71,7 +71,7 @@
         align-items: center;
         justify-items: center;
         padding-top: 1.5rem;
-        height: 88.2vh;
+        height: 97.5vh;
         background-color: #181818;
     }
 

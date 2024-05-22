@@ -3,7 +3,7 @@ import { fail, redirect } from '@sveltejs/kit';
 import { zfd } from 'zod-form-data';
 import { z } from "zod";
 // import type { PageServerLoad, Actions } from './$types';
-export const prerender = false;
+// export const prerender = false;
 
 //put a load function and export it as data to the frontend 
 // create a global variable to save the error or user to update the login and header functionality

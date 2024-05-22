@@ -5,7 +5,7 @@
     import Search from "../../../components/Search.svelte";
 </script>
 
-<Header />
+<!-- <Header /> -->
 
 <div class="search-container">
     <h1 class="genre">Books</h1>
@@ -17,7 +17,7 @@
     @import "../../../../styles.css";
     @font-face{
 		font-family: 'header-font';
-		src: url('../../assets/fonts/PublicPixel.ttf')
+		src: url('../../static/fonts/PublicPixel.ttf');
 	}
     @font-face {
         src: url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,600;0,900;1,400;1,600;1,800;1,900&display=swap");
@@ -33,7 +33,7 @@
         align-items: center;
         justify-items: center;
         padding-top: 1.5rem;
-        height: calc(100vh - 96px);
+        /* height: calc(100vh - 96px); */
         background-color: #181818;
     }
 
@@ -72,7 +72,7 @@
         align-items: center;
         justify-items: center;
         padding-top: 1.5rem;
-        height: 88.2vh;
+        height: 97.5vh;
         background-color: #181818;
     }
 

@@ -8,7 +8,7 @@
     import {bookList, guestBookList} from "../../../../BookStore";
     import UserDataStore from "../../../../UserDataStore";
     import { onDestroy } from "svelte";
-    import { addToast } from "../../../../../components/Toaster.svelte";
+    // import { addToast } from "../../../../../components/Toaster.svelte";
     import { createToaster } from "@melt-ui/svelte";
     import {page} from '$app/stores';
     import { createContextMenu, melt } from '@melt-ui/svelte'
@@ -102,15 +102,15 @@
             if (storeData.api_key) {
                 api_key = storeData.api_key;
             } else {
-                addToast({
-                    data: {
-                        title: "Warning",
-                        description: "Please login to add titles!",
-                        color: "yellow",
-                    },
-                    closeDelay: 5000,
-                    type: "foreground",
-                });
+                // addToast({
+                //     data: {
+                //         title: "Warning",
+                //         description: "Please login to add titles!",
+                //         color: "yellow",
+                //     },
+                //     closeDelay: 5000,
+                //     type: "foreground",
+                // });
             }
         });
 
@@ -133,15 +133,15 @@
             if (res.status >= 400 && res.status < 500) {
                 let update_errors = response?.error;
 
-                addToast({
-                    data: {
-                        title: "Error",
-                        description: update_errors,
-                        color: "red",
-                    },
-                    closeDelay: 5000,
-                    type: "foreground",
-                });
+                // addToast({
+                //     data: {
+                //         title: "Error",
+                //         description: update_errors,
+                //         color: "red",
+                //     },
+                //     closeDelay: 5000,
+                //     type: "foreground",
+                // });
             }
             // this is needs to be error handled and displayed to the user
             // gets the correct errors already
@@ -295,7 +295,7 @@
     @media screen and (min-height: 600px) {
 
         .grid {
-            padding-top: 7rem;
+            padding: 7rem 0.7rem 0rem;
         }
         
         .search-container {
@@ -329,7 +329,7 @@
     @media screen and (min-height: 750px) {
 
         .grid {
-            padding-top: 7rem;
+            padding: 7rem 1.7rem 0rem;
         }
 
         .search-container {
@@ -373,7 +373,7 @@
             grid-template-columns: repeat(7, 1fr);
             grid-template-rows: repeat(3, 1fr);
             padding: 2rem 8.7rem;
-            height: 100vh;
+            height: calc(100vh - 144px);
             padding-top: 7rem;
         }
 
@@ -416,7 +416,7 @@
             display: flex;
             flex-direction: row;
             justify-content: center;
-            margin-top: -5rem;
+            margin-top: -8rem;
             flex-wrap: wrap;
             align-items: center;
         }
